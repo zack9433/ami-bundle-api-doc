@@ -1,0 +1,1725 @@
+FORMAT: 1A
+HOST: http://www.google.com
+
+# MXcloud AMI
+MXcloud AMI API.
+
+# Group MXC Settings
+
+## MXC Configuration [/mxc/config]
+
+### Get Configuration [GET]
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "aliveReportPeriodSec": 30,
+                "sensorDataForwardCron": "* * * * *",
+                "sensorDataExpireTimeSec": 86400
+            }
+
+### Update Configuration [PUT]
+
++ Request (application/json)
+    + Body
+
+            {
+                "aliveReportPeriodSec": 30,
+                "sensorDataForwardCron": "* * * * *",
+                "sensorDataExpireTimeSec": 86400
+            }
+
++ Response 200 (application/json)
+    + Body
+
+            {
+                "aliveReportPeriodSec": 30,
+                "sensorDataForwardCron": "* * * * *",
+                "sensorDataExpireTimeSec": 86400,
+                "sensorDataStorageLimit": 3000
+            }
+
+# Group Reading Drop Count
+
+## Drop Count [/mxc/dropcount]
+
+### Get Drop Count [GET]
+
+Response Attribute:
+- "storDropCount": optional, integer. The count will increase when DB full.
+- "fwdDropCount": optional, integer. The count will increase when data's time expired.
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "storDropCount": 120,
+                "fwdDropCount": 99
+            }
+
+# Group Schedule Client Applications
+
+## Schedule CAP Jobs Collection [/mxc/schedules]
+
+### Get all CAP Jobs [GET]
+
+Response Attribute:
+- "id": required, integer, start from 0.
+- "name": required, string.
+- "command": required, string.
+- "logCount": required, integer.
+- "schedule": required, object.
+    - "type": required, string. Should be one of "cron", "periodical-sec" or "startup".
+    - "time": required only for "type=cron", string of cron type.
+    - "sec": required only for "type=periodical-sec", integer. Period second.
+    - "mode": required only for "type=periodical-sec", Should be one of "SCHEDULE_FIRST" or "TRIGGER_FIRST"
+        - "SCHEDULE_FIRST": trigger the job after the configurations were loaded.
+        - "TRIGGER_FIRST": schedule the job for future triggering.
+- "isRunning": required, boolean. **Need to use Browser's REFRESH to get new running status.**
+    - "true": This trigger job is still running.
+    - "false": This trigger job is not running.
+- "executionCount": required, integer.
+- "lastExecution": require, object. If the job not execute yet, the content would empty.
+    - "startTime": optional, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
+    - "endTime": optional, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
+    - "exitStatus": optional, integer.
+        - 0: Last execution success.
+        - others: Last execution fail.
+
++ Response 200 (application/json)
+
+    + Body
+    
+            [
+                {
+                    "id": 1,
+                    "name": "Read Register Data",
+                    "command": "/var/mxcc/bin/ansi --read-register-data",
+                    "logCount": 30,
+                    "schedule": 
+                    {
+                        "type": "cron",
+                        "time": "0 * * * *"
+                    },
+                    "isRunning": false,
+                    "executionCount": 15,
+                    "lastExecution":
+                    {
+                        "startTime": "2014-11-24T04:42:17.260861Z",
+                        "endTime": "2014-11-24T04:42:19.073265Z",
+                        "exitStatus": 0
+                    }
+                },
+                {
+                    "id": 2,
+                    "name": "Read Load Profile",
+                    "command": "/var/mxcc/bin/ansi --read-load-profile",
+                    "logCount": 30,
+                    "schedule":
+                    {
+                        "type": "periodical-sec",
+                        "sec": 900,
+                        "mode": "SCHEDULE_FIRST"
+                    },
+                    "isRunning": false,
+                    "executionCount": 0,
+                    "lastExecution": {}
+                },
+                {
+                    "id": 3,
+                    "name": "Read ioLogik E2242",
+                    "command": "iologik_e2242",
+                    "logCount": 30,
+                    "schedule":
+                    {
+                        "type": "periodical-sec",
+                        "sec": 1,
+                        "mode": "TRIGGER_FIRST"
+                    },
+                    "isRunning": false,
+                    "executionCount": 0,
+                    "lastExecution": {}
+                },
+                {
+                    "id": 4,
+                    "name": "FWD data",
+                    "command": "mxc_fwd",
+                    "logCount": 30,
+                    "schedule":
+                    {
+                        "type": "startup"
+                    },
+                    "isRunning": false,
+                    "executionCount": 0,
+                    "lastExecution": {}
+                }
+            ]
+
+
+### Update CAP Jobs [PUT]
+
+Request Attribute:
+- "id": required, integer, start from 0.
+- "name": required, string.
+- "command": required, string.
+- "logCount": required, integer.
+- "schedule": required, object.
+    - "type": required, string. Should be one of "cron", "periodical-sec" or "startup".
+    - "time": required only for "type=cron", string of cron type.
+    - "sec": required only for "type=periodical-sec", integer. Period second.
+    - "mode": required only for "type=periodical-sec", Should be one of "SCHEDULE_FIRST" or "TRIGGER_FIRST"
+        - "SCHEDULE_FIRST": trigger the job after the configurations were loaded.
+        - "TRIGGER_FIRST": schedule the job for future triggering.
+- "isRunning": optional(bundle does not use this attribute), boolean. **Need to use Browser's REFRESH to get new running status.**
+    - "true": This trigger job is still running.
+    - "false": This trigger job is not running.
+- "executionCount": optional(bundle does not use this attribute), integer.
+- "lastExecution": optional(bundle does not use this attribute), object. If the job not execute yet, the content would empty.
+    - "startTime": optional, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
+    - "endTime": optional, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
+    - "exitStatus": optional, integer.
+        - 0: Last execution success.
+        - others: Last execution fail.
+
+Response Attribute:
+- "id": required, integer, start from 0.
+- "name": required, string.
+- "command": required, string.
+- "logCount": required, integer.
+- "schedule": required, object.
+    - "type": required, string. Should be one of "cron", "periodical-sec" or "startup".
+    - "time": required only for "type=cron", string of cron type.
+    - "sec": required only for "type=periodical-sec", integer. Period second.
+    - "mode": required only for "type=periodical-sec", Should be one of "SCHEDULE_FIRST" or "TRIGGER_FIRST"
+        - "SCHEDULE_FIRST": trigger the job after the configurations were loaded.
+        - "TRIGGER_FIRST": schedule the job for future triggering.
+- "isRunning": required, boolean. **Need to use Browser's REFRESH to get new running status.**
+    - "true": This trigger job is still running.
+    - "false": This trigger job is not running.
+- "executionCount": required, integer.
+- "lastExecution": require, object. If the job not execute yet, the content would empty.
+    - "startTime": optional, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
+    - "endTime": optional, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
+    - "exitStatus": optional, integer.
+        - 0: Last execution success.
+        - others: Last execution fail.
+
++ Request (application/json)
+
+    + Body
+
+
+            [
+                {
+                    "id": 1
+                    "name": "Read Register Data",
+                    "command": "/var/mxcc/bin/ansi --read-register-data",
+                    "logCount": 30,
+                    "schedule":
+                    {
+                        "type": "cron",
+                        "time": "0 * * * *"
+                    }
+                },
+                {
+                    "id": 2,
+                    "name": "Read Load Profile",
+                    "command": "/var/mxcc/bin/ansi --read-load-profile",
+                    "logCount": 30,
+                    "schedule":
+                    {
+                        "type": "periodical-sec",
+                        "sec": 900,
+                        "mode": "SCHEDULE_FIRST"
+                    },
+                    "isRunning": false,
+                    "executionCount": 0,
+                    "lastExecution": {}
+                }
+            ]
+
+
++ Response 200 (application/json)
+
+    + Body
+    
+
+            [
+                {
+                    "id": 1
+                    "name": "Read Register Data",
+                    "command": "/var/mxcc/bin/ansi --read-register-data",
+                    "logCount": 30,
+                    "schedule":
+                    {
+                        "type": "cron",
+                        "time": "0 * * * *"
+                    },
+                    "isRunning": false,
+                    "executionCount": 15,
+                    "lastExecution":
+                    {
+                        "startTime": "2014-11-24T04:42:17.260861Z",
+                        "endTime": "2014-11-24T04:42:19.073265Z",
+                        "exitStatus": 0
+                    }
+                },
+                {
+                    "id": 2,
+                    "name": "Read Load Profile",
+                    "command": "/var/mxcc/bin/ansi --read-load-profile",
+                    "logCount": 30,
+                    "schedule":
+                    {
+                        "type": "periodical-sec",
+                        "sec": 900,
+                        "mode": "SCHEDULE_FIRST"
+                    },
+                    "isRunning": false,
+                    "executionCount": 0,
+                    "lastExecution": {}
+                }
+            ]
+
+
+### Create New CAP Job [POST]
+
+Request Attribute:
+- "name": required, string.
+- "command": required, string.
+- "logCount": required, integer.
+- "schedule": required, object.
+    - "type": required, string. Should be one of "cron", "periodical-sec" or "startup".
+    - "time": required only for "type=cron", string of cron type.
+    - "sec": required only for "type=periodical-sec", integer. Period second.
+    - "mode": required only for "type=periodical-sec", Should be one of "SCHEDULE_FIRST" or "TRIGGER_FIRST"
+        - "SCHEDULE_FIRST": trigger the job after the configurations were loaded.
+        - "TRIGGER_FIRST": schedule the job for future triggering.
+- "isRunning": optional(bundle does not use this attribute), boolean. **Need to use Browser's REFRESH to get new running status.**
+    - "true": This trigger job is still running.
+    - "false": This trigger job is not running.
+- "executionCount": optional(bundle does not use this attribure), integer.
+- "lastExecution": optional(bundle does not use this attribute), object. If the job not execute yet, the content would empty.
+    - "startTime": optional, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
+    - "endTime": optional, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
+    - "exitStatus": optional, integer.
+        - 0: Last execution success.
+        - others: Last execution fail.
+
+Response Attribute:
+- "id": required, integer, start from 0.
+- "name": required, string.
+- "command": required, string.
+- "logCount": required, integer.
+- "schedule": required, object.
+    - "type": required, string. Should be one of "cron", "periodical-sec" or "startup".
+    - "time": required only for "type=cron", string of cron type.
+    - "sec": required only for "type=periodical-sec", integer. Period second.
+    - "mode": required only for "type=periodical-sec", Should be one of "SCHEDULE_FIRST" or "TRIGGER_FIRST"
+        - "SCHEDULE_FIRST": trigger the job after the configurations were loaded.
+        - "TRIGGER_FIRST": schedule the job for future triggering.
+- "isRunning": required, boolean. **Need to use Browser's REFRESH to get new running status.**
+    - "true": This trigger job is still running.
+    - "false": This trigger job is not running.
+- "executionCount": required, integer.
+- "lastExecution": require, object. If the job not execute yet, the content would empty.
+    - "startTime": optional, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
+    - "endTime": optional, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
+    - "exitStatus": optional, integer.
+        - 0: Last execution success.
+        - others: Last execution fail.
+
++ Request (application/json)
+
+    + Body
+
+            {
+                "name": "Read Register Data",
+                "command": "/var/mxcc/bin/ansi --read-register-data",
+                "logCount": 30,
+                "schedule":
+                {
+                    "type": "cron",
+                    "time": "0 * * * *"
+                }
+            }
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "id": 5,
+                "name": "Read Register Data",
+                "command": "/var/mxcc/bin/ansi --read-register-data",
+                "logCount": 30,
+                "schedule":
+                {
+                    "type": "cron",
+                    "time": "0 * * * *"
+                },
+                "isRunning": false,
+                "executionCount": 0,
+                "lastExecution": {}
+            }
+
+## Schedule CAP Jobs [/mxc/schedules/{id}]
+
+### Get CAP Job [GET]
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "id": 1,
+                "name": "Read Register Data",
+                "command": "/var/mxcc/bin/ansi --read-register-data",
+                "schedule": 
+                {
+                    "type": "cron",
+                    "time": "0 * * * *"
+                }
+            }
+
+### Put CAP Job [PUT]
+
++ Request (application/json)
+
+    + Body
+    
+            {
+                "id": 1,
+                "name": "Read Register Data",
+                "command": "/var/mxcc/bin/ansi --read-register-data",
+                "schedule":
+                {
+                    "type": "cron",
+                    "time": "0 * * * *"
+                }
+            }
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "id": 1,
+                "name": "Read Register Data",
+                "command": "/var/mxcc/bin/ansi --read-register-data",
+                "schedule": 
+                {
+                    "type": "cron",
+                    "time": "0 * * * *"
+                }
+            }
+
+### Delete CAP Job [DELETE]
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Delete scheduler job on cg-123456789715 successfully."
+            }
+
+## Log List [/mxc/schedules/{sched_id}/logs?page_size={page_size}&page={page}]
+
+### Get Log List [GET]
+
+{page} value starts from 1.
+
+Logs are ordered by "startTime" in decending order.
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "total_count": 40,
+                "page_size": 30,
+                "page": 1,
+                "logs":
+                [
+                    {
+                        "id": "20141124045217",
+                        "startTime": "2014-11-24T04:52:17Z",
+                        "endTime": "2014-11-24T04:53:17Z",
+                        "exitStatus": 127
+                    },
+                    {
+                        "id": "20141124044217",
+                        "startTime": "2014-11-24T04:42:17Z",
+                        "endTime": "2014-11-24T04:43:17Z",
+                        "exitStatus": 0
+                    }
+                ]
+            }
+
+## Retrieve Logs [/mxc/schedules/{sched_id}/logs/{log_id}/export]
+
+### Upload Log [POST]
+
++ Request (application/json)
+
+    + Body
+
+            {
+                "url": "https://mxc-cs/log/upload/JEJC9bbc832k1Sc"
+            }
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "startTime": "2014-12-03T04:42:17.260861Z",
+                "endTime": "2014-12-03T04:48:36.992303Z",
+                "url": "https://mxc-cs/log/upload/JEJC9bbc832k1Sc"
+            }
+
+
+# Group On-demand Client Application Trigger
+After Custom Bundle upload to CG, CG will decompress the Custom Bundle.
+
+But **NO** any Trigger Configuration will be created.
+
+All Trigger Configuration **NEED** be created from WEB by using **POST** API.
+
+## Jobs Collection Setup [/trigger/jobs]
+
+### Get Job Collection [GET]
+
+Response Attribute:
+- "id": required, integer, start from 0.
+- "name": required, string.
+- "command": required, string.
+- "logCount": required, integer.
+- "isRunning": required, boolean. **Need to use Browser's REFRESH to get new running status.**
+    - "true": This trigger job is still running.
+    - "false": This trigger job is not running.
+- "executionCount": required, integer.
+- "lastExecution": require, object.
+    - "startTime": optional, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
+    - "endTime": optional, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
+    - "exitStatus": optional, integer.
+        - 0: Last execution success.
+        - others: Last execution fail.
+
++ Response 200 (application/json)
+
+    + Body
+
+            [
+                {
+                    "id": 0,
+                    "name": "Read Register Data",
+                    "command": "/var/mxcc/bin/ansi --read-register-data",
+                    "logCount": 30,
+                    "isRunning": false,
+                    "executionCount": 15,
+                    "lastExecution":
+                    {
+                        "startTime": "2014-11-24T04:42:17.260861Z",
+                        "endTime": "2014-11-24T04:42:19.073265Z",
+                        "exitStatus": 0
+                    }
+                },
+                {
+                    "id": 1,
+                    "name": "Read Load Profile",
+                    "command": "/var/mxcc/bin/ansi --read-load-profile",
+                    "logCount": 30,
+                    "isRunning": false,
+                    "executionCount": 0,
+                    "lastExecution": {}
+                }
+            ]
+
+### Update Job Collection [PUT]
+All the jobs in CG would be replaced.
+
+Request Attribure:
+- "id": required, integer, start from 0.
+- "name": required, string.
+- "command": required, string.
+- "logCount": required, integer.
+- "isRunngin": optional(bundle does not use this attribute), boolean.
+    - "true": This trigger job is still running.
+    - "false": This trigger job is not running.
+- "executionCount": optiinal(bundle does not use this attribute), integer.
+- "lastExecution": optional(bundle does not use this attribute), object.
+    - "startTime": optional, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
+    - "endTime": optional, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
+    - "exitStatus": optional, integer.
+        - 0: Last execution success.
+        - others: Last execution fail.
+
+Response Attribute:
+- "id": required, integer, start from 0.
+- "name": required, string.
+- "command": required, string.
+- "logCount": required, integer.
+- "isRunngin": required, boolean. **Need to use Browser's REFRESH to get new running status.**
+    - "true": This trigger job is still running.
+    - "false": This trigger job is not running.
+- "executionCount": required, integer.
+- "lastExecution": require, object.
+    - "startTime": optional, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
+    - "endTime": optional, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
+    - "exitStatus": optional, integer.
+        - 0: Last execution success.
+        - others: Last execution fail.
+
++ Request (application/json)
+
+    + Body
+
+            [
+                {
+                    "id": 4,
+                    "name": "Hello world",
+                    "command": "/var/mxcc/bin/ansi --read-register-data",
+                    "isRunning": false,
+                    "logCount": 30,
+                    "executionCount": 0,
+                    "lastExecution": {}
+                },
+                {
+                    "id": 7,
+                    "name": "Read Load Profile",
+                    "command": "/var/mxcc/bin/ansi --read-load-profile",
+                    "logCount": 30,
+                    "executionCount": 15,
+                    "lastExecution":
+                    {
+                        "startTime": "2014-11-24T04:42:17.260861Z",
+                        "endTime": "2014-11-24T04:42:19.073265Z",
+                        "exitStatus": 0
+                    }
+                }
+            ]
+
++ Response 200 (application/json)
+
+            [
+                {
+                    "id": 4,
+                    "name": "Hello world",
+                    "command": "/var/mxcc/bin/ansi --read-register-data",
+                    "isRunning": false,
+                    "logCount": 30,
+                    "executionCount": 0,
+                    "lastExecution": {}
+                },
+                {
+                    "id": 7,
+                    "name": "Read Load Profile",
+                    "command": "/var/mxcc/bin/ansi --read-load-profile",
+                    "isRunning": false,
+                    "logCount": 30,
+                    "executionCount": 15,
+                    "lastExecution":
+                    {
+                        "startTime": "2014-11-24T04:42:17.260861Z",
+                        "endTime": "2014-11-24T04:42:19.073265Z",
+                        "exitStatus": 0
+                    }
+                }
+            ]
+
+### Create a Job into Job Collection [POST]
+
+Request Attribure:
+- "name": required, string.
+- "command": required, string.
+- "logCount": required, integer.
+- "isRunngin": optional(bundle does not use this attribute), boolean.
+    - "true": This trigger job is still running.
+    - "false": This trigger job is not running.
+- "executionCount": optional(bundle does not use this attribute), integer.
+- "lastExecution": optional(bundle does not use this attribute), object.
+    - "startTime": optional, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
+    - "endTime": optional, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
+    - "exitStatus": optional, integer.
+        - 0: Last execution success.
+        - others: Last execution fail.
+
+Response Attribute:
+- "id": required, integer, start from 0.
+- "name": required, string.
+- "command": required, string.
+- "logCount": required, integer.
+- "isRunngin": required, boolean. **Need to use Browser's REFRESH to get new running status.**
+    - "true": This trigger job is still running.
+    - "false": This trigger job is not running.
+- "executionCount": required, integer.
+- "lastExecution": require, object.
+    - "startTime": optional, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
+    - "endTime": optional, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
+    - "exitStatus": optional, integer.
+        - 0: Last execution success.
+        - others: Last execution fail.
+
++ Request (application/json)
+
+    + Body
+
+            {
+                "name": "Hello world",
+                "command": "/var/mxcc/bin/ansi --read-load-profile",
+                "logCount": 30,
+            }
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "id": 8,
+                "name": "Hello world",
+                "command": "/var/mxcc/bin/ansi --read-load-profile",
+                "isRunning": false,
+                "logCount": 30,
+                "executionCount": 0,
+                "lastExecution": {}
+            }
+
+## Job [/trigger/jobs/{id}]
+
+### Get a Job [GET]
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "id": 7,
+                "name": "Read Load Profile",
+                "command": "/var/mxcc/bin/ansi --read-load-profile"
+                "isRunning": false,
+                "logCount": 30,
+                "executionCount": 15,
+                "lastExecution":
+                {
+                    "startTime": "2014-11-24T04:42:17.260861Z",
+                    "endTime": "2014-11-24T04:42:19.073265Z",
+                    "exitStatus": 0
+                }
+            }
+            
+### Update a Job [PUT]
+
++ Request (application/json)
+
+    + Body        
+
+            {
+                "id": 7,
+                "name": "Hello world",
+                "command": "/var/mxcc/bin/ansi --read-load-profile"
+                "isRunning": false,
+                "logCount": 30,
+                "executionCount": 15,
+                "lastExecution":
+                {
+                    "startTime": "2014-11-24T04:42:17.260861Z",
+                    "endTime": "2014-11-24T04:42:19.073265Z",
+                    "exitStatus": 0
+                }
+            }
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "id": 7,
+                "name": "Read Load Profile",
+                "command": "/var/mxcc/bin/ansi --read-load-profile"
+                "isRunning": false,
+                "logCount": 30,
+                "executionCount": 15,
+                "lastExecution":
+                {
+                    "startTime": "2014-11-24T04:42:17.260861Z",
+                    "endTime": "2014-11-24T04:42:19.073265Z",
+                    "exitStatus": 0
+                }
+            }
+
+### Delete a Job [DELETE]
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "message": "Delete client application on cg-123456789715 successfully."
+            }
+
+## Trigger Job [/trigger/jobs/{id}/trigger]
+
+### Trigger Single Job to execute [POST]
+
+Response Attribute:
+- "startTime": required, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
+- "endTime": required, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
+- "exitStatus": required, integer.
+    - 0: Last execution success.
+    - others: Last execution fail.
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "startTime": "2014-11-24T04:42:17.260861Z",
+                "endTime": "2014-11-24T04:42:19.073265Z",
+                "exitStatus": 0
+            }
+
+## Log List [/trigger/jobs/{job_id}/logs?page_size={page_size}&page={page}]
+
+### Get Log List [GET]
+
+{page} value starts from 1.
+
+Logs are ordered by "startTime" in decending order.
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "total_count": 40,
+                "page_size": 30,
+                "page": 1,
+                "logs":
+                [
+                    {
+                        "id": "20141124045217",
+                        "startTime": "2014-11-24T04:52:17Z",
+                        "endTime": "2014-11-24T04:53:17Z",
+                        "exitStatus": 127
+                    },
+                    {
+                        "id": "20141124044217",
+                        "startTime": "2014-11-24T04:42:17Z",
+                        "endTime": "2014-11-24T04:43:17Z",
+                        "exitStatus": 0
+                    }
+                ]
+            }
+
+## Retrieve Logs [/trigger/jobs/{job_id}/logs/{log_id}/export]
+
+### Upload Log [POST]
+
++ Request (application/json)
+
+    + Body
+
+            {
+                "url": "https://mxc-cs/log/upload/JEJC9bbc832k1Sc"
+            }
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "startTime": "2014-12-03T04:42:17.260861Z",
+                "endTime": "2014-12-03T04:48:36.992303Z",
+                "url": "https://mxc-cs/log/upload/JEJC9bbc832k1Sc"
+            }
+
+# Group Custom Bundle Management
+
+## Custom Bundle [/mxc/custom-bundle]
+
+### Get Custom Bundle Information [GET]
+
+Get information about currently deployed client-bundle.
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "name": "my-application-bundle.tgz",
+                "url": "https://mxc-cs/client-bundles/UD63CVU7QPLE"
+            }
+
+## Deploy Custom Bundle [/mxc/custom-bundle/update]
+
+### Start Deployment [POST]
+
+Starting a request while a previous request is in progress, results in error.
+
++ Request (application/json)
+
+    + Body
+
+            {
+                "name": "my-application-bundle.tgz",
+                "url": "https://mxc-cs/client-bundles/UD63CVU7QPLE"
+            }
+
++ Response 200 (application/json)
+
+### Get Deployment Status [GET]
+
+"progress" is a float value indicating overall progress, while 1.0 indicates complete.
+
+"status" can be: "idle", "inprogress", "failed".
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "name": "my-application-bundle.tgz",
+                "url": "https://mxc-cs/client-bundles/UD63CVU7QPLE",
+                "progress": 0.39,
+                "status": "inprogress"
+            }
+            
+
+# Group Manage Groups in CS
+
+## Groups Collection [/mxcs/groups?page_size={page_size}&page={page}]
+
+Query Attribute:
+- page: optional, integer.
+- page_size: optional, integer.
+
+Notes:
+- Default query value
+    - "page": 1
+    - "page_size": 10
+
+### Get Groups List [GET]
+
+Response Attribute:
+- totalCount: required, integer.
+- pageSize: required, integer.
+- page: required, integer.
+- date: required, list type. (If no groups will return [])
+    - gid: required, integer. Group ID, (gid=1, type=gateway) != (gid=1, type=equipmet) they are 2 different resource.
+    - name: required, string. Group name.
+    - type: required, string([gateways|equipments]). Group item's type.
+    - list: required, string list.
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "totalCount": 2,
+                "pageSize": 10,
+                "page": 1,
+                "data": [
+                    {
+                        "gid": 1,
+                        "name": "CG_Group",
+                        "type": "gateways",
+                        "list": [
+                            "cg-0090E8000001",
+                            "cg-0090E8000002",
+                            "cg-0090E8000003"
+                        ]
+                    },
+                    {
+                        "gid":1,
+                        "name": "Eq_Group",
+                        "type": "equipments",
+                        "list": [
+                            "uc-8100-0090E8000001",
+                            "iologik-e2243-1",
+                            "uc-8100-0090E8000002",
+                            "meter-protecsa-1"
+                        ]
+                    }
+                ]
+            }
+
+## Group Creation [/mxcs/groups]
+
+### Create New Group [POST]
+
+Request Attribute:
+- name: required, string. Group name.
+- type: required, string([gateways|equipments]). Group item's type.
+- list: required, string list.
+
+Response Attribute:
+- gid: required, integer. Group ID, (gid=1, type=gateway) != (gid=1, type=equipmet) they are 2 different resource.
+- name: required, string. Group name.
+- type: required, string([gateways|equipments]). Group item's type.
+- list: required, string list.
+
++ Request (application/json)
+
+    + Body
+    
+            {
+                "name": "Eq_Group",
+                "type": "equipments",
+                "list": [
+                    "uc-8100-0090E8000001",
+                    "iologik-e2243-1",
+                    "uc-8100-0090E8000002",
+                    "meter-protecsa-1"
+                ]
+            }
+            
++ Response 200 (appliation/json)
+
+    + Body
+    
+            {
+                "gid": 1,
+                "name": "Eq_Group",
+                "type": "equipments",
+                "list": [
+                    "uc-8100-0090E8000001",
+                    "iologik-e2243-1",
+                    "uc-8100-0090E8000002",
+                    "meter-protecsa-1"
+                ]
+            }
+
+## Specific Group Info [/mxcs/groups/{gid}?type={type}]
+
+gid: required, integer.
+
+Query Attribute:
+- type: required, string([gateway|equipment]). Group Type.
+
+### Modify Group [PUT]
+
+Request Attribute:
+- gid: required, integer. Group ID, (gid=1, type=gateway) != (gid=1, type=equipmet) they are 2 different resource.
+- name: required, string. Group name.
+- type: required, string([gateways|equipments]). Group item's type.
+- list: required, string list.
+
+Response Attribute:
+- gid: required, integer. Group ID, (gid=1, type=gateway) != (gid=1, type=equipmet) they are 2 different resource.
+- name: required, string. Group name.
+- type: required, string([gateways|equipments]). Group item's type.
+- list: required, string list.
+
++ Request (application/json)
+
+    + Body
+    
+            {
+                "gid": 1,
+                "name": "Eq_Group",
+                "type": "equipments",
+                "list": [
+                    "uc-8100-0090E8000001",
+                    "iologik-e2243-1",
+                    "uc-8100-0090E8000002",
+                    "meter-protecsa-1"
+                ]
+            }
+            
++ Response 200 (appliation/json)
+
+    + Body
+    
+            {
+                "gid": 1,
+                "name": "Eq_Group",
+                "type": "equipments",
+                "list": [
+                    "uc-8100-0090E8000001",
+                    "iologik-e2243-1",
+                    "uc-8100-0090E8000002",
+                    "meter-protecsa-1"
+                ]
+            }
+
+### Delete Group [DELETE]
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "message": "Delete Group ID={gid} OK"
+            }
+
+# Group Profile of Equipments and CGs
+
+## All CGs [/mxcs/profile/cgs]
+
+### Get Specific Group information [GET]
+
+Response Attribute:
+- gatewayOnlineCount: required, integer.
+- gatewayTotalCount: required, integer.
+- equipmentOnlineCount: required, integer.
+- equipmentTotalCount: required, integer.
+
+Note:
+- CG Online Rate = "gatewayOnlineCount"/"gatewayTotalCount"
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "gatewayOnlineCount": 9,
+                "gatewayTotalCount": 10,
+                "equipmentOnlineCount": 15,
+                "equipmentTotalCount": 20
+            }
+
+## Specific CG [/mxcs/profile/cgs/{cgName}]
+
+cgName: CG Name.
+
+### Get Specific Group information [GET]
+
+Response Attribute:
+- status: required, string([online|offline])
+- equipmentOnlineCount: required, integer.
+- equipmentTotalCount: required, integer.
+
+TODO:
+- How to calculate "CG Online Count"
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "status": "online",
+                "equipmentOnlineCount": 15,
+                "equipmentTotalCount": 20
+            }
+
+## All Equipments [/mxcs/profile/equipments]
+
+### Get Specific Group information [GET]
+
+Response Attribute:
+- equipmentOnlineCount: required, integer.
+- equipmentTotalCount: required, integer.
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "equipmentOnlineCount": 15,
+                "equipmentTotalCount": 20
+            }
+
+## Specific Equipments [/mxcs/profile/equipments/{equipmentName}]
+
+equipmentName: Equipment Name.
+
+### Get Specific Group information [GET]
+
+Response Attribute:
+- status: required, string([online|offline])
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "status": "online"
+            }
+
+## Groups of CGs [/mxcs/profile/groups/cgs/{gid}]
+
+gid: required, integer.
+
+### Get Specific Group information [GET]
+
+Response Attribute:
+- groupName: required, string.
+- gatewayOnlineCount: required, integer.
+- gatewayTotalCount: required, integer.
+- equipmentOnlineCount: required, integer.
+- equipmentTotalCount: required, integer.
+
+Note:
+- CG Online Rate = "gatewayOnlineCount"/"gatewayTotalCount"
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "groupName": "CG-Group-1"
+                "gatewayOnlineCount": 9,
+                "gatewayTotalCount": 10,
+                "equipmentOnlineCount": 15,
+                "equipmentTotalCount": 20
+            }
+
+## Groups of Equipments [/mxcs/profile/groups/equipments/{gid}]
+
+gid: required, integer.
+
+### Get Specific Group information [GET]
+
+Response Attribute:
+- groupName: required, string.
+- equipmentOnlineCount: required, integer.
+- equipmentTotalCount: required, integer.
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "groupName": "EQ-Group-1",
+                "equipmentOnlineCount": 15,
+                "equipmentTotalCount": 20
+            }
+
+# Group Manage CG in CS
+
+## CG Table Collection [/mxcs/cgs?gid={gid}&page_size={page_size}&page={page}]
+
+Query Attribute:
+- gid: optional, integer.
+- page: optional, integer.
+- page_size: optional, integer.
+
+Notes:
+- Default query value
+    - "page": 1
+    - "page_size": 10
+
+### Get CG List from Table [GET]
+
+Response Attribute:
+- "totalCount": required, integer. Total readings count.
+- "pageSize": required, integer. Each page maxium reading count.
+- "page": required, integer. Response page number.
+- "onlineCount": required, integer. Total CG online count.
+- "data": optional(it's empty if no any gateway in database)
+    - "cgName": required. CG ID of each authorized CG.
+    - "status": required, string([online|offline])
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "totalCount": 2,
+                "pageSize": 10,
+                "page": 1,
+                "onlineCount": 2,
+                "data": [
+                    {
+                        "cgName": "cg-0090E8001234",
+                        "status": "online"
+                    },
+                    {
+                        "cgName": "cg-0090E8004321",
+                        "status": "online"
+                    }
+                ]
+            }
+
+## CG Insert [/mxcs/cgs]
+
+### Create new CG [POST]
+
+Request Attribute:
+- "cgName": required. CG ID of each authorized CG.
+
+Response Attribute
+- "cgName": required. CG ID of each authorized CG.
+
++ Request (application/json)
+
+    + Body
+    
+            {
+                "cgName": "cg-0090E8001234"
+            }
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "cgName": "cg-0090E8001234"
+            }
+
+## CG Table [/mxcs/cgs/{cg_name}]
+
+- "cg_name": required. CG ID of each authorized CG. The value is the MAC of first ethernet.
+
+### Get Specific CG info [GET]
+
+Response Attribute:
+- status: optional, string([online|offline]).
+- equipmentOnlineCount: optional, integer. Ig type=gateway, equipmentOnlineCount=0.
+- equipmentTotalCount: optional, integer. Ig type=gateway, equipmentTotalCount=0.
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "status": "online",
+                "equipmentOnlineCount": 15,
+                "equipmentTotalCount": 20
+            }
+
+### Delete CG [DELETE]
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "message": "Delete CG={cg_name} OK"
+            }
+
+# Group Sensor Data in CS
+
+## Specific Equipment info [/mxcs/equipments/{equipment_name}]
+
+### Get Specific Equipment info [GET]
+
+Response Attribute:
+- status: required, string([online|offline])
+- readingCount: required, integer
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "status": "online",
+                "readingCount": 28831
+            }
+
+## Equipments [/mxcs/equipments?cg_name={cg_name}&gid={gid}&page_size={page_size}&page={page}]
+
+Query Attribute:
+- cg_name: optional, string. Only handle the data about {cg_name}, if assigned {cg_name}.
+- gid: optional, integer.
+- page: optional, integer.
+- page_size: optional, integer.
+
+Notes:
+- Default query value
+    - "cg_name": None. Means all equipments.
+    - "page": 1
+    - "page_size": 10
+
+### Get Equipments list [GET]
+
+Response Attribute:
+- "totalCount": required, integer. Total readings count.
+- "pageSize": required, integer. Each page maxium reading count.
+- "page": required, integer. Response page number.
+- "onlineCount": required, integer. Current online count of equipments.
+- "data": optional(it's empty if no any equipments in database)
+    - "name": required, string. Equipment Name.
+    - "readingsTotalCount": required, integer. Total readings count belong to this equipment.
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "totalCount": 2,
+                "pageSize": 10,
+                "page": 1,
+                "data": [
+                    {
+                        "name": "uc-81xx-0090e800e5ee",
+                        "status": "online",
+                        "readingCount": 2048
+                    },
+                    {
+                        "name": "iologik-e2242",
+                        "status": "online",
+                        "readingCount": 1037
+                    }
+                ]
+            }
+
+
+## Channels [/mxcs/equipments/{equipment_name}/channels?page_size={page_size}&page={page}]
+
+Resource Attribute:
+- equipment_name: required, string.
+
+Query Attribute:
+- page: optional, integer.
+- page_size: optional, integer.
+
+Notes:
+- Default query value
+    - "page": 1
+    - "page_size": 10
+
+### Get Channels [GET]
+
+Response Attribute:
+- "totalCount": required, integer. Total readings count.
+- "pageSize": required, integer. Each page maxium reading count.
+- "page": required, integer. Response page number.
+- "data": optional(it's empty if no data pair)
+    - "value": required. Last value in database
+    - "time": required. Last time in database
+
++ Response 200 (application/json)
+
+    + Body
+
+            {
+                "totalCount": 2,
+                "pageSize": 10,
+                "page": 1,
+                "data": [
+                    {
+                        "name": "ai0",
+                        "value": 1.0264739990234375,
+                        "time": "2015-01-14T07:43:46.814000Z"
+                    },
+                    {
+                        "name": "di0",
+                        "value": 1,
+                        "time": "2015-01-14T10:08:51.181000Z"
+                    }
+                ]
+            }
+
+## Reading Data [/mxcs/equipments/{equipment_name}/channels/{channel_name}/readings?start_time={start_time}&end_time={end_time}&page={page}&page_size={page_size}&asc={asc}]
+
+Resource Attribute:
+- equipment_name: required, string.
+- channel_name: required, string.
+
+Query Attribute:
+- start_time: optional, UTC time with format like: "2014-12-29T19:01:50.123000Z".
+- end_time: optional, UTC time with format like: "2014-12-29T19:01:50.123000Z".
+- page: optional, integer.
+- page_size: optional, integer.
+- asc: optional, boolean. True: ascend(oldest first), False: descend(latest first).
+
+Notes:
+- Default query value
+    - "start_time": None
+    - "end_time": NOW
+    - "page": 1
+    - "page_size": 10
+    - "asc": False
+
+### Query Sensor Data [GET]
+
+Response Attribute:
+- "totalCount": required, integer. Total readings count.
+- "pageSize": required, integer. Each page maxium reading count.
+- "page": required, integer. Response page number.
+- "data": optional(it's empty if no data pair)
+    - "value": required. Reading's data.
+    - "time": required. Reading's acquire time.
+
+Notes:
+- Latest (value, time) on the TOP.
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "totalCount": 2,
+                "pageSize": 10,
+                "page": 1,
+                "data": [
+                    {
+                        "value": 1.0255584716796875,
+                        "time": "2015-01-14T10:08:51.181000Z"
+                    },
+                    {
+                        "value": 1.0264739990234375,
+                        "time": "2015-01-14T07:43:46.814000Z"
+                    }
+                ]
+            }
+            
+
+# Group Sensor Data Configuration
+
+## Sensor Data Configuration  [/mxcs/config]
+
+### Get Configuration [GET]
+
+Response Attribure
+- "expireTimeDay": required, integer. Sensor Data expire time in day.
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "expireTimeDay": 90
+            }
+
+### Update Configuration [PUT]
+
+Request Attribute:
+- "expireTimeDay": required, integer. Sensor Data expire time in day.
+
+Response Attribute:
+- "expireTimeDay": required, integer. Sensor Data expire time in day.
+
++ Request (application/json)
+
+    + Body
+    
+            {
+                "expireTimeDay": 90
+            }
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "expireTimeDay": 90
+            }
+            
+# Group CG Online Count
+
+## CG Online Count [/mxcs/cgOnlineCount?gid={gid}&type={type}&endTime={endTime}&limit={limit}]
+
+Query Attribute:
+- gid: optional, integer. Group ID.
+- type: optional, string([gateway|equipment]).
+- endTime: required, timestamp. The last date's timestamp.
+- limit: required. integer. Report data's number.
+
+### Get CG Online Cout Data [GET]
+
+Response Attribute:
+- data: required. If no data will return [].
+    - time: required, string.
+    - value: required, decimal or string.
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "data": [
+                    {
+                        "time": 1422438015,
+                        "value": 10
+                    },
+                    {
+                        "time": 1422524415,
+                        "value":11
+                    },
+                    {
+                        "time": 1422610815,
+                        "value":19
+                    },
+                    {
+                        "time": 1422697215,
+                        "value":12
+                    },
+                    {
+                        "time": 1422783615,
+                        "value":15
+                    },
+                    {
+                        "time": 1422870015,
+                        "value":20
+                    },
+                    {
+                        "time": 1422956415,
+                        "value":25
+                    }
+                ]
+            }
+
+# Group Equipment Online Count
+
+## Equipment Online Count [/mxcs/equipmentOnlineCount?gid={gid}&type={type}&endTime={endTime}&limit={limit}]
+
+Query Attribute:
+- gid: optional, integer. Group ID.
+- type: optional, string([gateway|equipment]).
+- endTime: optional, timestamp(in milliseconds). The last date's timestamp.
+- limit: optional, integer. Report data's number.
+
+Default Query:
+- gid: None
+- type: None
+- endTime: TimeStamp of NOW
+- limit: 7
+
+### Get Equipment Online Cout Data [GET]
+
+Response Attribute:
+- data: required. If no data will return [].
+    - time: required, timestamp in milliseconds.
+    - value: required, decimal or string.
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "data": [
+                    {
+                        "time": 1422438015000,
+                        "value": 10
+                    },
+                    {
+                        "time": 1422524415000,
+                        "value":11
+                    },
+                    {
+                        "time": 1422610815000,
+                        "value":19
+                    },
+                    {
+                        "time": 1422697215000,
+                        "value":12
+                    },
+                    {
+                        "time": 1422783615000,
+                        "value":15
+                    },
+                    {
+                        "time": 1422870015000,
+                        "value":20
+                    },
+                    {
+                        "time": 1422956415000,
+                        "value":25
+                    }
+                ]
+            }
+
+# Group CG Data Row
+
+## CG Data Row [/mxcs/cgDataRow?gid={gid}&type={type}&endTime={endTime}&limit={limit}]
+
+Query Attribute:
+- gid: optional, integer. Group ID.
+- type: optional, string([gateway|equipment]).
+- endTime: required, timestamp. The last date's timestamp.
+- limit: required. integer. Report data's number.
+
+### Get CG Data Row Data [GET]
+
+Response Attribute:
+- data: required. If no data will return [].
+    - time: required, string.
+    - value: required, decimal or string.
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "data": [
+                    {
+                        "time": 1422438015,
+                        "value": 10
+                    },
+                    {
+                        "time": 1422524415,
+                        "value":11
+                    },
+                    {
+                        "time": 1422610815,
+                        "value":19
+                    },
+                    {
+                        "time": 1422697215,
+                        "value":12
+                    },
+                    {
+                        "time": 1422783615,
+                        "value":15
+                    },
+                    {
+                        "time": 1422870015,
+                        "value":20
+                    },
+                    {
+                        "time": 1422956415,
+                        "value":25
+                    }
+                ]
+            }
+
+# Group Equipment Data Row
+
+## Equipment Data Row [/mxcs/equipmentDataRow?gid={gid}&type={type}&endTime={endTime}&limit={limit}]
+
+Query Attribute:
+- gid: optional, integer. Group ID.
+- type: optional, string([gateway|equipment]).
+- endTime: required, timestamp. The last date's timestamp.
+- limit: required. integer. Report data's number.
+
+### Get Equipment Data Row Data [GET]
+
+Response Attribute:
+- data: required. If no data will return [].
+    - time: required, string.
+    - value: required, decimal or string.
+
++ Response 200 (application/json)
+
+    + Body
+    
+            {
+                "data": [
+                    {
+                        "time": 1422438015,
+                        "value": 10
+                    },
+                    {
+                        "time": 1422524415,
+                        "value":11
+                    },
+                    {
+                        "time": 1422610815,
+                        "value":19
+                    },
+                    {
+                        "time": 1422697215,
+                        "value":12
+                    },
+                    {
+                        "time": 1422783615,
+                        "value":15
+                    },
+                    {
+                        "time": 1422870015,
+                        "value":20
+                    },
+                    {
+                        "time": 1422956415,
+                        "value":25
+                    }
+                ]
+            }
