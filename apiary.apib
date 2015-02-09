@@ -1,10 +1,13 @@
 FORMAT: 1A
-HOST: http://www.google.com
 
-# MXcloud AMI
-MXcloud AMI API.
+# MXcloud Data Collection
+MXcloud Data Collection Related API.
 
-# Group MXC Settings
+Resources provided by Cloud Gateway are categorized in */mxc/** related resources.
+
+Resources provided by Cloud Server are categorized in */mxcs/** related resources.
+
+# group MXC Settings
 
 ## MXC Configuration [/mxc/config]
 
@@ -12,331 +15,156 @@ MXcloud AMI API.
 
 + Response 200 (application/json)
 
-    + Body
-
-            {
-                "aliveReportPeriodSec": 30,
-                "sensorDataForwardCron": "* * * * *",
-                "sensorDataExpireTimeSec": 86400
-            }
+        {
+            "aliveReportPeriodSec": 30,
+            "sensorDataForwardCron": "* * * * *",
+            "sensorDataExpireTimeSec": 86400
+        }
 
 ### Update Configuration [PUT]
 
 + Request (application/json)
-    + Body
 
-            {
-                "aliveReportPeriodSec": 30,
-                "sensorDataForwardCron": "* * * * *",
-                "sensorDataExpireTimeSec": 86400
-            }
+        {
+            "aliveReportPeriodSec": 30,
+            "sensorDataForwardCron": "* * * * *",
+            "sensorDataExpireTimeSec": 86400
+        }
 
 + Response 200 (application/json)
-    + Body
 
-            {
-                "aliveReportPeriodSec": 30,
-                "sensorDataForwardCron": "* * * * *",
-                "sensorDataExpireTimeSec": 86400,
-                "sensorDataStorageLimit": 3000
-            }
+        {
+            "aliveReportPeriodSec": 30,
+            "sensorDataForwardCron": "* * * * *",
+            "sensorDataExpireTimeSec": 86400
+        }
 
-# Group Reading Drop Count
+# group Reading Drop Count
 
 ## Drop Count [/mxc/dropcount]
 
 ### Get Drop Count [GET]
 
 Response Attribute:
-- "storDropCount": optional, integer. The count will increase when DB full.
-- "fwdDropCount": optional, integer. The count will increase when data's time expired.
+- *storDropCount*: required, integer. Number of Readings dropped, caused by out-of-storage.
+- *fwdDropCount*: required, integer. Number of Readings dropped, caused by readings-expired.
 
 + Response 200 (application/json)
 
-    + Body
+        {
+            "storDropCount": 120,
+            "fwdDropCount": 99
+        }
 
+# group Scheduled Jobs
+
+## Scheduled Jobs Configuration [/mxc/schedules]
+
+### Get Multiple Job Configurations [GET]
+
+Response Attribute:
+- *id*: required, integer, start from 0.
+- *name*: required, string.
+- *command*: required, string.
+- *logCount*: required, integer.
+- *schedule*: required, object.
+    - *type*: required, string. Should be one of "cron", "periodical-sec" or "startup".
+    - *time*: required when *type="cron"*, cron schedule string.
+    - *sec*: required when *type="periodical-sec"*, integer. Period second.
+    - *mode*: required when *type="periodical-sec"*. Should be one of the following:
+        - *SCHEDULE_FIRST*: schedule the job for future triggering.
+        - *TRIGGER_FIRST*: trigger the job after the configurations were loaded.
+- *isRunning*: required, boolean. Indicates whether the job is running.
+- *executionCount*: required, integer.
+- *lastExecution*: required, object. If the job hasn't been executed yet, the content would be empty.
+    - *startTime*: optional, datetime string("yyyy-mm-ddThh:mm:ss.xxxxxxZ")
+    - *endTime*: optional, datetime string("yyyy-mm-ddThh:mm:ss.xxxxxxZ")
+    - *exitStatus*: optional, integer.
+        - *0*: Last execution success.
+        - *others*: Last execution failed.
+
++ Response 200 (application/json)
+
+        [
             {
-                "storDropCount": 120,
-                "fwdDropCount": 99
+                "id": 1,
+                "name": "Read Register Data",
+                "command": "bin/ansi --read-register-data",
+                "logCount": 30,
+                "schedule":
+                {
+                    "type": "cron",
+                    "time": "0 * * * *"
+                },
+                "isRunning": false,
+                "executionCount": 15,
+                "lastExecution":
+                {
+                    "startTime": "2014-11-24T04:42:17.260861Z",
+                    "endTime": "2014-11-24T04:42:19.073265Z",
+                    "exitStatus": 0
+                }
+            },
+            {
+                "id": 2,
+                "name": "Read Load Profile",
+                "command": "bin/ansi --read-load-profile",
+                "logCount": 30,
+                "schedule":
+                {
+                    "type": "periodical-sec",
+                    "sec": 900,
+                    "mode": "SCHEDULE_FIRST"
+                },
+                "isRunning": false,
+                "executionCount": 0,
+                "lastExecution": {}
+            },
+            {
+                "id": 3,
+                "name": "Read ioLogik E2242",
+                "command": "iologik_e2242",
+                "logCount": 30,
+                "schedule":
+                {
+                    "type": "periodical-sec",
+                    "sec": 1,
+                    "mode": "TRIGGER_FIRST"
+                },
+                "isRunning": false,
+                "executionCount": 0,
+                "lastExecution": {}
             }
-
-# Group Schedule Client Applications
-
-## Schedule CAP Jobs Collection [/mxc/schedules]
-
-### Get all CAP Jobs [GET]
-
-Response Attribute:
-- "id": required, integer, start from 0.
-- "name": required, string.
-- "command": required, string.
-- "logCount": required, integer.
-- "schedule": required, object.
-    - "type": required, string. Should be one of "cron", "periodical-sec" or "startup".
-    - "time": required only for "type=cron", string of cron type.
-    - "sec": required only for "type=periodical-sec", integer. Period second.
-    - "mode": required only for "type=periodical-sec", Should be one of "SCHEDULE_FIRST" or "TRIGGER_FIRST"
-        - "SCHEDULE_FIRST": trigger the job after the configurations were loaded.
-        - "TRIGGER_FIRST": schedule the job for future triggering.
-- "isRunning": required, boolean. **Need to use Browser's REFRESH to get new running status.**
-    - "true": This trigger job is still running.
-    - "false": This trigger job is not running.
-- "executionCount": required, integer.
-- "lastExecution": require, object. If the job not execute yet, the content would empty.
-    - "startTime": optional, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
-    - "endTime": optional, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
-    - "exitStatus": optional, integer.
-        - 0: Last execution success.
-        - others: Last execution fail.
-
-+ Response 200 (application/json)
-
-    + Body
-    
-            [
-                {
-                    "id": 1,
-                    "name": "Read Register Data",
-                    "command": "/var/mxcc/bin/ansi --read-register-data",
-                    "logCount": 30,
-                    "schedule": 
-                    {
-                        "type": "cron",
-                        "time": "0 * * * *"
-                    },
-                    "isRunning": false,
-                    "executionCount": 15,
-                    "lastExecution":
-                    {
-                        "startTime": "2014-11-24T04:42:17.260861Z",
-                        "endTime": "2014-11-24T04:42:19.073265Z",
-                        "exitStatus": 0
-                    }
-                },
-                {
-                    "id": 2,
-                    "name": "Read Load Profile",
-                    "command": "/var/mxcc/bin/ansi --read-load-profile",
-                    "logCount": 30,
-                    "schedule":
-                    {
-                        "type": "periodical-sec",
-                        "sec": 900,
-                        "mode": "SCHEDULE_FIRST"
-                    },
-                    "isRunning": false,
-                    "executionCount": 0,
-                    "lastExecution": {}
-                },
-                {
-                    "id": 3,
-                    "name": "Read ioLogik E2242",
-                    "command": "iologik_e2242",
-                    "logCount": 30,
-                    "schedule":
-                    {
-                        "type": "periodical-sec",
-                        "sec": 1,
-                        "mode": "TRIGGER_FIRST"
-                    },
-                    "isRunning": false,
-                    "executionCount": 0,
-                    "lastExecution": {}
-                },
-                {
-                    "id": 4,
-                    "name": "FWD data",
-                    "command": "mxc_fwd",
-                    "logCount": 30,
-                    "schedule":
-                    {
-                        "type": "startup"
-                    },
-                    "isRunning": false,
-                    "executionCount": 0,
-                    "lastExecution": {}
-                }
-            ]
+        ]
 
 
-### Update CAP Jobs [PUT]
+### Update Multiple Job Configurations [PUT]
 
 Request Attribute:
-- "id": required, integer, start from 0.
-- "name": required, string.
-- "command": required, string.
-- "logCount": required, integer.
-- "schedule": required, object.
-    - "type": required, string. Should be one of "cron", "periodical-sec" or "startup".
-    - "time": required only for "type=cron", string of cron type.
-    - "sec": required only for "type=periodical-sec", integer. Period second.
-    - "mode": required only for "type=periodical-sec", Should be one of "SCHEDULE_FIRST" or "TRIGGER_FIRST"
-        - "SCHEDULE_FIRST": trigger the job after the configurations were loaded.
-        - "TRIGGER_FIRST": schedule the job for future triggering.
-- "isRunning": optional(bundle does not use this attribute), boolean. **Need to use Browser's REFRESH to get new running status.**
-    - "true": This trigger job is still running.
-    - "false": This trigger job is not running.
-- "executionCount": optional(bundle does not use this attribute), integer.
-- "lastExecution": optional(bundle does not use this attribute), object. If the job not execute yet, the content would empty.
-    - "startTime": optional, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
-    - "endTime": optional, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
-    - "exitStatus": optional, integer.
-        - 0: Last execution success.
-        - others: Last execution fail.
+- *id*: required, integer, start from 0.
+- *name*: required, string.
+- *command*: required, string.
+- *logCount*: required, integer.
+- *schedule*: required, object.
+    - *type*: required, string. Should be one of "cron", "periodical-sec" or "startup".
+    - *time*: required when *type="cron"*, cron schedule string.
+    - *sec*: required when *type="periodical-sec"*, integer. Period second.
+    - *mode*: required when *type="periodical-sec"*. Should be one of the following:
+        - *SCHEDULE_FIRST*: schedule the job for future triggering.
+        - *TRIGGER_FIRST*: trigger the job after the configurations were loaded.
+- *isRunning*: optional, boolean. Ignored.
+- *executionCount*: optional, integer. Ignored.
+- *lastExecution*: optional, object. Ignored.
 
 Response Attribute:
-- "id": required, integer, start from 0.
-- "name": required, string.
-- "command": required, string.
-- "logCount": required, integer.
-- "schedule": required, object.
-    - "type": required, string. Should be one of "cron", "periodical-sec" or "startup".
-    - "time": required only for "type=cron", string of cron type.
-    - "sec": required only for "type=periodical-sec", integer. Period second.
-    - "mode": required only for "type=periodical-sec", Should be one of "SCHEDULE_FIRST" or "TRIGGER_FIRST"
-        - "SCHEDULE_FIRST": trigger the job after the configurations were loaded.
-        - "TRIGGER_FIRST": schedule the job for future triggering.
-- "isRunning": required, boolean. **Need to use Browser's REFRESH to get new running status.**
-    - "true": This trigger job is still running.
-    - "false": This trigger job is not running.
-- "executionCount": required, integer.
-- "lastExecution": require, object. If the job not execute yet, the content would empty.
-    - "startTime": optional, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
-    - "endTime": optional, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
-    - "exitStatus": optional, integer.
-        - 0: Last execution success.
-        - others: Last execution fail.
+
+- Same as in *GET* response.
 
 + Request (application/json)
 
-    + Body
-
-
-            [
-                {
-                    "id": 1
-                    "name": "Read Register Data",
-                    "command": "/var/mxcc/bin/ansi --read-register-data",
-                    "logCount": 30,
-                    "schedule":
-                    {
-                        "type": "cron",
-                        "time": "0 * * * *"
-                    }
-                },
-                {
-                    "id": 2,
-                    "name": "Read Load Profile",
-                    "command": "/var/mxcc/bin/ansi --read-load-profile",
-                    "logCount": 30,
-                    "schedule":
-                    {
-                        "type": "periodical-sec",
-                        "sec": 900,
-                        "mode": "SCHEDULE_FIRST"
-                    },
-                    "isRunning": false,
-                    "executionCount": 0,
-                    "lastExecution": {}
-                }
-            ]
-
-
-+ Response 200 (application/json)
-
-    + Body
-    
-
-            [
-                {
-                    "id": 1
-                    "name": "Read Register Data",
-                    "command": "/var/mxcc/bin/ansi --read-register-data",
-                    "logCount": 30,
-                    "schedule":
-                    {
-                        "type": "cron",
-                        "time": "0 * * * *"
-                    },
-                    "isRunning": false,
-                    "executionCount": 15,
-                    "lastExecution":
-                    {
-                        "startTime": "2014-11-24T04:42:17.260861Z",
-                        "endTime": "2014-11-24T04:42:19.073265Z",
-                        "exitStatus": 0
-                    }
-                },
-                {
-                    "id": 2,
-                    "name": "Read Load Profile",
-                    "command": "/var/mxcc/bin/ansi --read-load-profile",
-                    "logCount": 30,
-                    "schedule":
-                    {
-                        "type": "periodical-sec",
-                        "sec": 900,
-                        "mode": "SCHEDULE_FIRST"
-                    },
-                    "isRunning": false,
-                    "executionCount": 0,
-                    "lastExecution": {}
-                }
-            ]
-
-
-### Create New CAP Job [POST]
-
-Request Attribute:
-- "name": required, string.
-- "command": required, string.
-- "logCount": required, integer.
-- "schedule": required, object.
-    - "type": required, string. Should be one of "cron", "periodical-sec" or "startup".
-    - "time": required only for "type=cron", string of cron type.
-    - "sec": required only for "type=periodical-sec", integer. Period second.
-    - "mode": required only for "type=periodical-sec", Should be one of "SCHEDULE_FIRST" or "TRIGGER_FIRST"
-        - "SCHEDULE_FIRST": trigger the job after the configurations were loaded.
-        - "TRIGGER_FIRST": schedule the job for future triggering.
-- "isRunning": optional(bundle does not use this attribute), boolean. **Need to use Browser's REFRESH to get new running status.**
-    - "true": This trigger job is still running.
-    - "false": This trigger job is not running.
-- "executionCount": optional(bundle does not use this attribure), integer.
-- "lastExecution": optional(bundle does not use this attribute), object. If the job not execute yet, the content would empty.
-    - "startTime": optional, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
-    - "endTime": optional, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
-    - "exitStatus": optional, integer.
-        - 0: Last execution success.
-        - others: Last execution fail.
-
-Response Attribute:
-- "id": required, integer, start from 0.
-- "name": required, string.
-- "command": required, string.
-- "logCount": required, integer.
-- "schedule": required, object.
-    - "type": required, string. Should be one of "cron", "periodical-sec" or "startup".
-    - "time": required only for "type=cron", string of cron type.
-    - "sec": required only for "type=periodical-sec", integer. Period second.
-    - "mode": required only for "type=periodical-sec", Should be one of "SCHEDULE_FIRST" or "TRIGGER_FIRST"
-        - "SCHEDULE_FIRST": trigger the job after the configurations were loaded.
-        - "TRIGGER_FIRST": schedule the job for future triggering.
-- "isRunning": required, boolean. **Need to use Browser's REFRESH to get new running status.**
-    - "true": This trigger job is still running.
-    - "false": This trigger job is not running.
-- "executionCount": required, integer.
-- "lastExecution": require, object. If the job not execute yet, the content would empty.
-    - "startTime": optional, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
-    - "endTime": optional, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
-    - "exitStatus": optional, integer.
-        - 0: Last execution success.
-        - others: Last execution fail.
-
-+ Request (application/json)
-
-    + Body
-
+        [
             {
+                "id": 1
                 "name": "Read Register Data",
                 "command": "/var/mxcc/bin/ansi --read-register-data",
                 "logCount": 30,
@@ -345,14 +173,29 @@ Response Attribute:
                     "type": "cron",
                     "time": "0 * * * *"
                 }
+            },
+            {
+                "id": 2,
+                "name": "Read Load Profile",
+                "command": "/var/mxcc/bin/ansi --read-load-profile",
+                "logCount": 30,
+                "schedule":
+                {
+                    "type": "periodical-sec",
+                    "sec": 900,
+                    "mode": "SCHEDULE_FIRST"
+                },
+                "isRunning": false,
+                "executionCount": 0,
+                "lastExecution": {}
             }
+        ]
 
 + Response 200 (application/json)
 
-    + Body
-
+        [
             {
-                "id": 5,
+                "id": 1
                 "name": "Read Register Data",
                 "command": "/var/mxcc/bin/ansi --read-register-data",
                 "logCount": 30,
@@ -362,345 +205,296 @@ Response Attribute:
                     "time": "0 * * * *"
                 },
                 "isRunning": false,
+                "executionCount": 15,
+                "lastExecution":
+                {
+                    "startTime": "2014-11-24T04:42:17.260861Z",
+                    "endTime": "2014-11-24T04:42:19.073265Z",
+                    "exitStatus": 0
+                }
+            },
+            {
+                "id": 2,
+                "name": "Read Load Profile",
+                "command": "/var/mxcc/bin/ansi --read-load-profile",
+                "logCount": 30,
+                "schedule":
+                {
+                    "type": "periodical-sec",
+                    "sec": 900,
+                    "mode": "SCHEDULE_FIRST"
+                },
+                "isRunning": false,
                 "executionCount": 0,
                 "lastExecution": {}
             }
+        ]
 
-## Schedule CAP Jobs [/mxc/schedules/{id}]
+### Create New Job [POST]
 
-### Get CAP Job [GET]
+Request Attribute:
+- *name*: required, string.
+- *command*: required, string.
+- *logCount*: required, integer.
+- *schedule*: required, object.
+    - *type*: required, string. Should be one of "cron", "periodical-sec" or "startup".
+    - *time*: required when *type="cron"*, cron schedule string.
+    - *sec*: required when *type="periodical-sec"*, integer. Period second.
+    - *mode*: required when *type="periodical-sec"*. Should be one of the following:
+        - *SCHEDULE_FIRST*: schedule the job for future triggering.
+        - *TRIGGER_FIRST*: trigger the job after the configurations were loaded.
+- *isRunning*: optional, boolean. Ignored.
+- *executionCount*: optional, integer. Ignored.
+- *lastExecution*: optional, object. Ignored.
 
-+ Response 200 (application/json)
-
-    + Body
-
-            {
-                "id": 1,
-                "name": "Read Register Data",
-                "command": "/var/mxcc/bin/ansi --read-register-data",
-                "schedule": 
-                {
-                    "type": "cron",
-                    "time": "0 * * * *"
-                }
-            }
-
-### Put CAP Job [PUT]
+Response Attribute:
+- Same as *GET* response.
 
 + Request (application/json)
 
-    + Body
-    
+        {
+            "name": "Read Register Data",
+            "command": "/var/mxcc/bin/ansi --read-register-data",
+            "logCount": 30,
+            "schedule":
             {
-                "id": 1,
-                "name": "Read Register Data",
-                "command": "/var/mxcc/bin/ansi --read-register-data",
-                "schedule":
-                {
-                    "type": "cron",
-                    "time": "0 * * * *"
-                }
+                "type": "cron",
+                "time": "0 * * * *"
             }
+        }
 
 + Response 200 (application/json)
 
-    + Body
-    
+        {
+            "id": 5,
+            "name": "Read Register Data",
+            "command": "/var/mxcc/bin/ansi --read-register-data",
+            "logCount": 30,
+            "schedule":
             {
-                "id": 1,
-                "name": "Read Register Data",
-                "command": "/var/mxcc/bin/ansi --read-register-data",
-                "schedule": 
-                {
-                    "type": "cron",
-                    "time": "0 * * * *"
-                }
-            }
+                "type": "cron",
+                "time": "0 * * * *"
+            },
+            "isRunning": false,
+            "executionCount": 0,
+            "lastExecution": {}
+        }
 
-### Delete CAP Job [DELETE]
+## Scheduled Job Configuration [/mxc/schedules/{id}]
+
+### Get Single Job Configuration [GET]
 
 + Response 200 (application/json)
 
-    + Body
-
+        {
+            "id": 1,
+            "name": "Read Register Data",
+            "command": "bin/ansi --read-register-data",
+            "schedule": 
             {
-                "message": "Delete scheduler job on cg-123456789715 successfully."
+                "type": "cron",
+                "time": "0 * * * *"
             }
+        }
 
-## Log List [/mxc/schedules/{sched_id}/logs?page_size={page_size}&page={page}]
+### Update Single Job Configuration [PUT]
+
++ Request (application/json)
+
+        {
+            "id": 1,
+            "name": "Read Register Data",
+            "command": "bin/ansi --read-register-data",
+            "schedule":
+            {
+                "type": "cron",
+                "time": "0 * * * *"
+            }
+        }
+
++ Response 200 (application/json)
+
+        {
+            "id": 1,
+            "name": "Read Register Data",
+            "command": "bin/ansi --read-register-data",
+            "schedule": 
+            {
+                "type": "cron",
+                "time": "0 * * * *"
+            }
+        }
+
+### Delete Single Job Configuration [DELETE]
+
++ Response 200 (application/json)
+
+        {
+            "message": "Delete scheduler job on cg-123456789715 successfully."
+        }
+
+## Log Management [/mxc/schedules/{sched_id}/logs?page_size={page_size}&page={page}]
 
 ### Get Log List [GET]
 
-{page} value starts from 1.
+Query String Arguments:
+- *{page_size}*: Default *30*.
+- *{page}*: Start from *1*. Default *1*.
 
-Logs are ordered by "startTime" in decending order.
+Log list returned is ordered by *startTime* in decending order.
 
 + Response 200 (application/json)
 
-    + Body
+        {
+            "total_count": 40,
+            "page_size": 30,
+            "page": 1,
+            "logs":
+            [
+                {
+                    "id": "20141124045217",
+                    "startTime": "2014-11-24T04:52:17Z",
+                    "endTime": "2014-11-24T04:53:17Z",
+                    "exitStatus": 127
+                },
+                {
+                    "id": "20141124044217",
+                    "startTime": "2014-11-24T04:42:17Z",
+                    "endTime": "2014-11-24T04:43:17Z",
+                    "exitStatus": 0
+                }
+            ]
+        }
 
-            {
-                "total_count": 40,
-                "page_size": 30,
-                "page": 1,
-                "logs":
-                [
-                    {
-                        "id": "20141124045217",
-                        "startTime": "2014-11-24T04:52:17Z",
-                        "endTime": "2014-11-24T04:53:17Z",
-                        "exitStatus": 127
-                    },
-                    {
-                        "id": "20141124044217",
-                        "startTime": "2014-11-24T04:42:17Z",
-                        "endTime": "2014-11-24T04:43:17Z",
-                        "exitStatus": 0
-                    }
-                ]
-            }
+### Retrieve Single Log File [POST]
 
-## Retrieve Logs [/mxc/schedules/{sched_id}/logs/{log_id}/export]
-
-### Upload Log [POST]
+This request causes Cloud Gateway to upload the *Log File* to the designated *url*.
 
 + Request (application/json)
 
-    + Body
-
-            {
-                "url": "https://mxc-cs/log/upload/JEJC9bbc832k1Sc"
-            }
+        {
+            "url": "https://mxc-cs/log/upload/JEJC9bbc832k1Sc"
+        }
 
 + Response 200 (application/json)
 
-    + Body
+        {
+            "startTime": "2014-12-03T04:42:17.260861Z",
+            "endTime": "2014-12-03T04:48:36.992303Z",
+            "url": "https://mxc-cs/log/upload/JEJC9bbc832k1Sc"
+        }
 
-            {
-                "startTime": "2014-12-03T04:42:17.260861Z",
-                "endTime": "2014-12-03T04:48:36.992303Z",
-                "url": "https://mxc-cs/log/upload/JEJC9bbc832k1Sc"
-            }
-
-
-# Group On-demand Client Application Trigger
+# group Trigger Jobs
 After Custom Bundle upload to CG, CG will decompress the Custom Bundle.
 
 But **NO** any Trigger Configuration will be created.
 
 All Trigger Configuration **NEED** be created from WEB by using **POST** API.
 
-## Jobs Collection Setup [/trigger/jobs]
+## Trigger Jobs Configuration [/trigger/jobs]
 
-### Get Job Collection [GET]
+### Get Multiple Job Configurations [GET]
 
 Response Attribute:
-- "id": required, integer, start from 0.
-- "name": required, string.
-- "command": required, string.
-- "logCount": required, integer.
-- "isRunning": required, boolean. **Need to use Browser's REFRESH to get new running status.**
-    - "true": This trigger job is still running.
-    - "false": This trigger job is not running.
-- "executionCount": required, integer.
-- "lastExecution": require, object.
-    - "startTime": optional, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
-    - "endTime": optional, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
-    - "exitStatus": optional, integer.
-        - 0: Last execution success.
-        - others: Last execution fail.
+- *id*: required, integer, start from 0.
+- *name*: required, string.
+- *command*: required, string.
+- *logCount*: required, integer.
+- *isRunning*: required, boolean. Indicates whether the job is running.
+- *executionCount*: required, integer. Number of times the job is executed.
+- *lastExecution*: require, object.
+    - *startTime*: optional, string in *Datetime* format.
+    - *endTime*: optional, string in *Datetime* format.
+    - *exitStatus*: optional, integer.
+        - *0*: Last execution success.
+        - *others*: Last execution fail.
 
 + Response 200 (application/json)
 
-    + Body
-
-            [
+        [
+            {
+                "id": 0,
+                "name": "Read Register Data",
+                "command": "bin/ansi --read-register-data",
+                "logCount": 30,
+                "isRunning": false,
+                "executionCount": 15,
+                "lastExecution":
                 {
-                    "id": 0,
-                    "name": "Read Register Data",
-                    "command": "/var/mxcc/bin/ansi --read-register-data",
-                    "logCount": 30,
-                    "isRunning": false,
-                    "executionCount": 15,
-                    "lastExecution":
-                    {
-                        "startTime": "2014-11-24T04:42:17.260861Z",
-                        "endTime": "2014-11-24T04:42:19.073265Z",
-                        "exitStatus": 0
-                    }
-                },
-                {
-                    "id": 1,
-                    "name": "Read Load Profile",
-                    "command": "/var/mxcc/bin/ansi --read-load-profile",
-                    "logCount": 30,
-                    "isRunning": false,
-                    "executionCount": 0,
-                    "lastExecution": {}
+                    "startTime": "2014-11-24T04:42:17.260861Z",
+                    "endTime": "2014-11-24T04:42:19.073265Z",
+                    "exitStatus": 0
                 }
-            ]
+            },
+            {
+                "id": 1,
+                "name": "Read Load Profile",
+                "command": "bin/ansi --read-load-profile",
+                "logCount": 30,
+                "isRunning": false,
+                "executionCount": 0,
+                "lastExecution": {}
+            }
+        ]
 
-### Update Job Collection [PUT]
+### Update Multiple Job Configurations [PUT]
 All the jobs in CG would be replaced.
 
 Request Attribure:
-- "id": required, integer, start from 0.
-- "name": required, string.
-- "command": required, string.
-- "logCount": required, integer.
-- "isRunngin": optional(bundle does not use this attribute), boolean.
-    - "true": This trigger job is still running.
-    - "false": This trigger job is not running.
-- "executionCount": optiinal(bundle does not use this attribute), integer.
-- "lastExecution": optional(bundle does not use this attribute), object.
-    - "startTime": optional, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
-    - "endTime": optional, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
-    - "exitStatus": optional, integer.
-        - 0: Last execution success.
-        - others: Last execution fail.
+- *id*: required, integer, start from 0.
+- *name*: required, string.
+- *command*: required, string.
+- *logCount*: required, integer.
+- *isRunning*: optional, boolean. Ignored.
+- *executionCount*: optional, integer. Ignored.
+- *lastExecution*: optional, object. Ignored.
 
 Response Attribute:
-- "id": required, integer, start from 0.
-- "name": required, string.
-- "command": required, string.
-- "logCount": required, integer.
-- "isRunngin": required, boolean. **Need to use Browser's REFRESH to get new running status.**
-    - "true": This trigger job is still running.
-    - "false": This trigger job is not running.
-- "executionCount": required, integer.
-- "lastExecution": require, object.
-    - "startTime": optional, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
-    - "endTime": optional, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
-    - "exitStatus": optional, integer.
-        - 0: Last execution success.
-        - others: Last execution fail.
+- Same as *GET* request.
 
 + Request (application/json)
 
-    + Body
-
-            [
-                {
-                    "id": 4,
-                    "name": "Hello world",
-                    "command": "/var/mxcc/bin/ansi --read-register-data",
-                    "isRunning": false,
-                    "logCount": 30,
-                    "executionCount": 0,
-                    "lastExecution": {}
-                },
-                {
-                    "id": 7,
-                    "name": "Read Load Profile",
-                    "command": "/var/mxcc/bin/ansi --read-load-profile",
-                    "logCount": 30,
-                    "executionCount": 15,
-                    "lastExecution":
-                    {
-                        "startTime": "2014-11-24T04:42:17.260861Z",
-                        "endTime": "2014-11-24T04:42:19.073265Z",
-                        "exitStatus": 0
-                    }
-                }
-            ]
-
-+ Response 200 (application/json)
-
-            [
-                {
-                    "id": 4,
-                    "name": "Hello world",
-                    "command": "/var/mxcc/bin/ansi --read-register-data",
-                    "isRunning": false,
-                    "logCount": 30,
-                    "executionCount": 0,
-                    "lastExecution": {}
-                },
-                {
-                    "id": 7,
-                    "name": "Read Load Profile",
-                    "command": "/var/mxcc/bin/ansi --read-load-profile",
-                    "isRunning": false,
-                    "logCount": 30,
-                    "executionCount": 15,
-                    "lastExecution":
-                    {
-                        "startTime": "2014-11-24T04:42:17.260861Z",
-                        "endTime": "2014-11-24T04:42:19.073265Z",
-                        "exitStatus": 0
-                    }
-                }
-            ]
-
-### Create a Job into Job Collection [POST]
-
-Request Attribure:
-- "name": required, string.
-- "command": required, string.
-- "logCount": required, integer.
-- "isRunngin": optional(bundle does not use this attribute), boolean.
-    - "true": This trigger job is still running.
-    - "false": This trigger job is not running.
-- "executionCount": optional(bundle does not use this attribute), integer.
-- "lastExecution": optional(bundle does not use this attribute), object.
-    - "startTime": optional, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
-    - "endTime": optional, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
-    - "exitStatus": optional, integer.
-        - 0: Last execution success.
-        - others: Last execution fail.
-
-Response Attribute:
-- "id": required, integer, start from 0.
-- "name": required, string.
-- "command": required, string.
-- "logCount": required, integer.
-- "isRunngin": required, boolean. **Need to use Browser's REFRESH to get new running status.**
-    - "true": This trigger job is still running.
-    - "false": This trigger job is not running.
-- "executionCount": required, integer.
-- "lastExecution": require, object.
-    - "startTime": optional, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
-    - "endTime": optional, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
-    - "exitStatus": optional, integer.
-        - 0: Last execution success.
-        - others: Last execution fail.
-
-+ Request (application/json)
-
-    + Body
-
+        [
             {
+                "id": 4,
                 "name": "Hello world",
-                "command": "/var/mxcc/bin/ansi --read-load-profile",
-                "logCount": 30,
-            }
-
-+ Response 200 (application/json)
-
-    + Body
-
-            {
-                "id": 8,
-                "name": "Hello world",
-                "command": "/var/mxcc/bin/ansi --read-load-profile",
+                "command": "/var/mxcc/bin/ansi --read-register-data",
                 "isRunning": false,
                 "logCount": 30,
                 "executionCount": 0,
                 "lastExecution": {}
-            }
-
-## Job [/trigger/jobs/{id}]
-
-### Get a Job [GET]
-
-+ Response 200 (application/json)
-
-    + Body
-    
+            },
             {
                 "id": 7,
                 "name": "Read Load Profile",
-                "command": "/var/mxcc/bin/ansi --read-load-profile"
+                "command": "/var/mxcc/bin/ansi --read-load-profile",
+                "logCount": 30,
+                "executionCount": 15,
+                "lastExecution":
+                {
+                    "startTime": "2014-11-24T04:42:17.260861Z",
+                    "endTime": "2014-11-24T04:42:19.073265Z",
+                    "exitStatus": 0
+                }
+            }
+        ]
+
++ Response 200 (application/json)
+
+        [
+            {
+                "id": 4,
+                "name": "Hello world",
+                "command": "/var/mxcc/bin/ansi --read-register-data",
+                "isRunning": false,
+                "logCount": 30,
+                "executionCount": 0,
+                "lastExecution": {}
+            },
+            {
+                "id": 7,
+                "name": "Read Load Profile",
+                "command": "/var/mxcc/bin/ansi --read-load-profile",
                 "isRunning": false,
                 "logCount": 30,
                 "executionCount": 15,
@@ -711,134 +505,172 @@ Response Attribute:
                     "exitStatus": 0
                 }
             }
-            
-### Update a Job [PUT]
+        ]
+
+### Create New Job [POST]
+
+Request Attribure:
+- Same as *PUT* request.
+
+Response Attribute:
+- Same as *GET* request.
 
 + Request (application/json)
 
-    + Body        
-
-            {
-                "id": 7,
-                "name": "Hello world",
-                "command": "/var/mxcc/bin/ansi --read-load-profile"
-                "isRunning": false,
-                "logCount": 30,
-                "executionCount": 15,
-                "lastExecution":
-                {
-                    "startTime": "2014-11-24T04:42:17.260861Z",
-                    "endTime": "2014-11-24T04:42:19.073265Z",
-                    "exitStatus": 0
-                }
-            }
+        {
+            "name": "Hello world",
+            "command": "bin/ansi --read-load-profile",
+            "logCount": 30,
+        }
 
 + Response 200 (application/json)
 
-    + Body
-    
-            {
-                "id": 7,
-                "name": "Read Load Profile",
-                "command": "/var/mxcc/bin/ansi --read-load-profile"
-                "isRunning": false,
-                "logCount": 30,
-                "executionCount": 15,
-                "lastExecution":
-                {
-                    "startTime": "2014-11-24T04:42:17.260861Z",
-                    "endTime": "2014-11-24T04:42:19.073265Z",
-                    "exitStatus": 0
-                }
-            }
+        {
+            "id": 8,
+            "name": "Hello world",
+            "command": "bin/ansi --read-load-profile",
+            "isRunning": false,
+            "logCount": 30,
+            "executionCount": 0,
+            "lastExecution": {}
+        }
 
-### Delete a Job [DELETE]
+## Job [/trigger/jobs/{id}]
+
+### Get Single Job Configuration [GET]
 
 + Response 200 (application/json)
 
-    + Body
-    
-            {
-                "message": "Delete client application on cg-123456789715 successfully."
-            }
-
-## Trigger Job [/trigger/jobs/{id}/trigger]
-
-### Trigger Single Job to execute [POST]
-
-Response Attribute:
-- "startTime": required, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
-- "endTime": required, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
-- "exitStatus": required, integer.
-    - 0: Last execution success.
-    - others: Last execution fail.
-
-+ Response 200 (application/json)
-
-    + Body
-
+        {
+            "id": 7,
+            "name": "Read Load Profile",
+            "command": "bin/ansi --read-load-profile"
+            "isRunning": false,
+            "logCount": 30,
+            "executionCount": 15,
+            "lastExecution":
             {
                 "startTime": "2014-11-24T04:42:17.260861Z",
                 "endTime": "2014-11-24T04:42:19.073265Z",
                 "exitStatus": 0
             }
+        }
 
-## Log List [/trigger/jobs/{job_id}/logs?page_size={page_size}&page={page}]
-
-### Get Log List [GET]
-
-{page} value starts from 1.
-
-Logs are ordered by "startTime" in decending order.
-
-+ Response 200 (application/json)
-
-    + Body
-
-            {
-                "total_count": 40,
-                "page_size": 30,
-                "page": 1,
-                "logs":
-                [
-                    {
-                        "id": "20141124045217",
-                        "startTime": "2014-11-24T04:52:17Z",
-                        "endTime": "2014-11-24T04:53:17Z",
-                        "exitStatus": 127
-                    },
-                    {
-                        "id": "20141124044217",
-                        "startTime": "2014-11-24T04:42:17Z",
-                        "endTime": "2014-11-24T04:43:17Z",
-                        "exitStatus": 0
-                    }
-                ]
-            }
-
-## Retrieve Logs [/trigger/jobs/{job_id}/logs/{log_id}/export]
-
-### Upload Log [POST]
+### Update Single Job Configuration [PUT]
 
 + Request (application/json)
 
-    + Body
-
+        {
+            "id": 7,
+            "name": "Hello world",
+            "command": "bin/ansi --read-load-profile"
+            "isRunning": false,
+            "logCount": 30,
+            "executionCount": 15,
+            "lastExecution":
             {
-                "url": "https://mxc-cs/log/upload/JEJC9bbc832k1Sc"
+                "startTime": "2014-11-24T04:42:17.260861Z",
+                "endTime": "2014-11-24T04:42:19.073265Z",
+                "exitStatus": 0
             }
+        }
 
 + Response 200 (application/json)
 
-    + Body
-
+        {
+            "id": 7,
+            "name": "Read Load Profile",
+            "command": "bin/ansi --read-load-profile"
+            "isRunning": false,
+            "logCount": 30,
+            "executionCount": 15,
+            "lastExecution":
             {
-                "startTime": "2014-12-03T04:42:17.260861Z",
-                "endTime": "2014-12-03T04:48:36.992303Z",
-                "url": "https://mxc-cs/log/upload/JEJC9bbc832k1Sc"
+                "startTime": "2014-11-24T04:42:17.260861Z",
+                "endTime": "2014-11-24T04:42:19.073265Z",
+                "exitStatus": 0
             }
+        }
 
-# Group Custom Bundle Management
+### Delete Single Job [DELETE]
+
++ Response 200 (application/json)
+
+        {
+            "message": "Delete trigger-job on cg-123456789715 successful."
+        }
+
+## On-demand Trigger [/trigger/jobs/{id}/trigger]
+
+### Trigger Single Job to execute [POST]
+
+Response Attribute:
+- *startTime*: required, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
+- *endTime*: required, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
+- *exitStatus*: required, integer.
+    - *0*: Last execution success.
+    - *others*: Last execution fail.
+
++ Response 200 (application/json)
+
+        {
+            "startTime": "2014-11-24T04:42:17.260861Z",
+            "endTime": "2014-11-24T04:42:19.073265Z",
+            "exitStatus": 0
+        }
+
+## Log Management [/trigger/jobs/{job_id}/logs?page_size={page_size}&page={page}]
+
+### Get Log List [GET]
+
+Query String Attributes:
+- {page_size}: Default *30*.
+- {page}: Start from *1*. Default *1*.
+
+Log list returned is ordered by startTime in decending order.
+
++ Response 200 (application/json)
+
+        {
+            "total_count": 40,
+            "page_size": 30,
+            "page": 1,
+            "logs":
+            [
+                {
+                    "id": "20141124045217",
+                    "startTime": "2014-11-24T04:52:17Z",
+                    "endTime": "2014-11-24T04:53:17Z",
+                    "exitStatus": 127
+                },
+                {
+                    "id": "20141124044217",
+                    "startTime": "2014-11-24T04:42:17Z",
+                    "endTime": "2014-11-24T04:43:17Z",
+                    "exitStatus": 0
+                }
+            ]
+        }
+
+### Retrieve Single Log File [POST]
+
+This request causes Cloud Gateway to upload the *Log File* to the designated *url*.
+
++ Request (application/json)
+
+        {
+            "url": "https://mxc-cs/log/upload/JEJC9bbc832k1Sc"
+        }
+
++ Response 200 (application/json)
+
+        {
+            "startTime": "2014-12-03T04:42:17.260861Z",
+            "endTime": "2014-12-03T04:48:36.992303Z",
+            "url": "https://mxc-cs/log/upload/JEJC9bbc832k1Sc"
+        }
+
+# group Custom Bundle Management
 
 ## Custom Bundle [/mxc/custom-bundle]
 
@@ -848,49 +680,41 @@ Get information about currently deployed client-bundle.
 
 + Response 200 (application/json)
 
-    + Body
-
-            {
-                "name": "my-application-bundle.tgz",
-                "url": "https://mxc-cs/client-bundles/UD63CVU7QPLE"
-            }
+        {
+            "name": "my-application-bundle.tgz",
+            "url": "https://mxc-cs/client-bundles/UD63CVU7QPLE"
+        }
 
 ## Deploy Custom Bundle [/mxc/custom-bundle/update]
 
-### Start Deployment [POST]
+### Request Deployment [POST]
 
 Starting a request while a previous request is in progress, results in error.
 
 + Request (application/json)
 
-    + Body
-
-            {
-                "name": "my-application-bundle.tgz",
-                "url": "https://mxc-cs/client-bundles/UD63CVU7QPLE"
-            }
+        {
+            "name": "my-application-bundle.tgz",
+            "url": "https://mxc-cs/client-bundles/UD63CVU7QPLE"
+        }
 
 + Response 200 (application/json)
 
 ### Get Deployment Status [GET]
 
-"progress" is a float value indicating overall progress, while 1.0 indicates complete.
-
-"status" can be: "idle", "inprogress", "failed".
+- *progress*: required, float. Indcating overall progress, *1.0* indicates complete.
+- *status*: required, string. Can be one of "idle", "inprogress", "failed".
 
 + Response 200 (application/json)
 
-    + Body
+        {
+            "name": "my-application-bundle.tgz",
+            "url": "https://mxc-cs/client-bundles/UD63CVU7QPLE",
+            "progress": 0.39,
+            "status": "inprogress"
+        }
 
-            {
-                "name": "my-application-bundle.tgz",
-                "url": "https://mxc-cs/client-bundles/UD63CVU7QPLE",
-                "progress": 0.39,
-                "status": "inprogress"
-            }
-            
-
-# Group Manage Groups in CS
+# group Manage Groups in CS
 
 ## Groups Collection [/mxcs/groups?page_size={page_size}&page={page}]
 
