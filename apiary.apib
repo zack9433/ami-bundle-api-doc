@@ -11,23 +11,23 @@ Resources provided by Cloud Server are categorized in */mxcs/** related resource
 
 ## Date Format
 
-date  = year "-" month "-" day
-year  = 4DIGIT
-month = 2DIGIT
-day   = 2DIGIT
+    date  = year "-" month "-" day
+    year  = 4DIGIT
+    month = 2DIGIT
+    day   = 2DIGIT
 
 ## Datetime Format
 
-datetime = date "T" time "Z"
-date     = year "-" month "-" day
-year     = 4DIGIT
-month    = 2DIGIT
-day      = 2DIGIT
-time     = hour ":" minute ":" second 0*1("." fragment)
-hour     = 2DIGIT
-minute   = 2DIGIT
-second   = 2DIGIT
-fragment = 1*6DIGIT
+    datetime = date "T" time "Z"
+    date     = year "-" month "-" day
+    year     = 4DIGIT
+    month    = 2DIGIT
+    day      = 2DIGIT
+    time     = hour ":" minute ":" second 0*1("." fragment)
+    hour     = 2DIGIT
+    minute   = 2DIGIT
+    second   = 2DIGIT
+    fragment = 1*6DIGIT
 
 # group MXC Settings
 
@@ -627,13 +627,21 @@ Response Attributes:
 ## Job [/mxc/triggers/{id}]
 
 Resource Attributes:
-(fixme)
+- id: integer. Trigger ID.
 
 ### Get Single Job Configuration [GET]
 (not implemented yet)
 
 Response Attributes:
-(fixme)
+- *name*: required, string.
+- *command*: required, string.
+- *isRunning*: required, boolean.
+- *logCount*: required, integer.
+- *executionCount*: required, integer.
+- *lastExecution*: required, object.
+    - *startTime*: optional, string in *Datetime* format.
+    - *endTime*: optional, string in *Datetime* format.
+    - *exitStatus*: optional, integer.
 
 + Response 200 (application/json)
 
@@ -655,18 +663,23 @@ Response Attributes:
 (not implemented yet)
 
 Request Attributes:
-(fixme)
+- *name*: required, string.
+- *command*: required, string.
+- *logCount*: required, integer.
+- *isRunning*: optional, boolean. Ignored.
+- *executionCount*: optional, integer. Ignored.
+- *lastExecution*: optional, object. Ignored.
 
 Response Attributes:
-(fixme)
+- Same as *GET* response.
 
 + Request (application/json)
 
         {
             "name": "Hello world",
             "command": "bin/ansi --read-load-profile"
-            "isRunning": false,
             "logCount": 30,
+            "isRunning": false,
             "executionCount": 15,
             "lastExecution":
             {
@@ -703,7 +716,7 @@ Response Attributes:
 ## On-demand Trigger [/mxc/triggers/{id}/trigger]
 
 Resource Attributes:
-(fixme)
+- *id*: integer. Trigger ID.
 
 ### Trigger Single Job to execute [POST]
 
@@ -711,8 +724,6 @@ Response Attributes:
 - *startTime*: required, string in *Datetime* format.
 - *endTime*: required, string in *Datetime* format.
 - *exitStatus*: required, integer.
-    - *0*: Last execution success.
-    - *others*: Last execution fail.
 
 + Response 200 (application/json)
 
@@ -725,7 +736,7 @@ Response Attributes:
 ## Log Management [/mxc/triggers/{id}/logs?pageSize={pageSize}&page={page}]
 
 Resource Attributes:
-(fixme)
+- *id*: integer. Trigger ID.
 
 ### Get Log List [GET]
 
@@ -734,7 +745,16 @@ Query Attributes:
 - *page*: optional, integer. Start from *1*. Default *1*.
 
 Response Attributes:
-(fixme)
+- *totalCount*: required, integer.
+- *pageSize*: required, integer.
+- *page*: required, integer.
+- *logList*: required, object list.
+    - *id*: required, string. Log ID.
+    - *startTime*: required, string in *Datetime* format.
+    - *endTime*: required, string in *Datetime* format.
+    - *exitStatus*: required, integer.
+        - *0*: success.
+        - *others*: failure.
 
 Log list returned is ordered by startTime in decending order.
 
@@ -744,7 +764,7 @@ Log list returned is ordered by startTime in decending order.
             "totalCount": 40,
             "pageSize": 30,
             "page": 1,
-            "logs":
+            "logList":
             [
                 {
                     "id": "20141124045217",
@@ -764,15 +784,18 @@ Log list returned is ordered by startTime in decending order.
 ## Export Log Files [/mxc/triggers/{trigger_id}/logs/{log_id}/export]
 
 Resource Attributes:
-(fixme)
+- *trigger_id*: integer.
+- *log_id*: integer.
 
 ### Retrieve Single Log File [POST]
 
 Request Attributes:
-(fixme)
+- *url*: required, string.
 
 Response Attributes:
-(fixme)
+- *startTime*: required, string in *Datetime* format.
+- *endTime*: required, string in *Datetime* format.
+- *url*: required, string.
 
 This request causes Cloud Gateway to upload the *Log File* to the designated *url*.
 
@@ -797,7 +820,8 @@ This request causes Cloud Gateway to upload the *Log File* to the designated *ur
 ### Get Custom Bundle Information [GET]
 
 Response Attributes:
-(fixme)
+- *name*: required, string.
+- *url*: required, string.
 
 Get information about currently deployed client-bundle.
 
@@ -813,10 +837,8 @@ Get information about currently deployed client-bundle.
 ### Request Deployment [POST]
 
 Request Attributes:
-(fixme)
-
-Reponse Attributes:
-(fixme)
+- *name*: required, string.
+- *url*: required, string.
 
 Starting a request while a previous request is in progress, results in error.
 
@@ -832,7 +854,8 @@ Starting a request while a previous request is in progress, results in error.
 ### Get Deployment Status [GET]
 
 Response Attributes:
-(fixme)
+- *name*: required, string.
+- *url*: required, string.
 - *progress*: required, float. Indcating overall progress, *1.0* indicates complete.
 - *status*: required, string. Can be one of "idle", "inprogress", "failed".
 
@@ -1059,7 +1082,7 @@ Response Attributes:
 - *page*: required, integer.
 - *cgList*: required, object list.
     - *name*: required. CG ID of each authorized CG.
-    - *status*: required, string([online|offline])
+    - *status*: required, string. Can be "online" or "offline".
 
 + Response 200 (application/json)
 
@@ -1109,7 +1132,7 @@ Resource Attributes:
 ### Get Cloud Gateway Information [GET]
 
 Response Attributes:
-- *status*: required, string([online|offline]).
+- *status*: required, string. Can be "online" or "offline".
 - *equipmentTotalCount*: required, integer. Number of equipments, related to CG.
 - *equipmentOnlineCount*: required, integer. Number of equipments, related to CG, that are currently online.
 
@@ -1119,6 +1142,144 @@ Response Attributes:
             "status": "online",
             "equipmentTotalCount": 20
             "equipmentOnlineCount": 15,
+        }
+
+## Cloud Gateway Meta Information Management [/mxcs/cgs/{cg_name}/metas]
+
+Resource Attributes:
+- *cg_name*: required. ID of the CG to be queried.
+
+Query Attributes:
+- *pageSize*: optional, integer. Default *30*.
+- *page*: optional, integer. Default *1*.
+
+### Get Meta Information [GET]
+
+Response Attributes:
+- *key*: required, string.
+- *value*: required, string.
+
+Returned key-value list is sorted by *key*.
+
++ Response 200 (application/json)
+
+        [
+            {
+                "key": "latitude",
+                "value": "41.40338"
+            },
+            {
+                "key": "longitude",
+                "value": "2.17403"
+            }
+        ]
+
+### Replace All Meta Information [PUT]
+
+Request Attriutes:
+- *key*: required, string.
+- *value*: required, string.
+
+Response Attributes:
+- Same as *GET* response.
+
++ Request (application/json)
+
+        [
+            {
+                "key": "latitude",
+                "value": "41.40338"
+            },
+            {
+                "key": "longitude",
+                "value": "2.17403"
+            }
+        ]
+
++ Response 200 (application/json)
+
+        [
+            {
+                "key": "latitude",
+                "value": "41.40338"
+            },
+            {
+                "key": "longitude",
+                "value": "2.17403"
+            }
+        ]
+
+### Create New Key Value [POST]
+
+Request Attriutes:
+- Same as *PUT* request.
+
+Response Attributes:
+- Same as *GET* response.
+
++ Request (application/json)
+
+        {
+            "key": "latitude",
+            "value": "41.40338"
+        }
+
++ Response 200 (application/json)
+
+        [
+            {
+                "key": "latitude",
+                "value": "41.40338"
+            },
+            {
+                "key": "longitude",
+                "value": "2.17403"
+            }
+        ]
+
+## Single Meta Key Value [/mxcs/cgs/{cg_name}/metas/{key}]
+
+Resource Attributes:
+- *cg_name*: string.
+- *key*: string.
+
+### Get Single Key Value [GET]
+
+Response Attributes:
+- *value*: required, string.
+
++ Response 200 (application/json)
+
+        {
+            "value": "41.40338"
+        }
+
+### Update Single Key Value [PUT]
+
+Request Attributes:
+- *value*: required, string.
+
+Response Attributes:
+- Same as *GET* response.
+
++ Request (application/json)
+
+        {
+            "value": "41.40338"
+        }
+
++ Response 200 (application/json)
+
+        {
+            "value": "41.40338"
+        }
+
+### Delete Single Key Value [PUT]
+
++ Response 200 (application/json)
+
+        {
+            "message": "Delete {key} successful."
         }
 
 ### Delete Cloud Gateway [DELETE]
@@ -1173,12 +1334,12 @@ Response Attributes:
 ## Single Equipment [/mxcs/equipments/{equipment_name}]
 
 Resource Attributes:
-(fixme)
+- *equipment_name*: string.
 
 ### Get Specific Equipment Information [GET]
 
 Response Attributes:
-- *status*: required, string([online|offline])
+- *status*: required, string. Can either be "online" or "offline".
 - *readingCount*: required, integer. Number of Readings reported by this Equipment.
 
 + Response 200 (application/json)
