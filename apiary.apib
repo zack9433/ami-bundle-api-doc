@@ -7,26 +7,57 @@ Resources provided by Cloud Gateway are categorized in */mxc/** related resource
 
 Resources provided by Cloud Server are categorized in */mxcs/** related resources.
 
+# Common Notations
+
+## Date Format
+
+date  = year "-" month "-" day
+year  = 4DIGIT
+month = 2DIGIT
+day   = 2DIGIT
+
+## Datetime Format
+
+datetime = date "T" time "Z"
+date     = year "-" month "-" day
+year     = 4DIGIT
+month    = 2DIGIT
+day      = 2DIGIT
+time     = hour ":" minute ":" second 0*1("." fragment)
+hour     = 2DIGIT
+minute   = 2DIGIT
+second   = 2DIGIT
+fragment = 1*6DIGIT
+
 # group MXC Settings
 
 ## MXC Configuration [/mxc/config]
 
 ### Get Configuration [GET]
 
+Response Attributes:
+- *sensorDataForwardCron*: required, string.
+- *sensorDataExpireTimeSec*: required, integer.
+
 + Response 200 (application/json)
 
         {
-            "aliveReportPeriodSec": 30,
             "sensorDataForwardCron": "* * * * *",
             "sensorDataExpireTimeSec": 86400
         }
 
 ### Update Configuration [PUT]
 
+Request Attributes:
+- *sensorDataForwardCron*: required, string.
+- *sensorDataExpireTimeSec*: required, integer.
+
+Response Attributes:
+- Same as *GET* response.
+
 + Request (application/json)
 
         {
-            "aliveReportPeriodSec": 30,
             "sensorDataForwardCron": "* * * * *",
             "sensorDataExpireTimeSec": 86400
         }
@@ -34,7 +65,6 @@ Resources provided by Cloud Server are categorized in */mxcs/** related resource
 + Response 200 (application/json)
 
         {
-            "aliveReportPeriodSec": 30,
             "sensorDataForwardCron": "* * * * *",
             "sensorDataExpireTimeSec": 86400
         }
@@ -45,7 +75,7 @@ Resources provided by Cloud Server are categorized in */mxcs/** related resource
 
 ### Get Drop Count [GET]
 
-Response Attribute:
+Response Attributes:
 - *storDropCount*: required, integer. Number of Readings dropped, caused by out-of-storage.
 - *fwdDropCount*: required, integer. Number of Readings dropped, caused by readings-expired.
 
@@ -62,8 +92,8 @@ Response Attribute:
 
 ### Get Multiple Job Configurations [GET]
 
-Response Attribute:
-- *id*: required, integer, start from 0.
+Response Attributes:
+- *id*: required, integer, starting from 0.
 - *name*: required, string.
 - *command*: required, string.
 - *logCount*: required, integer.
@@ -77,8 +107,8 @@ Response Attribute:
 - *isRunning*: required, boolean. Indicates whether the job is running.
 - *executionCount*: required, integer.
 - *lastExecution*: required, object. If the job hasn't been executed yet, the content would be empty.
-    - *startTime*: optional, datetime string("yyyy-mm-ddThh:mm:ss.xxxxxxZ")
-    - *endTime*: optional, datetime string("yyyy-mm-ddThh:mm:ss.xxxxxxZ")
+    - *startTime*: optional, string in Datetime format.
+    - *endTime*: optional, string in Datetime format.
     - *exitStatus*: optional, integer.
         - *0*: Last execution success.
         - *others*: Last execution failed.
@@ -140,8 +170,8 @@ Response Attribute:
 
 ### Update Multiple Job Configurations [PUT]
 
-Request Attribute:
-- *id*: required, integer, start from 0.
+Request Attributes:
+- *id*: required, integer, starting from 0.
 - *name*: required, string.
 - *command*: required, string.
 - *logCount*: required, integer.
@@ -156,8 +186,7 @@ Request Attribute:
 - *executionCount*: optional, integer. Ignored.
 - *lastExecution*: optional, object. Ignored.
 
-Response Attribute:
-
+Response Attributes:
 - Same as in *GET* response.
 
 + Request (application/json)
@@ -166,7 +195,7 @@ Response Attribute:
             {
                 "id": 1
                 "name": "Read Register Data",
-                "command": "/var/mxcc/bin/ansi --read-register-data",
+                "command": "bin/ansi --read-register-data",
                 "logCount": 30,
                 "schedule":
                 {
@@ -177,7 +206,7 @@ Response Attribute:
             {
                 "id": 2,
                 "name": "Read Load Profile",
-                "command": "/var/mxcc/bin/ansi --read-load-profile",
+                "command": "bin/ansi --read-load-profile",
                 "logCount": 30,
                 "schedule":
                 {
@@ -197,7 +226,7 @@ Response Attribute:
             {
                 "id": 1
                 "name": "Read Register Data",
-                "command": "/var/mxcc/bin/ansi --read-register-data",
+                "command": "bin/ansi --read-register-data",
                 "logCount": 30,
                 "schedule":
                 {
@@ -216,7 +245,7 @@ Response Attribute:
             {
                 "id": 2,
                 "name": "Read Load Profile",
-                "command": "/var/mxcc/bin/ansi --read-load-profile",
+                "command": "bin/ansi --read-load-profile",
                 "logCount": 30,
                 "schedule":
                 {
@@ -232,7 +261,7 @@ Response Attribute:
 
 ### Create New Job [POST]
 
-Request Attribute:
+Request Attributes:
 - *name*: required, string.
 - *command*: required, string.
 - *logCount*: required, integer.
@@ -247,14 +276,14 @@ Request Attribute:
 - *executionCount*: optional, integer. Ignored.
 - *lastExecution*: optional, object. Ignored.
 
-Response Attribute:
+Response Attributes:
 - Same as *GET* response.
 
 + Request (application/json)
 
         {
             "name": "Read Register Data",
-            "command": "/var/mxcc/bin/ansi --read-register-data",
+            "command": "bin/ansi --read-register-data",
             "logCount": 30,
             "schedule":
             {
@@ -268,7 +297,7 @@ Response Attribute:
         {
             "id": 5,
             "name": "Read Register Data",
-            "command": "/var/mxcc/bin/ansi --read-register-data",
+            "command": "bin/ansi --read-register-data",
             "logCount": 30,
             "schedule":
             {
@@ -282,29 +311,60 @@ Response Attribute:
 
 ## Scheduled Job Configuration [/mxc/schedules/{id}]
 
+Resource Attributes:
+- *id*: integer. Schedule ID.
+
 ### Get Single Job Configuration [GET]
+
+Response Attributes:
+- *name*: required, string.
+- *command*: required, string. Shell command to be executed.
+- *logCount*: required, integer. Number of logs to keep on Cloud Gateways.
+- *schedule*: required, object.
+    - *type*: required, string. Should be one of "cron", "periodical-sec" or "startup".
+    - *time*: required when *type="cron"*, cron schedule string.
+    - *sec*: required when *type="periodical-sec"*, integer. Period second.
+    - *mode*: required when *type="periodical-sec"*. Should be one of the following:
+        - *SCHEDULE_FIRST*: schedule the job for future triggering.
+        - *TRIGGER_FIRST*: trigger the job after the configurations were loaded.
+- *isRunning*: required, boolean. Indicates whether the job is running.
+- *executionCount*: required, integer.
+- *lastExecution*: required, object. If the job hasn't been executed yet, the content would be empty.
+    - *startTime*: optional, string in Datetime format.
+    - *endTime*: optional, string in Datetime format.
+    - *exitStatus*: optional, integer.
+        - *0*: Last execution success.
+        - *others*: Last execution failed.
 
 + Response 200 (application/json)
 
         {
-            "id": 1,
             "name": "Read Register Data",
             "command": "bin/ansi --read-register-data",
+            "logCount": 30,
             "schedule":
             {
                 "type": "cron",
                 "time": "0 * * * *"
-            }
+            },
+            "isRunning": false,
+            "executionCount": 0,
+            "lastExecution": {}
         }
 
 ### Update Single Job Configuration [PUT]
 
+Request Attributes:
+
+Response Attributes:
+- Same as *GET* response.
+
 + Request (application/json)
 
         {
-            "id": 1,
             "name": "Read Register Data",
             "command": "bin/ansi --read-register-data",
+            "logCount": 30,
             "schedule":
             {
                 "type": "cron",
@@ -315,14 +375,17 @@ Response Attribute:
 + Response 200 (application/json)
 
         {
-            "id": 1,
             "name": "Read Register Data",
             "command": "bin/ansi --read-register-data",
+            "logCount": 30,
             "schedule":
             {
                 "type": "cron",
                 "time": "0 * * * *"
-            }
+            },
+            "isRunning": false,
+            "executionCount": 0,
+            "lastExecution": {}
         }
 
 ### Delete Single Job Configuration [DELETE]
@@ -333,23 +396,35 @@ Response Attribute:
             "message": "Delete scheduler job on cg-123456789715 successfully."
         }
 
-## Log Management [/mxc/schedules/{sched_id}/logs?page_size={page_size}&page={page}]
+## Log Management [/mxc/schedules/{sched_id}/logs?pageSize={pageSize}&page={page}]
 
 ### Get Log List [GET]
 
-Query String Arguments:
-- *{page_size}*: Default *30*.
-- *{page}*: Start from *1*. Default *1*.
+Query Attributes:
+- *pageSize*: Default *30*.
+- *page*: Start from *1*. Default *1*.
+
+Response Attributes:
+- *totalCount*: required, integer. Number of items in the list.
+- *pageSize*: required, integer.
+- *page*: required, integer.
+- *logList*: required, object list.
+    - *id*: required, string. Log ID.
+    - *startTime*: required, string in Datetime format.
+    - *endTime*: required, string in Datetime format.
+    - *exitStatus*: required, integer.
+        - *0*: success.
+        - *others*: failure.
 
 Log list returned is ordered by *startTime* in decending order.
 
 + Response 200 (application/json)
 
         {
-            "total_count": 40,
-            "page_size": 30,
+            "totalCount": 40,
+            "pageSize": 30,
             "page": 1,
-            "logs":
+            "logList":
             [
                 {
                     "id": "20141124045217",
@@ -366,9 +441,23 @@ Log list returned is ordered by *startTime* in decending order.
             ]
         }
 
+## Export Log Files [/mxc/schedules/{sched_id}/logs/{log_id}/export]
+
+Resource Attributes:
+- *sched_id*: integer. Schedule ID.
+- *log_id*: string. Log ID.
+
 ### Retrieve Single Log File [POST]
 
-This request causes Cloud Gateway to upload the *Log File* to the designated *url*.
+This request causes Cloud Gateway to *POST* the *Log File* to the designated *url*.
+
+Request Attributes:
+- *url*: required, string. URL given for Cloud Gateway to *POST* the log file to.
+
+Response Attributes:
+- *startTime*: required, string in *Datetime* format. Time when *POST* started.
+- *endTime*: required, string in *Datetime* format. Time when *POST* ended.
+- *url*: required, string.
 
 + Request (application/json)
 
@@ -391,12 +480,12 @@ But **NO** any Trigger Configuration will be created.
 
 All Trigger Configuration **NEED** be created from WEB by using **POST** API.
 
-## Trigger Jobs Configuration [/trigger/jobs]
+## Trigger Jobs Configuration [/mxc/triggers]
 
 ### Get Multiple Job Configurations [GET]
 
-Response Attribute:
-- *id*: required, integer, start from 0.
+Response Attributes:
+- *id*: required, integer, starting from 0.
 - *name*: required, string.
 - *command*: required, string.
 - *logCount*: required, integer.
@@ -441,7 +530,7 @@ Response Attribute:
 All the jobs in CG would be replaced.
 
 Request Attribure:
-- *id*: required, integer, start from 0.
+- *id*: required, integer, starting from 0.
 - *name*: required, string.
 - *command*: required, string.
 - *logCount*: required, integer.
@@ -449,7 +538,7 @@ Request Attribure:
 - *executionCount*: optional, integer. Ignored.
 - *lastExecution*: optional, object. Ignored.
 
-Response Attribute:
+Response Attributes:
 - Same as *GET* request.
 
 + Request (application/json)
@@ -458,7 +547,7 @@ Response Attribute:
             {
                 "id": 4,
                 "name": "Hello world",
-                "command": "/var/mxcc/bin/ansi --read-register-data",
+                "command": "bin/ansi --read-register-data",
                 "isRunning": false,
                 "logCount": 30,
                 "executionCount": 0,
@@ -467,7 +556,7 @@ Response Attribute:
             {
                 "id": 7,
                 "name": "Read Load Profile",
-                "command": "/var/mxcc/bin/ansi --read-load-profile",
+                "command": "bin/ansi --read-load-profile",
                 "logCount": 30,
                 "executionCount": 15,
                 "lastExecution":
@@ -485,7 +574,7 @@ Response Attribute:
             {
                 "id": 4,
                 "name": "Hello world",
-                "command": "/var/mxcc/bin/ansi --read-register-data",
+                "command": "bin/ansi --read-register-data",
                 "isRunning": false,
                 "logCount": 30,
                 "executionCount": 0,
@@ -494,7 +583,7 @@ Response Attribute:
             {
                 "id": 7,
                 "name": "Read Load Profile",
-                "command": "/var/mxcc/bin/ansi --read-load-profile",
+                "command": "bin/ansi --read-load-profile",
                 "isRunning": false,
                 "logCount": 30,
                 "executionCount": 15,
@@ -509,18 +598,18 @@ Response Attribute:
 
 ### Create New Job [POST]
 
-Request Attribure:
+Request Attributes:
 - Same as *PUT* request.
 
-Response Attribute:
-- Same as *GET* request.
+Response Attributes:
+- Same as *GET* response.
 
 + Request (application/json)
 
         {
             "name": "Hello world",
             "command": "bin/ansi --read-load-profile",
-            "logCount": 30,
+            "logCount": 30
         }
 
 + Response 200 (application/json)
@@ -535,14 +624,20 @@ Response Attribute:
             "lastExecution": {}
         }
 
-## Job [/trigger/jobs/{id}]
+## Job [/mxc/triggers/{id}]
+
+Resource Attributes:
+(fixme)
 
 ### Get Single Job Configuration [GET]
+(not implemented yet)
+
+Response Attributes:
+(fixme)
 
 + Response 200 (application/json)
 
         {
-            "id": 7,
             "name": "Read Load Profile",
             "command": "bin/ansi --read-load-profile"
             "isRunning": false,
@@ -557,11 +652,17 @@ Response Attribute:
         }
 
 ### Update Single Job Configuration [PUT]
+(not implemented yet)
+
+Request Attributes:
+(fixme)
+
+Response Attributes:
+(fixme)
 
 + Request (application/json)
 
         {
-            "id": 7,
             "name": "Hello world",
             "command": "bin/ansi --read-load-profile"
             "isRunning": false,
@@ -578,7 +679,6 @@ Response Attribute:
 + Response 200 (application/json)
 
         {
-            "id": 7,
             "name": "Read Load Profile",
             "command": "bin/ansi --read-load-profile"
             "isRunning": false,
@@ -600,13 +700,16 @@ Response Attribute:
             "message": "Delete trigger-job on cg-123456789715 successful."
         }
 
-## On-demand Trigger [/trigger/jobs/{id}/trigger]
+## On-demand Trigger [/mxc/triggers/{id}/trigger]
+
+Resource Attributes:
+(fixme)
 
 ### Trigger Single Job to execute [POST]
 
-Response Attribute:
-- *startTime*: required, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
-- *endTime*: required, datetime string(yyyy-mm-ddThh:mm:ss.xxxxxZ)
+Response Attributes:
+- *startTime*: required, string in *Datetime* format.
+- *endTime*: required, string in *Datetime* format.
 - *exitStatus*: required, integer.
     - *0*: Last execution success.
     - *others*: Last execution fail.
@@ -619,21 +722,27 @@ Response Attribute:
             "exitStatus": 0
         }
 
-## Log Management [/trigger/jobs/{job_id}/logs?page_size={page_size}&page={page}]
+## Log Management [/mxc/triggers/{id}/logs?pageSize={pageSize}&page={page}]
+
+Resource Attributes:
+(fixme)
 
 ### Get Log List [GET]
 
-Query String Attributes:
-- {page_size}: Default *30*.
-- {page}: Start from *1*. Default *1*.
+Query Attributes:
+- *pageSize*: optional, integer. Default *30*.
+- *page*: optional, integer. Start from *1*. Default *1*.
+
+Response Attributes:
+(fixme)
 
 Log list returned is ordered by startTime in decending order.
 
 + Response 200 (application/json)
 
         {
-            "total_count": 40,
-            "page_size": 30,
+            "totalCount": 40,
+            "pageSize": 30,
             "page": 1,
             "logs":
             [
@@ -652,7 +761,18 @@ Log list returned is ordered by startTime in decending order.
             ]
         }
 
+## Export Log Files [/mxc/triggers/{trigger_id}/logs/{log_id}/export]
+
+Resource Attributes:
+(fixme)
+
 ### Retrieve Single Log File [POST]
+
+Request Attributes:
+(fixme)
+
+Response Attributes:
+(fixme)
 
 This request causes Cloud Gateway to upload the *Log File* to the designated *url*.
 
@@ -676,6 +796,9 @@ This request causes Cloud Gateway to upload the *Log File* to the designated *ur
 
 ### Get Custom Bundle Information [GET]
 
+Response Attributes:
+(fixme)
+
 Get information about currently deployed client-bundle.
 
 + Response 200 (application/json)
@@ -688,6 +811,12 @@ Get information about currently deployed client-bundle.
 ## Deploy Custom Bundle [/mxc/custom-bundle/update]
 
 ### Request Deployment [POST]
+
+Request Attributes:
+(fixme)
+
+Reponse Attributes:
+(fixme)
 
 Starting a request while a previous request is in progress, results in error.
 
@@ -702,6 +831,8 @@ Starting a request while a previous request is in progress, results in error.
 
 ### Get Deployment Status [GET]
 
+Response Attributes:
+(fixme)
 - *progress*: required, float. Indcating overall progress, *1.0* indicates complete.
 - *status*: required, string. Can be one of "idle", "inprogress", "failed".
 
@@ -716,23 +847,23 @@ Starting a request while a previous request is in progress, results in error.
 
 # group Manage Groups in CS
 
-## Groups Collection [/mxcs/groups?page_size={page_size}&page={page}]
+## Groups Collection [/mxcs/groups?pageSize={pageSize}&page={page}]
 
-Query Attribute:
+Query Attributes:
 - page: optional, integer. Default *1*.
-- page_size: optional, integer. Default *10*.
+- pageSize: optional, integer. Default *30*.
 
 ### Get Groups List [GET]
 
-Response Attribute:
+Response Attributes:
 - *totalCount*: required, integer.
 - *pageSize*: required, integer.
 - *page*: required, integer.
-- *date*: required, list type. (If no groups will return [])
+- *groupList*: required, object list.
     - *gid*: required, integer. Group ID. (gid=1, type=gateway) != (gid=1, type=equipmet) they are 2 different resource.
     - *name*: required, string. Group name.
     - *type*: required, string([gateways|equipments]). Group item's type.
-    - *list*: required, string list. Either GatewayIDs or EquipmentIDs, according to *type*.
+    - *itemList*: required, string list. Either GatewayIDs or EquipmentIDs, according to *type*.
 
 + Response 200 (application/json)
 
@@ -740,22 +871,22 @@ Response Attribute:
             "totalCount": 2,
             "pageSize": 10,
             "page": 1,
-            "data": [
+            "groupList": [
                 {
                     "gid": 1,
                     "name": "CG_Group",
                     "type": "gateways",
-                    "list": [
+                    "itemList": [
                         "cg-0090E8000001",
                         "cg-0090E8000002",
                         "cg-0090E8000003"
                     ]
                 },
                 {
-                    "gid":1,
+                    "gid": 1,
                     "name": "Eq_Group",
                     "type": "equipments",
-                    "list": [
+                    "itemList": [
                         "uc-8100-0090E8000001",
                         "iologik-e2243-1",
                         "uc-8100-0090E8000002",
@@ -769,23 +900,23 @@ Response Attribute:
 
 ### Create New Group [POST]
 
-Request Attribute:
+Request Attributes:
 - *name*: required, string. Group name.
 - *type*: required, string([gateways|equipments]). Group item's type.
-- *list*: required, string list.
+- *itemList*: required, string list.
 
-Response Attribute:
+Response Attributes:
 - *gid*: required, integer. Group ID. (gid=1, type=gateway) != (gid=1, type=equipmet) they are 2 different resource.
 - *name*: required, string. Group name.
 - *type*: required, string([gateways|equipments]). Group item's type.
-- *list*: required, string list.
+- *itemList*: required, string list.
 
 + Request (application/json)
 
         {
             "name": "Eq_Group",
             "type": "equipments",
-            "list": [
+            "itemList": [
                 "uc-8100-0090E8000001",
                 "iologik-e2243-1",
                 "uc-8100-0090E8000002",
@@ -799,7 +930,7 @@ Response Attribute:
             "gid": 1,
             "name": "Eq_Group",
             "type": "equipments",
-            "list": [
+            "itemList": [
                 "uc-8100-0090E8000001",
                 "iologik-e2243-1",
                 "uc-8100-0090E8000002",
@@ -807,34 +938,34 @@ Response Attribute:
             ]
         }
 
-## Specific Group Info [/mxcs/groups/{gid}?type={type}]
+## Specific Group Information [/mxcs/groups/{gid}?type={type}]
 
-*gid*: Group ID.
+Resource Attributes:
+- *gid*: Group ID.
 
-Query Attribute:
+Query Attributes:
 - *type*: required, string([gateway|equipment]). Group Type.
 
 ### Modify Group [PUT]
 
-Request Attribute:
+Request Attributes:
 - *gid*: required, integer. Group ID. (gid=1, type=gateway) != (gid=1, type=equipmet) they are 2 different resource.
 - *name*: required, string. Group name.
 - *type*: required, string([gateways|equipments]). Group item's type.
-- *list*: required, string list.
+- *itemList*: required, string list.
 
-Response Attribute:
+Response Attributes:
 - *gid*: required, integer. Group ID, (gid=1, type=gateway) != (gid=1, type=equipmet) they are 2 different resource.
 - *name*: required, string. Group name.
 - *type*: required, string([gateways|equipments]). Group item's type.
-- *list*: required, string list.
+- *itemList*: required, string list.
 
 + Request (application/json)
 
         {
-            "gid": 1,
             "name": "Eq_Group",
             "type": "equipments",
-            "list": [
+            "itemList": [
                 "uc-8100-0090E8000001",
                 "iologik-e2243-1",
                 "uc-8100-0090E8000002",
@@ -845,10 +976,9 @@ Response Attribute:
 + Response 200 (appliation/json)
 
         {
-            "gid": 1,
             "name": "Eq_Group",
             "type": "equipments",
-            "list": [
+            "itemList": [
                 "uc-8100-0090E8000001",
                 "iologik-e2243-1",
                 "uc-8100-0090E8000002",
@@ -866,18 +996,21 @@ Response Attribute:
 
 # group Profile of Equipments and CGs
 
-## All CGs [/mxcs/profile/cgs]
+## All CGs [/mxcs/profile/cgs?gid={gid}&type={type}]
+(not implemented yet)
+(used in Control Center)
+(fixme)
 
 ### Get Specific Group information [GET]
 
-Response Attribute:
+Response Attributes:
 - gatewayOnlineCount: required, integer.
 - gatewayTotalCount: required, integer.
 - equipmentOnlineCount: required, integer.
 - equipmentTotalCount: required, integer.
 
 Note:
-- CG Online Rate = "gatewayOnlineCount"/"gatewayTotalCount"
+- CG Online Rate = *gatewayOnlineCount* / *gatewayTotalCount*
 
 + Response 200 (application/json)
 
@@ -890,35 +1023,13 @@ Note:
                 "equipmentTotalCount": 20
             }
 
-## Specific CG [/mxcs/profile/cgs/{cgName}]
-
-cgName: CG Name.
-
-### Get Specific Group information [GET]
-
-Response Attribute:
-- status: required, string([online|offline])
-- equipmentOnlineCount: required, integer.
-- equipmentTotalCount: required, integer.
-
-TODO:
-- How to calculate "CG Online Count"
-
-+ Response 200 (application/json)
-
-    + Body
-
-            {
-                "status": "online",
-                "equipmentOnlineCount": 15,
-                "equipmentTotalCount": 20
-            }
-
-## All Equipments [/mxcs/profile/equipments]
+## All Equipments [/mxcs/profile/equipments?gid={gid}&type={type}]
+(not implemented yet)
+(used in Control Center)
 
 ### Get Specific Group information [GET]
 
-Response Attribute:
+Response Attributes:
 - equipmentOnlineCount: required, integer.
 - equipmentTotalCount: required, integer.
 
@@ -927,94 +1038,27 @@ Response Attribute:
     + Body
 
             {
-                "equipmentOnlineCount": 15,
-                "equipmentTotalCount": 20
-            }
-
-## Specific Equipments [/mxcs/profile/equipments/{equipmentName}]
-
-equipmentName: Equipment Name.
-
-### Get Specific Group information [GET]
-
-Response Attribute:
-- status: required, string([online|offline])
-
-+ Response 200 (application/json)
-
-    + Body
-
-            {
-                "status": "online"
-            }
-
-## Groups of CGs [/mxcs/profile/groups/cgs/{gid}]
-
-gid: required, integer.
-
-### Get Specific Group information [GET]
-
-Response Attribute:
-- groupName: required, string.
-- gatewayOnlineCount: required, integer.
-- gatewayTotalCount: required, integer.
-- equipmentOnlineCount: required, integer.
-- equipmentTotalCount: required, integer.
-
-Note:
-- CG Online Rate = "gatewayOnlineCount"/"gatewayTotalCount"
-
-+ Response 200 (application/json)
-
-    + Body
-
-            {
-                "groupName": "CG-Group-1"
-                "gatewayOnlineCount": 9,
-                "gatewayTotalCount": 10,
-                "equipmentOnlineCount": 15,
-                "equipmentTotalCount": 20
-            }
-
-## Groups of Equipments [/mxcs/profile/groups/equipments/{gid}]
-
-gid: required, integer.
-
-### Get Specific Group information [GET]
-
-Response Attribute:
-- groupName: required, string.
-- equipmentOnlineCount: required, integer.
-- equipmentTotalCount: required, integer.
-
-+ Response 200 (application/json)
-
-    + Body
-
-            {
-                "groupName": "EQ-Group-1",
                 "equipmentOnlineCount": 15,
                 "equipmentTotalCount": 20
             }
 
 # group Cloud Gateway Management
 
-## Get Cloud Gateway List [/mxcs/cgs?gid={gid}&page_size={page_size}&page={page}]
+## Get Cloud Gateway List [/mxcs/cgs?gid={gid}&pageSize={pageSize}&page={page}]
 
-Query Attribute:
+Query Attributes:
 - *gid*: optional, integer. If given, only CGs in the given group are returned.
 - *page*: optional, integer. Default *1*.
-- page_size: optional, integer. Default *10*.
+- *pageSize*: optional, integer. Default *30*.
 
 ### Get CG List from Table [GET]
 
-Response Attribute:
+Response Attributes:
 - *totalCount*: required, integer. Number of CGs in the list.
 - *pageSize*: required, integer.
 - *page*: required, integer.
-- *onlineCount*: required, integer. Number of CGs that is currently online.
-- *data*: required, object list.
-    - *cgName*: required. CG ID of each authorized CG.
+- *cgList*: required, object list.
+    - *name*: required. CG ID of each authorized CG.
     - *status*: required, string([online|offline])
 
 + Response 200 (application/json)
@@ -1023,14 +1067,13 @@ Response Attribute:
             "totalCount": 2,
             "pageSize": 10,
             "page": 1,
-            "onlineCount": 2,
-            "data": [
+            "cgList": [
                 {
-                    "cgName": "cg-0090E8001234",
+                    "name": "cg-0090E8001234",
                     "status": "online"
                 },
                 {
-                    "cgName": "cg-0090E8004321",
+                    "name": "cg-0090E8004321",
                     "status": "online"
                 }
             ]
@@ -1040,31 +1083,32 @@ Response Attribute:
 
 ### Create new Cloud Gateway [POST]
 
-Request Attribute:
-- *cgName*: required. ID of the CG to be created.
+Request Attributes:
+- *name*: required. ID of the CG to be created.
 
 Response Attribute
-- *cgName*: required. ID of the CG just created.
+- *name*: required. ID of the CG just created.
 
 + Request (application/json)
 
         {
-            "cgName": "cg-0090E8001234"
+            "name": "cg-0090E8001234"
         }
 
 + Response 200 (application/json)
 
         {
-            "cgName": "cg-0090E8001234"
+            "name": "cg-0090E8001234"
         }
 
 ## Cloud Gateway Management [/mxcs/cgs/{cg_name}]
 
+Resource Attributes:
 - *cg_name*: required. ID of the CG to be queried.
 
 ### Get Cloud Gateway Information [GET]
 
-Response Attribute:
+Response Attributes:
 - *status*: required, string([online|offline]).
 - *equipmentTotalCount*: required, integer. Number of equipments, related to CG.
 - *equipmentOnlineCount*: required, integer. Number of equipments, related to CG, that are currently online.
@@ -1087,22 +1131,22 @@ Response Attribute:
 
 # group Equipment Management
 
-## Multiple Equipments [/mxcs/equipments?cg_name={cg_name}&gid={gid}&page_size={page_size}&page={page}]
+## Multiple Equipments [/mxcs/equipments?cgName={cgName}&gid={gid}&pageSize={pageSize}&page={page}]
 
-Query Attribute:
-- *cg_name*: optional, string. Only Equipments related to this Cloud Gateway is returned.
+Query Attributes:
+- *cgName*: optional, string. Only Equipments related to this Cloud Gateway is returned.
 - *gid*: optional, integer. Only Equipments that are in the Group(type=*equipments*) are returned.
 - *page*: optional, integer. Default *1*.
-- *page_size*: optional, integer. Default *10*
+- *pageSize*: optional, integer. Default *30*.
 
 ### Get Equipment List [GET]
 
-Response Attribute:
+Response Attributes:
 - *totalCount*: required, integer. Number of Equipments in the list.
 - *pageSize*: required, integer.
 - *page*: required, integer.
 - *onlineCount*: required, integer. Number of Equipments that are currently online.
-- *data*: required, object list.
+- *eqList*: required, object list.
     - *name*: required, string. Equipment Name.
     - *readingCount*: required, integer.
 
@@ -1112,7 +1156,7 @@ Response Attribute:
             "totalCount": 2,
             "pageSize": 10,
             "page": 1,
-            "data": [
+            "eqList": [
                 {
                     "name": "uc-81xx-0090e800e5ee",
                     "status": "online",
@@ -1128,9 +1172,12 @@ Response Attribute:
 
 ## Single Equipment [/mxcs/equipments/{equipment_name}]
 
+Resource Attributes:
+(fixme)
+
 ### Get Specific Equipment Information [GET]
 
-Response Attribute:
+Response Attributes:
 - *status*: required, string([online|offline])
 - *readingCount*: required, integer. Number of Readings reported by this Equipment.
 
@@ -1143,22 +1190,22 @@ Response Attribute:
 
 # group Reading Management
 
-## Channels [/mxcs/equipments/{equipment_name}/channels?page_size={page_size}&page={page}]
+## Channels [/mxcs/equipments/{equipment_name}/channels?pageSize={pageSize}&page={page}]
 
-Resource Attribute:
+Resource Attributes:
 - *equipment_name*: required, string.
 
-Query Attribute:
+Query Attributes:
 - *page*: optional, integer. Default *1*.
-- *page_size*: optional, integer. Default *10*.
+- *pageSize*: optional, integer. Default *30*.
 
 ### Get Channel List [GET]
 
-Response Attribute:
+Response Attributes:
 - *totalCount*: required, integer. Number of Channels in the list.
 - *pageSize*: required, integer.
 - *page*: required, integer.
-- *data*: required, object list.
+- *chanList*: required, object list.
     - *name*: required, string. Channel name.
     - *value*: required, string or float. Latest value received.
     - *time*: required, string in Datetime format. Latest value received time.
@@ -1169,7 +1216,7 @@ Response Attribute:
             "totalCount": 2,
             "pageSize": 10,
             "page": 1,
-            "data": [
+            "chanList": [
                 {
                     "name": "ai0",
                     "value": 1.0264739990234375,
@@ -1183,26 +1230,26 @@ Response Attribute:
             ]
         }
 
-## Readings [/mxcs/equipments/{equipment_name}/channels/{channel_name}/readings?start_time={start_time}&end_time={end_time}&page={page}&page_size={page_size}&asc={asc}]
+## Readings [/mxcs/equipments/{equipment_name}/channels/{channel_name}/readings?startTime={startTime}&endTime={endTime}&page={page}&pageSize={pageSize}&asc={asc}]
 
-Resource Attribute:
+Resource Attributes:
 - *equipment_name*: required, string.
 - *channel_name*: required, string.
 
-Query Attribute:
-- *start_time*: optional, string in Datetime format.
-- *end_time*: optional, string in Datetime format.
+Query Attributes:
+- *startTime*: optional, string in *Datetime* format.
+- *endTime*: optional, string in *Datetime* format.
 - *page*: optional, integer. Default *1*.
-- *page_size*: optional, integer. Default *10*.
-- *asc*: optional, boolean. True: ascend(oldest first), False: descend(latest first). Default *False*.
+- *pageSize*: optional, integer. Default *30*.
+- *asc*: optional, boolean. true: ascend(oldest first), false: descend(latest first). Default *false*.
 
 ### Query Sensor Data [GET]
 
-Response Attribute:
+Response Attributes:
 - *totalCount*: required, integer. Number of Readings in the list.
 - *pageSize*: required, integer.
 - *page*: required, integer.
-- *data*: required, object list.
+- *readingList*: required, object list.
     - *value*: required, string or float.
     - *time*: required, string in Datetime format.
 
@@ -1212,7 +1259,7 @@ Response Attribute:
             "totalCount": 2,
             "pageSize": 10,
             "page": 1,
-            "data": [
+            "readingList": [
                 {
                     "value": 1.0255584716796875,
                     "time": "2015-01-14T10:08:51.181000Z"
@@ -1224,14 +1271,13 @@ Response Attribute:
             ]
         }
 
-
 # group Cloud Server Configuration
 
 ## Configuration  [/mxcs/config]
 
 ### Get Configuration [GET]
 
-Response Attribure
+Response Attributes:
 - *expireTimeDay*: required, integer. Reading expire time in days.
 
 + Response 200 (application/json)
@@ -1242,10 +1288,10 @@ Response Attribure
 
 ### Update Configuration [PUT]
 
-Request Attribute:
+Request Attributes:
 - *expireTimeDay*: required, integer.
 
-Response Attribute:
+Response Attributes:
 - *expireTimeDay*: required, integer.
 
 + Request (application/json)
@@ -1262,222 +1308,210 @@ Response Attribute:
 
 # Group CG Online Count
 
-## CG Online Count [/mxcs/cgOnlineCount?gid={gid}&type={type}&endTime={endTime}&limit={limit}]
+## CG Online Count [/mxcs/history/cg-online-count?gid={gid}&type={type}&endDate={endDate}&limit={limit}]
 
-Query Attribute:
-- gid: optional, integer. Group ID.
-- type: optional, string([gateway|equipment]).
-- endTime: required, timestamp. The last date's timestamp.
-- limit: required. integer. Report data's number.
+Query Attributes:
+- *gid*: optional, integer. Group ID.
+- *type*: optional, string. Must be "gateway". Must exist when *gid* is given.
+- *endDate*: required, string in *Date* format.
+- *limit*: required. integer. Days to return.
 
-### Get CG Online Cout Data [GET]
+### Get CG Online Count Data [GET]
 
-Response Attribute:
-- data: required. If no data will return [].
-    - time: required, string.
-    - value: required, decimal or string.
+Response Attributes:
+- *historyList*: required, object list.
+    - *date*: required, string in *Date* format.
+    - *count*: required, integer.
 
 + Response 200 (application/json)
 
-    + Body
-
-            {
-                "data": [
-                    {
-                        "time": 1422438015,
-                        "value": 10
-                    },
-                    {
-                        "time": 1422524415,
-                        "value":11
-                    },
-                    {
-                        "time": 1422610815,
-                        "value":19
-                    },
-                    {
-                        "time": 1422697215,
-                        "value":12
-                    },
-                    {
-                        "time": 1422783615,
-                        "value":15
-                    },
-                    {
-                        "time": 1422870015,
-                        "value":20
-                    },
-                    {
-                        "time": 1422956415,
-                        "value":25
-                    }
-                ]
-            }
+        {
+            "historyList": [
+                {
+                    "date": "2015-01-10",
+                    "count": 10
+                },
+                {
+                    "date": "2015-01-11",
+                    "count": 11
+                },
+                {
+                    "date": "2015-01-12",
+                    "count": 19
+                },
+                {
+                    "date": "2015-01-13",
+                    "count": 12
+                },
+                {
+                    "date": "2015-01-14",
+                    "count": 15
+                },
+                {
+                    "date": "2015-01-15",
+                    "count": 20
+                },
+                {
+                    "date": "2015-01-16",
+                    "count": 25
+                }
+            ]
+        }
 
 # Group Equipment Online Count
 
-## Equipment Online Count [/mxcs/equipmentOnlineCount?gid={gid}&type={type}&endTime={endTime}&limit={limit}]
+## Equipment Online Count [/mxcs/history/equipment-online-count?gid={gid}&type={type}&endDate={endDate}&limit={limit}]
 
 Query Attribute:
-- gid: optional, integer. Group ID.
-- type: optional, string([gateway|equipment]).
-- endTime: optional, timestamp(in milliseconds). The last date's timestamp.
-- limit: optional, integer. Report data's number.
+- *gid*: optional, integer. Group ID.
+- *type*: optional, string([gateway|equipment]).
+- *endDate*: optional, string in *Date* format. Default *current-date*.
+- *limit*: optional, integer. Default *7*.
 
-Default Query:
-- gid: None
-- type: None
-- endTime: TimeStamp of NOW
-- limit: 7
-
-### Get Equipment Online Cout Data [GET]
+### Get Equipment Online Count Data [GET]
 
 Response Attribute:
-- data: required. If no data will return [].
-    - time: required, timestamp in milliseconds.
-    - value: required, decimal or string.
+- *historyList*: required, object list.
+    - *date*: required, string in *Date* format.
+    - *count*: required, integer.
 
 + Response 200 (application/json)
 
-    + Body
+        {
+            "historyList": [
+                {
+                    "date": "2015-01-10",
+                    "count": 10
+                },
+                {
+                    "date": "2015-01-11",
+                    "count": 11
+                },
+                {
+                    "date": "2015-01-12",
+                    "count": 19
+                },
+                {
+                    "date": "2015-01-13",
+                    "count": 12
+                },
+                {
+                    "date": "2015-01-14",
+                    "count": 15
+                },
+                {
+                    "date": "2015-01-15",
+                    "count": 20
+                },
+                {
+                    "date": "2015-01-16",
+                    "count": 25
+                }
+            ]
+        }
 
-            {
-                "data": [
-                    {
-                        "time": 1422438015000,
-                        "value": 10
-                    },
-                    {
-                        "time": 1422524415000,
-                        "value":11
-                    },
-                    {
-                        "time": 1422610815000,
-                        "value":19
-                    },
-                    {
-                        "time": 1422697215000,
-                        "value":12
-                    },
-                    {
-                        "time": 1422783615000,
-                        "value":15
-                    },
-                    {
-                        "time": 1422870015000,
-                        "value":20
-                    },
-                    {
-                        "time": 1422956415000,
-                        "value":25
-                    }
-                ]
-            }
+# group CG Reading Count
 
-# Group CG Data Row
-
-## CG Data Row [/mxcs/cgDataRow?gid={gid}&type={type}&endTime={endTime}&limit={limit}]
+## CG Reading Count [/mxcs/history/cg-reading-count?gid={gid}&type={type}&endDate={endDate}&limit={limit}]
 
 Query Attribute:
-- gid: optional, integer. Group ID.
-- type: optional, string([gateway|equipment]).
-- endTime: required, timestamp. The last date's timestamp.
-- limit: required. integer. Report data's number.
+- *gid*: optional, integer. Group ID.
+- *type*: optional, string. Must be "gateway" when *gid* is given.
+- *endDate*: optional, string in *Date* format. Default *current-date*.
+- *limit*: optional, integer. Number of records to return. Default *7*.
 
-### Get CG Data Row Data [GET]
+### Get CG Reading Count [GET]
 
 Response Attribute:
-- data: required. If no data will return [].
-    - time: required, string.
-    - value: required, decimal or string.
+- *historyList*: required. If no data will return [].
+    - *date*: required, string.
+    - *count*: required, decimal or string.
 
 + Response 200 (application/json)
 
-    + Body
+        {
+            "historyList": [
+                {
+                    "date": "2015-01-10",
+                    "count": 10
+                },
+                {
+                    "date": "2015-01-11",
+                    "count": 11
+                },
+                {
+                    "date": "2015-01-12",
+                    "count": 19
+                },
+                {
+                    "date": "2015-01-13",
+                    "count": 12
+                },
+                {
+                    "date": "2015-01-14",
+                    "count": 15
+                },
+                {
+                    "date": "2015-01-15",
+                    "count": 20
+                },
+                {
+                    "date": "2015-01-16",
+                    "count": 25
+                }
+            ]
+        }
 
-            {
-                "data": [
-                    {
-                        "time": 1422438015,
-                        "value": 10
-                    },
-                    {
-                        "time": 1422524415,
-                        "value":11
-                    },
-                    {
-                        "time": 1422610815,
-                        "value":19
-                    },
-                    {
-                        "time": 1422697215,
-                        "value":12
-                    },
-                    {
-                        "time": 1422783615,
-                        "value":15
-                    },
-                    {
-                        "time": 1422870015,
-                        "value":20
-                    },
-                    {
-                        "time": 1422956415,
-                        "value":25
-                    }
-                ]
-            }
+# Group Equipment Reading Count
 
-# Group Equipment Data Row
+## Equipment Reading Count [/mxcs/history/equipment-reading-count?gid={gid}&type={type}&endDate={endDate}&limit={limit}]
 
-## Equipment Data Row [/mxcs/equipmentDataRow?gid={gid}&type={type}&endTime={endTime}&limit={limit}]
+Provide the number of Readings reported by all or a group of Equipments.
 
 Query Attribute:
-- gid: optional, integer. Group ID.
-- type: optional, string([gateway|equipment]).
-- endTime: required, timestamp. The last date's timestamp.
-- limit: required. integer. Report data's number.
+- *gid*: optional, integer. Group ID.
+- *type*: optional, string([gateway|equipment]).
+- *endDate*: optional, string *Date* format. Default *current-date*.
+- *limit*: optional, integer. Number of records to return. Default *7*.
 
-### Get Equipment Data Row Data [GET]
+### Get Equipment Reading Count [GET]
 
 Response Attribute:
-- data: required. If no data will return [].
-    - time: required, string.
-    - value: required, decimal or string.
+- *historyList*: required, object list.
+    - *date*: required, string in *Datetime* format.
+    - *count*: required, integer.
 
 + Response 200 (application/json)
 
-    + Body
-
-            {
-                "data": [
-                    {
-                        "time": 1422438015,
-                        "value": 10
-                    },
-                    {
-                        "time": 1422524415,
-                        "value":11
-                    },
-                    {
-                        "time": 1422610815,
-                        "value":19
-                    },
-                    {
-                        "time": 1422697215,
-                        "value":12
-                    },
-                    {
-                        "time": 1422783615,
-                        "value":15
-                    },
-                    {
-                        "time": 1422870015,
-                        "value":20
-                    },
-                    {
-                        "time": 1422956415,
-                        "value":25
-                    }
-                ]
-            }
+        {
+            "historyList": [
+                {
+                    "date": "2015-01-10",
+                    "count": 10
+                },
+                {
+                    "date": "2015-01-11",
+                    "count": 11
+                },
+                {
+                    "date": "2015-01-12",
+                    "count": 19
+                },
+                {
+                    "date": "2015-01-13",
+                    "count": 12
+                },
+                {
+                    "date": "2015-01-14",
+                    "count": 15
+                },
+                {
+                    "date": "2015-01-15",
+                    "count": 20
+                },
+                {
+                    "date": "2015-01-16",
+                    "count": 25
+                }
+            ]
+        }
