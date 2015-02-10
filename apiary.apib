@@ -290,7 +290,7 @@ Response Attribute:
             "id": 1,
             "name": "Read Register Data",
             "command": "bin/ansi --read-register-data",
-            "schedule": 
+            "schedule":
             {
                 "type": "cron",
                 "time": "0 * * * *"
@@ -318,7 +318,7 @@ Response Attribute:
             "id": 1,
             "name": "Read Register Data",
             "command": "bin/ansi --read-register-data",
-            "schedule": 
+            "schedule":
             {
                 "type": "cron",
                 "time": "0 * * * *"
@@ -719,169 +719,152 @@ Starting a request while a previous request is in progress, results in error.
 ## Groups Collection [/mxcs/groups?page_size={page_size}&page={page}]
 
 Query Attribute:
-- page: optional, integer.
-- page_size: optional, integer.
-
-Notes:
-- Default query value
-    - "page": 1
-    - "page_size": 10
+- page: optional, integer. Default *1*.
+- page_size: optional, integer. Default *10*.
 
 ### Get Groups List [GET]
 
 Response Attribute:
-- totalCount: required, integer.
-- pageSize: required, integer.
-- page: required, integer.
-- date: required, list type. (If no groups will return [])
-    - gid: required, integer. Group ID, (gid=1, type=gateway) != (gid=1, type=equipmet) they are 2 different resource.
-    - name: required, string. Group name.
-    - type: required, string([gateways|equipments]). Group item's type.
-    - list: required, string list.
+- *totalCount*: required, integer.
+- *pageSize*: required, integer.
+- *page*: required, integer.
+- *date*: required, list type. (If no groups will return [])
+    - *gid*: required, integer. Group ID. (gid=1, type=gateway) != (gid=1, type=equipmet) they are 2 different resource.
+    - *name*: required, string. Group name.
+    - *type*: required, string([gateways|equipments]). Group item's type.
+    - *list*: required, string list. Either GatewayIDs or EquipmentIDs, according to *type*.
 
 + Response 200 (application/json)
 
-    + Body
-    
-            {
-                "totalCount": 2,
-                "pageSize": 10,
-                "page": 1,
-                "data": [
-                    {
-                        "gid": 1,
-                        "name": "CG_Group",
-                        "type": "gateways",
-                        "list": [
-                            "cg-0090E8000001",
-                            "cg-0090E8000002",
-                            "cg-0090E8000003"
-                        ]
-                    },
-                    {
-                        "gid":1,
-                        "name": "Eq_Group",
-                        "type": "equipments",
-                        "list": [
-                            "uc-8100-0090E8000001",
-                            "iologik-e2243-1",
-                            "uc-8100-0090E8000002",
-                            "meter-protecsa-1"
-                        ]
-                    }
-                ]
-            }
+        {
+            "totalCount": 2,
+            "pageSize": 10,
+            "page": 1,
+            "data": [
+                {
+                    "gid": 1,
+                    "name": "CG_Group",
+                    "type": "gateways",
+                    "list": [
+                        "cg-0090E8000001",
+                        "cg-0090E8000002",
+                        "cg-0090E8000003"
+                    ]
+                },
+                {
+                    "gid":1,
+                    "name": "Eq_Group",
+                    "type": "equipments",
+                    "list": [
+                        "uc-8100-0090E8000001",
+                        "iologik-e2243-1",
+                        "uc-8100-0090E8000002",
+                        "meter-protecsa-1"
+                    ]
+                }
+            ]
+        }
 
 ## Group Creation [/mxcs/groups]
 
 ### Create New Group [POST]
 
 Request Attribute:
-- name: required, string. Group name.
-- type: required, string([gateways|equipments]). Group item's type.
-- list: required, string list.
+- *name*: required, string. Group name.
+- *type*: required, string([gateways|equipments]). Group item's type.
+- *list*: required, string list.
 
 Response Attribute:
-- gid: required, integer. Group ID, (gid=1, type=gateway) != (gid=1, type=equipmet) they are 2 different resource.
-- name: required, string. Group name.
-- type: required, string([gateways|equipments]). Group item's type.
-- list: required, string list.
+- *gid*: required, integer. Group ID. (gid=1, type=gateway) != (gid=1, type=equipmet) they are 2 different resource.
+- *name*: required, string. Group name.
+- *type*: required, string([gateways|equipments]). Group item's type.
+- *list*: required, string list.
 
 + Request (application/json)
 
-    + Body
-    
-            {
-                "name": "Eq_Group",
-                "type": "equipments",
-                "list": [
-                    "uc-8100-0090E8000001",
-                    "iologik-e2243-1",
-                    "uc-8100-0090E8000002",
-                    "meter-protecsa-1"
-                ]
-            }
-            
+        {
+            "name": "Eq_Group",
+            "type": "equipments",
+            "list": [
+                "uc-8100-0090E8000001",
+                "iologik-e2243-1",
+                "uc-8100-0090E8000002",
+                "meter-protecsa-1"
+            ]
+        }
+
 + Response 200 (appliation/json)
 
-    + Body
-    
-            {
-                "gid": 1,
-                "name": "Eq_Group",
-                "type": "equipments",
-                "list": [
-                    "uc-8100-0090E8000001",
-                    "iologik-e2243-1",
-                    "uc-8100-0090E8000002",
-                    "meter-protecsa-1"
-                ]
-            }
+        {
+            "gid": 1,
+            "name": "Eq_Group",
+            "type": "equipments",
+            "list": [
+                "uc-8100-0090E8000001",
+                "iologik-e2243-1",
+                "uc-8100-0090E8000002",
+                "meter-protecsa-1"
+            ]
+        }
 
 ## Specific Group Info [/mxcs/groups/{gid}?type={type}]
 
-gid: required, integer.
+*gid*: Group ID.
 
 Query Attribute:
-- type: required, string([gateway|equipment]). Group Type.
+- *type*: required, string([gateway|equipment]). Group Type.
 
 ### Modify Group [PUT]
 
 Request Attribute:
-- gid: required, integer. Group ID, (gid=1, type=gateway) != (gid=1, type=equipmet) they are 2 different resource.
-- name: required, string. Group name.
-- type: required, string([gateways|equipments]). Group item's type.
-- list: required, string list.
+- *gid*: required, integer. Group ID. (gid=1, type=gateway) != (gid=1, type=equipmet) they are 2 different resource.
+- *name*: required, string. Group name.
+- *type*: required, string([gateways|equipments]). Group item's type.
+- *list*: required, string list.
 
 Response Attribute:
-- gid: required, integer. Group ID, (gid=1, type=gateway) != (gid=1, type=equipmet) they are 2 different resource.
-- name: required, string. Group name.
-- type: required, string([gateways|equipments]). Group item's type.
-- list: required, string list.
+- *gid*: required, integer. Group ID, (gid=1, type=gateway) != (gid=1, type=equipmet) they are 2 different resource.
+- *name*: required, string. Group name.
+- *type*: required, string([gateways|equipments]). Group item's type.
+- *list*: required, string list.
 
 + Request (application/json)
 
-    + Body
-    
-            {
-                "gid": 1,
-                "name": "Eq_Group",
-                "type": "equipments",
-                "list": [
-                    "uc-8100-0090E8000001",
-                    "iologik-e2243-1",
-                    "uc-8100-0090E8000002",
-                    "meter-protecsa-1"
-                ]
-            }
-            
+        {
+            "gid": 1,
+            "name": "Eq_Group",
+            "type": "equipments",
+            "list": [
+                "uc-8100-0090E8000001",
+                "iologik-e2243-1",
+                "uc-8100-0090E8000002",
+                "meter-protecsa-1"
+            ]
+        }
+
 + Response 200 (appliation/json)
 
-    + Body
-    
-            {
-                "gid": 1,
-                "name": "Eq_Group",
-                "type": "equipments",
-                "list": [
-                    "uc-8100-0090E8000001",
-                    "iologik-e2243-1",
-                    "uc-8100-0090E8000002",
-                    "meter-protecsa-1"
-                ]
-            }
+        {
+            "gid": 1,
+            "name": "Eq_Group",
+            "type": "equipments",
+            "list": [
+                "uc-8100-0090E8000001",
+                "iologik-e2243-1",
+                "uc-8100-0090E8000002",
+                "meter-protecsa-1"
+            ]
+        }
 
 ### Delete Group [DELETE]
 
 + Response 200 (application/json)
 
-    + Body
-    
-            {
-                "message": "Delete Group ID={gid} OK"
-            }
+        {
+            "message": "Delete Group ID={gid} OK"
+        }
 
-# Group Profile of Equipments and CGs
+# group Profile of Equipments and CGs
 
 ## All CGs [/mxcs/profile/cgs]
 
@@ -899,7 +882,7 @@ Note:
 + Response 200 (application/json)
 
     + Body
-    
+
             {
                 "gatewayOnlineCount": 9,
                 "gatewayTotalCount": 10,
@@ -924,7 +907,7 @@ TODO:
 + Response 200 (application/json)
 
     + Body
-    
+
             {
                 "status": "online",
                 "equipmentOnlineCount": 15,
@@ -942,7 +925,7 @@ Response Attribute:
 + Response 200 (application/json)
 
     + Body
-    
+
             {
                 "equipmentOnlineCount": 15,
                 "equipmentTotalCount": 20
@@ -960,7 +943,7 @@ Response Attribute:
 + Response 200 (application/json)
 
     + Body
-    
+
             {
                 "status": "online"
             }
@@ -984,7 +967,7 @@ Note:
 + Response 200 (application/json)
 
     + Body
-    
+
             {
                 "groupName": "CG-Group-1"
                 "gatewayOnlineCount": 9,
@@ -1007,325 +990,276 @@ Response Attribute:
 + Response 200 (application/json)
 
     + Body
-    
+
             {
                 "groupName": "EQ-Group-1",
                 "equipmentOnlineCount": 15,
                 "equipmentTotalCount": 20
             }
 
-# Group Manage CG in CS
+# group Cloud Gateway Management
 
-## CG Table Collection [/mxcs/cgs?gid={gid}&page_size={page_size}&page={page}]
+## Get Cloud Gateway List [/mxcs/cgs?gid={gid}&page_size={page_size}&page={page}]
 
 Query Attribute:
-- gid: optional, integer.
-- page: optional, integer.
-- page_size: optional, integer.
-
-Notes:
-- Default query value
-    - "page": 1
-    - "page_size": 10
+- *gid*: optional, integer. If given, only CGs in the given group are returned.
+- *page*: optional, integer. Default *1*.
+- page_size: optional, integer. Default *10*.
 
 ### Get CG List from Table [GET]
 
 Response Attribute:
-- "totalCount": required, integer. Total readings count.
-- "pageSize": required, integer. Each page maxium reading count.
-- "page": required, integer. Response page number.
-- "onlineCount": required, integer. Total CG online count.
-- "data": optional(it's empty if no any gateway in database)
-    - "cgName": required. CG ID of each authorized CG.
-    - "status": required, string([online|offline])
+- *totalCount*: required, integer. Number of CGs in the list.
+- *pageSize*: required, integer.
+- *page*: required, integer.
+- *onlineCount*: required, integer. Number of CGs that is currently online.
+- *data*: required, object list.
+    - *cgName*: required. CG ID of each authorized CG.
+    - *status*: required, string([online|offline])
 
 + Response 200 (application/json)
 
-    + Body
-    
-            {
-                "totalCount": 2,
-                "pageSize": 10,
-                "page": 1,
-                "onlineCount": 2,
-                "data": [
-                    {
-                        "cgName": "cg-0090E8001234",
-                        "status": "online"
-                    },
-                    {
-                        "cgName": "cg-0090E8004321",
-                        "status": "online"
-                    }
-                ]
-            }
+        {
+            "totalCount": 2,
+            "pageSize": 10,
+            "page": 1,
+            "onlineCount": 2,
+            "data": [
+                {
+                    "cgName": "cg-0090E8001234",
+                    "status": "online"
+                },
+                {
+                    "cgName": "cg-0090E8004321",
+                    "status": "online"
+                }
+            ]
+        }
 
 ## CG Insert [/mxcs/cgs]
 
-### Create new CG [POST]
+### Create new Cloud Gateway [POST]
 
 Request Attribute:
-- "cgName": required. CG ID of each authorized CG.
+- *cgName*: required. ID of the CG to be created.
 
 Response Attribute
-- "cgName": required. CG ID of each authorized CG.
+- *cgName*: required. ID of the CG just created.
 
 + Request (application/json)
 
-    + Body
-    
-            {
-                "cgName": "cg-0090E8001234"
-            }
+        {
+            "cgName": "cg-0090E8001234"
+        }
 
 + Response 200 (application/json)
 
-    + Body
-    
-            {
-                "cgName": "cg-0090E8001234"
-            }
+        {
+            "cgName": "cg-0090E8001234"
+        }
 
-## CG Table [/mxcs/cgs/{cg_name}]
+## Cloud Gateway Management [/mxcs/cgs/{cg_name}]
 
-- "cg_name": required. CG ID of each authorized CG. The value is the MAC of first ethernet.
+- *cg_name*: required. ID of the CG to be queried.
 
-### Get Specific CG info [GET]
+### Get Cloud Gateway Information [GET]
 
 Response Attribute:
-- status: optional, string([online|offline]).
-- equipmentOnlineCount: optional, integer. Ig type=gateway, equipmentOnlineCount=0.
-- equipmentTotalCount: optional, integer. Ig type=gateway, equipmentTotalCount=0.
+- *status*: required, string([online|offline]).
+- *equipmentTotalCount*: required, integer. Number of equipments, related to CG.
+- *equipmentOnlineCount*: required, integer. Number of equipments, related to CG, that are currently online.
 
 + Response 200 (application/json)
 
-    + Body
-    
-            {
-                "status": "online",
-                "equipmentOnlineCount": 15,
-                "equipmentTotalCount": 20
-            }
+        {
+            "status": "online",
+            "equipmentTotalCount": 20
+            "equipmentOnlineCount": 15,
+        }
 
-### Delete CG [DELETE]
+### Delete Cloud Gateway [DELETE]
 
 + Response 200 (application/json)
 
-    + Body
+        {
+            "message": "Delete CG={cg_name} OK"
+        }
 
-            {
-                "message": "Delete CG={cg_name} OK"
-            }
+# group Equipment Management
 
-# Group Sensor Data in CS
-
-## Specific Equipment info [/mxcs/equipments/{equipment_name}]
-
-### Get Specific Equipment info [GET]
-
-Response Attribute:
-- status: required, string([online|offline])
-- readingCount: required, integer
-
-+ Response 200 (application/json)
-
-    + Body
-    
-            {
-                "status": "online",
-                "readingCount": 28831
-            }
-
-## Equipments [/mxcs/equipments?cg_name={cg_name}&gid={gid}&page_size={page_size}&page={page}]
+## Multiple Equipments [/mxcs/equipments?cg_name={cg_name}&gid={gid}&page_size={page_size}&page={page}]
 
 Query Attribute:
-- cg_name: optional, string. Only handle the data about {cg_name}, if assigned {cg_name}.
-- gid: optional, integer.
-- page: optional, integer.
-- page_size: optional, integer.
+- *cg_name*: optional, string. Only Equipments related to this Cloud Gateway is returned.
+- *gid*: optional, integer. Only Equipments that are in the Group(type=*equipments*) are returned.
+- *page*: optional, integer. Default *1*.
+- *page_size*: optional, integer. Default *10*
 
-Notes:
-- Default query value
-    - "cg_name": None. Means all equipments.
-    - "page": 1
-    - "page_size": 10
-
-### Get Equipments list [GET]
+### Get Equipment List [GET]
 
 Response Attribute:
-- "totalCount": required, integer. Total readings count.
-- "pageSize": required, integer. Each page maxium reading count.
-- "page": required, integer. Response page number.
-- "onlineCount": required, integer. Current online count of equipments.
-- "data": optional(it's empty if no any equipments in database)
-    - "name": required, string. Equipment Name.
-    - "readingsTotalCount": required, integer. Total readings count belong to this equipment.
+- *totalCount*: required, integer. Number of Equipments in the list.
+- *pageSize*: required, integer.
+- *page*: required, integer.
+- *onlineCount*: required, integer. Number of Equipments that are currently online.
+- *data*: required, object list.
+    - *name*: required, string. Equipment Name.
+    - *readingCount*: required, integer.
 
 + Response 200 (application/json)
 
-    + Body
-    
-            {
-                "totalCount": 2,
-                "pageSize": 10,
-                "page": 1,
-                "data": [
-                    {
-                        "name": "uc-81xx-0090e800e5ee",
-                        "status": "online",
-                        "readingCount": 2048
-                    },
-                    {
-                        "name": "iologik-e2242",
-                        "status": "online",
-                        "readingCount": 1037
-                    }
-                ]
-            }
+        {
+            "totalCount": 2,
+            "pageSize": 10,
+            "page": 1,
+            "data": [
+                {
+                    "name": "uc-81xx-0090e800e5ee",
+                    "status": "online",
+                    "readingCount": 2048
+                },
+                {
+                    "name": "iologik-e2242",
+                    "status": "online",
+                    "readingCount": 1037
+                }
+            ]
+        }
 
+## Single Equipment [/mxcs/equipments/{equipment_name}]
+
+### Get Specific Equipment Information [GET]
+
+Response Attribute:
+- *status*: required, string([online|offline])
+- *readingCount*: required, integer. Number of Readings reported by this Equipment.
+
++ Response 200 (application/json)
+
+        {
+            "status": "online",
+            "readingCount": 28831
+        }
+
+# group Reading Management
 
 ## Channels [/mxcs/equipments/{equipment_name}/channels?page_size={page_size}&page={page}]
 
 Resource Attribute:
-- equipment_name: required, string.
+- *equipment_name*: required, string.
 
 Query Attribute:
-- page: optional, integer.
-- page_size: optional, integer.
+- *page*: optional, integer. Default *1*.
+- *page_size*: optional, integer. Default *10*.
 
-Notes:
-- Default query value
-    - "page": 1
-    - "page_size": 10
-
-### Get Channels [GET]
+### Get Channel List [GET]
 
 Response Attribute:
-- "totalCount": required, integer. Total readings count.
-- "pageSize": required, integer. Each page maxium reading count.
-- "page": required, integer. Response page number.
-- "data": optional(it's empty if no data pair)
-    - "value": required. Last value in database
-    - "time": required. Last time in database
+- *totalCount*: required, integer. Number of Channels in the list.
+- *pageSize*: required, integer.
+- *page*: required, integer.
+- *data*: required, object list.
+    - *name*: required, string. Channel name.
+    - *value*: required, string or float. Latest value received.
+    - *time*: required, string in Datetime format. Latest value received time.
 
 + Response 200 (application/json)
 
-    + Body
+        {
+            "totalCount": 2,
+            "pageSize": 10,
+            "page": 1,
+            "data": [
+                {
+                    "name": "ai0",
+                    "value": 1.0264739990234375,
+                    "time": "2015-01-14T07:43:46.814000Z"
+                },
+                {
+                    "name": "di0",
+                    "value": "on",
+                    "time": "2015-01-14T10:08:51.181000Z"
+                }
+            ]
+        }
 
-            {
-                "totalCount": 2,
-                "pageSize": 10,
-                "page": 1,
-                "data": [
-                    {
-                        "name": "ai0",
-                        "value": 1.0264739990234375,
-                        "time": "2015-01-14T07:43:46.814000Z"
-                    },
-                    {
-                        "name": "di0",
-                        "value": 1,
-                        "time": "2015-01-14T10:08:51.181000Z"
-                    }
-                ]
-            }
-
-## Reading Data [/mxcs/equipments/{equipment_name}/channels/{channel_name}/readings?start_time={start_time}&end_time={end_time}&page={page}&page_size={page_size}&asc={asc}]
+## Readings [/mxcs/equipments/{equipment_name}/channels/{channel_name}/readings?start_time={start_time}&end_time={end_time}&page={page}&page_size={page_size}&asc={asc}]
 
 Resource Attribute:
-- equipment_name: required, string.
-- channel_name: required, string.
+- *equipment_name*: required, string.
+- *channel_name*: required, string.
 
 Query Attribute:
-- start_time: optional, UTC time with format like: "2014-12-29T19:01:50.123000Z".
-- end_time: optional, UTC time with format like: "2014-12-29T19:01:50.123000Z".
-- page: optional, integer.
-- page_size: optional, integer.
-- asc: optional, boolean. True: ascend(oldest first), False: descend(latest first).
-
-Notes:
-- Default query value
-    - "start_time": None
-    - "end_time": NOW
-    - "page": 1
-    - "page_size": 10
-    - "asc": False
+- *start_time*: optional, string in Datetime format.
+- *end_time*: optional, string in Datetime format.
+- *page*: optional, integer. Default *1*.
+- *page_size*: optional, integer. Default *10*.
+- *asc*: optional, boolean. True: ascend(oldest first), False: descend(latest first). Default *False*.
 
 ### Query Sensor Data [GET]
 
 Response Attribute:
-- "totalCount": required, integer. Total readings count.
-- "pageSize": required, integer. Each page maxium reading count.
-- "page": required, integer. Response page number.
-- "data": optional(it's empty if no data pair)
-    - "value": required. Reading's data.
-    - "time": required. Reading's acquire time.
-
-Notes:
-- Latest (value, time) on the TOP.
+- *totalCount*: required, integer. Number of Readings in the list.
+- *pageSize*: required, integer.
+- *page*: required, integer.
+- *data*: required, object list.
+    - *value*: required, string or float.
+    - *time*: required, string in Datetime format.
 
 + Response 200 (application/json)
 
-    + Body
-    
-            {
-                "totalCount": 2,
-                "pageSize": 10,
-                "page": 1,
-                "data": [
-                    {
-                        "value": 1.0255584716796875,
-                        "time": "2015-01-14T10:08:51.181000Z"
-                    },
-                    {
-                        "value": 1.0264739990234375,
-                        "time": "2015-01-14T07:43:46.814000Z"
-                    }
-                ]
-            }
-            
+        {
+            "totalCount": 2,
+            "pageSize": 10,
+            "page": 1,
+            "data": [
+                {
+                    "value": 1.0255584716796875,
+                    "time": "2015-01-14T10:08:51.181000Z"
+                },
+                {
+                    "value": 1.0264739990234375,
+                    "time": "2015-01-14T07:43:46.814000Z"
+                }
+            ]
+        }
 
-# Group Sensor Data Configuration
 
-## Sensor Data Configuration  [/mxcs/config]
+# group Cloud Server Configuration
+
+## Configuration  [/mxcs/config]
 
 ### Get Configuration [GET]
 
 Response Attribure
-- "expireTimeDay": required, integer. Sensor Data expire time in day.
+- *expireTimeDay*: required, integer. Reading expire time in days.
 
 + Response 200 (application/json)
 
-    + Body
-    
-            {
-                "expireTimeDay": 90
-            }
+        {
+            "expireTimeDay": 90
+        }
 
 ### Update Configuration [PUT]
 
 Request Attribute:
-- "expireTimeDay": required, integer. Sensor Data expire time in day.
+- *expireTimeDay*: required, integer.
 
 Response Attribute:
-- "expireTimeDay": required, integer. Sensor Data expire time in day.
+- *expireTimeDay*: required, integer.
 
 + Request (application/json)
 
-    + Body
-    
-            {
-                "expireTimeDay": 90
-            }
+        {
+            "expireTimeDay": 90
+        }
 
 + Response 200 (application/json)
 
-    + Body
-    
-            {
-                "expireTimeDay": 90
-            }
-            
+        {
+            "expireTimeDay": 90
+        }
+
 # Group CG Online Count
 
 ## CG Online Count [/mxcs/cgOnlineCount?gid={gid}&type={type}&endTime={endTime}&limit={limit}]
@@ -1346,7 +1280,7 @@ Response Attribute:
 + Response 200 (application/json)
 
     + Body
-    
+
             {
                 "data": [
                     {
@@ -1406,7 +1340,7 @@ Response Attribute:
 + Response 200 (application/json)
 
     + Body
-    
+
             {
                 "data": [
                     {
@@ -1460,7 +1394,7 @@ Response Attribute:
 + Response 200 (application/json)
 
     + Body
-    
+
             {
                 "data": [
                     {
@@ -1514,7 +1448,7 @@ Response Attribute:
 + Response 200 (application/json)
 
     + Body
-    
+
             {
                 "data": [
                     {
