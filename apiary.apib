@@ -868,6 +868,180 @@ Response Attributes:
             "status": "inprogress"
         }
 
+# group Cloud Gateway Management
+
+## Get Cloud Gateway List [/mxcs/cgs?gid={gid}&pageSize={pageSize}&page={page}]
+
+Query Attributes:
+- *gid*: optional, integer. If given, only CGs in the given group are returned.
+- *page*: optional, integer. Default *1*.
+- *pageSize*: optional, integer. Default *30*.
+
+### Get Cloud Gateway List [GET]
+
+Response Attributes:
+- *totalCount*: required, integer. Number of CGs in the list.
+- *pageSize*: required, integer.
+- *page*: required, integer.
+- *cgList*: required, object list.
+    - *id*: required. CG ID of each authorized CG.
+    - *isOnline*: required, boolean.
+    - *lastUpdateTime*: required, string in *Datetime* format.
+    - *cellularUsageBytes*: optional, integer.
+      Exists only when CG has Cellular Modules.
+    - *runtimeVersion*: required, string.
+    - *equipmentCount*: required, integer.
+    - *onlineEquipmentCount*: required, integer.
+    - *metas*: required, object.
+      Contains a dictionary of previously stored key-value pairs.
+
++ Response 200 (application/json)
+
+        {
+            "totalCount": 2,
+            "pageSize": 10,
+            "page": 1,
+            "cgList": [
+                {
+                    "id": "cg-0090E8001234",
+                    "isOnline": true,
+                    "lastUpdateTime": "2014-02-12T14:31:49.298123",
+                    "cellularUsageBytes": 29891893,
+                    "runtimeVersion": "1.0.0",
+                    "equipmentCount": 20,
+                    "onlineEquipmentCount": 15,
+                    "metas": {
+                        "aliasName": "CG-01",
+                        "latitude": "41.428342",
+                        "longitude": "2.94482"
+                    }
+                },
+                {
+                    "id": "cg-0090E8004321",
+                    "isOnline": false,
+                    "lastUpdateTime": "2014-02-12T14:31:49.298123",
+                    "runtimeVersion": "1.0.0",
+                    "equipmentCount": 20,
+                    "onlineEquipmentCount": 15,
+                    "metas": {
+                        "aliasName": "CG-02",
+                        "latitude": "41.428342",
+                        "longitude": "2.94482"
+                    }
+                }
+            ]
+        }
+
+## Create Cloud Gateway [/mxcs/cgs]
+
+### Create Cloud Gateway [POST]
+
+Request Attributes:
+- *id*: required. ID of the CG to be created.
+- *metas: optional, object.
+  Contains a dictionary of key-value pairs to be stored relative to the newly
+  created CG.
+
++ Request (application/json)
+
+        {
+            "id": "cg-0090E8001234",
+            "metas": {
+                "aliasName": "CG-03",
+                "latitude": "41.428342",
+                "longitude": "294482"
+            }
+        }
+
++ Response 200 (application/json)
+
+        {
+            "id": "cg-0090E8001234"
+        }
+
+### Delete Cloud Gateways [DELETE]
+
+Request Attributes:
+- *cgList*: required, string array.
+  Contains a list of IDs of the CGs to be deleted.
+
++ Request (application/json)
+
+        {
+            "cgList": [
+                "cg-0090E8001234",
+                "cg-0090E8004321"
+            ]
+        }
+
++ Response 200 (application/json)
+
+        {
+            "message": "success"
+        }
+
+## Cloud Gateway Management [/mxcs/cgs/{cg_id}]
+
+Resource Attributes:
+- *cg_id*: required. ID of the CG to be queried.
+
+### Get Cloud Gateway Information [GET]
+
+Response Attributes:
+- *isOnline*: required, boolean.
+- *lastUpdateTime*: required, string in *Datetime* format.
+- *cellularUsageBytes*: optional, integer.
+  Exists only when CG has Cellular Modules.
+- *runtimeVersion*: required, string.
+- *equipmentCount*: required, integer.
+- *onlineEquipmentCount*: required, integer.
+- *metas*: required, object.
+  Contains a dictionary of previously stored key-value pairs.
+
++ Response 200 (application/json)
+
+        {
+            "isOnline": true,
+            "lastUpdateTime": "2014-02-12T14:31:49.298123",
+            "cellularUsageBytes": 29891893,
+            "runtimeVersion": "1.0.0",
+            "equipmentCount": 20,
+            "onlineEquipmentCount": 15,
+            "metas": {
+                "aliasName": "CG-01",
+                "latitude": "41.428342",
+                "longitude": "2.94482"
+            }
+        }
+
+## Manage Meta Entries [/mxcs/cgs/{cg_id}/metas]
+
+### Update Meta Entries [PUT]
+
+Update key-value pairs that are already exist.
+
+Request Attributes:
+- *metas*: required, object.
+  Contains a dictionary of key-value pairs to be updated.
+
+Response Attributes:
+- *message*: required, string.
+  Human-readable message.
+
++ Request (application/json)
+
+        {
+            "metas": {
+                "aliasName": "CG-0001"
+            }
+        }
+
++ Response 200 (application/json)
+
+        {
+            "message": "success"
+        }
+
 # group Manage Groups in CS
 
 ## Groups Collection [/mxcs/groups?pageSize={pageSize}&page={page}]
@@ -1065,85 +1239,6 @@ Response Attributes:
                 "equipmentTotalCount": 20
             }
 
-# group Cloud Gateway Management
-
-## Get Cloud Gateway List [/mxcs/cgs?gid={gid}&pageSize={pageSize}&page={page}]
-
-Query Attributes:
-- *gid*: optional, integer. If given, only CGs in the given group are returned.
-- *page*: optional, integer. Default *1*.
-- *pageSize*: optional, integer. Default *30*.
-
-### Get CG List from Table [GET]
-
-Response Attributes:
-- *totalCount*: required, integer. Number of CGs in the list.
-- *pageSize*: required, integer.
-- *page*: required, integer.
-- *cgList*: required, object list.
-    - *name*: required. CG ID of each authorized CG.
-    - *status*: required, string. Can be "online" or "offline".
-
-+ Response 200 (application/json)
-
-        {
-            "totalCount": 2,
-            "pageSize": 10,
-            "page": 1,
-            "cgList": [
-                {
-                    "name": "cg-0090E8001234",
-                    "status": "online"
-                },
-                {
-                    "name": "cg-0090E8004321",
-                    "status": "online"
-                }
-            ]
-        }
-
-## CG Insert [/mxcs/cgs]
-
-### Create new Cloud Gateway [POST]
-
-Request Attributes:
-- *name*: required. ID of the CG to be created.
-
-Response Attribute
-- *name*: required. ID of the CG just created.
-
-+ Request (application/json)
-
-        {
-            "name": "cg-0090E8001234"
-        }
-
-+ Response 200 (application/json)
-
-        {
-            "name": "cg-0090E8001234"
-        }
-
-## Cloud Gateway Management [/mxcs/cgs/{cg_name}]
-
-Resource Attributes:
-- *cg_name*: required. ID of the CG to be queried.
-
-### Get Cloud Gateway Information [GET]
-
-Response Attributes:
-- *status*: required, string. Can be "online" or "offline".
-- *equipmentTotalCount*: required, integer. Number of equipments, related to CG.
-- *equipmentOnlineCount*: required, integer. Number of equipments, related to CG, that are currently online.
-
-+ Response 200 (application/json)
-
-        {
-            "status": "online",
-            "equipmentTotalCount": 20
-            "equipmentOnlineCount": 15,
-        }
-
 ## Cloud Gateway Meta Information Management [/mxcs/cgs/{cg_name}/metas]
 
 Resource Attributes:
@@ -1274,20 +1369,12 @@ Response Attributes:
             "value": "41.40338"
         }
 
-### Delete Single Key Value [PUT]
+### Delete Single Key Value [DELETE]
 
 + Response 200 (application/json)
 
         {
             "message": "Delete {key} successful."
-        }
-
-### Delete Cloud Gateway [DELETE]
-
-+ Response 200 (application/json)
-
-        {
-            "message": "Delete CG={cg_name} OK"
         }
 
 # group Equipment Management
