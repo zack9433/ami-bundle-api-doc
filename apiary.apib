@@ -870,10 +870,14 @@ Response Attributes:
 
 # group Cloud Gateway Management
 
-## Get Cloud Gateway List [/mxcs/cgs?gid={gid}&pageSize={pageSize}&page={page}]
+## Get Cloud Gateway List [/mxcs/cgs?gid={gid}&keyword={keyword}&page={page}&pageSize={pageSize}]
 
 Query Attributes:
-- *gid*: optional, integer. If given, only CGs in the given group are returned.
+- *gid*: optional, integer.
+  If given, only CGs in the given group are returned.
+  (not implemented yet)
+- *keyword*: optional, string.
+  Return only Cloud Gateways with *id* or *aliasName* similar to the given string.
 - *page*: optional, integer. Default *1*.
 - *pageSize*: optional, integer. Default *30*.
 
@@ -885,6 +889,7 @@ Response Attributes:
 - *page*: required, integer.
 - *cgList*: required, object list.
     - *id*: required. CG ID of each authorized CG.
+    - *aliasName*: required, string.
     - *isOnline*: required, boolean.
     - *lastUpdateTime*: required, string in *Datetime* format.
     - *cellularUsageBytes*: optional, integer.
@@ -904,6 +909,7 @@ Response Attributes:
             "cgList": [
                 {
                     "id": "cg-0090E8001234",
+                    "aliasName": "CG-01",
                     "isOnline": true,
                     "lastUpdateTime": "2014-02-12T14:31:49.298123",
                     "cellularUsageBytes": 29891893,
@@ -911,20 +917,19 @@ Response Attributes:
                     "equipmentCount": 20,
                     "onlineEquipmentCount": 15,
                     "metas": {
-                        "aliasName": "CG-01",
                         "latitude": "41.428342",
                         "longitude": "2.94482"
                     }
                 },
                 {
                     "id": "cg-0090E8004321",
+                    "aliasName": "CG-02",
                     "isOnline": false,
                     "lastUpdateTime": "2014-02-12T14:31:49.298123",
                     "runtimeVersion": "1.0.0",
                     "equipmentCount": 20,
                     "onlineEquipmentCount": 15,
                     "metas": {
-                        "aliasName": "CG-02",
                         "latitude": "41.428342",
                         "longitude": "2.94482"
                     }
@@ -938,16 +943,20 @@ Response Attributes:
 
 Request Attributes:
 - *id*: required. ID of the CG to be created.
+- *aliasName*: required, string.
 - *metas: optional, object.
   Contains a dictionary of key-value pairs to be stored relative to the newly
   created CG.
+
+Response Attributes:
+- *id*: required, ID of the CG just created.
 
 + Request (application/json)
 
         {
             "id": "cg-0090E8001234",
+            "aliasName": "CG-03",
             "metas": {
-                "aliasName": "CG-03",
                 "latitude": "41.428342",
                 "longitude": "294482"
             }
@@ -964,6 +973,10 @@ Request Attributes:
 Request Attributes:
 - *cgList*: required, string array.
   Contains a list of IDs of the CGs to be deleted.
+
+Response Attributes:
+- *message*: required, string.
+  Human-readable message.
 
 + Request (application/json)
 
@@ -988,6 +1001,8 @@ Resource Attributes:
 ### Get Cloud Gateway Information [GET]
 
 Response Attributes:
+- *id*: required, string.
+- *aliasName*: required, string.
 - *isOnline*: required, boolean.
 - *lastUpdateTime*: required, string in *Datetime* format.
 - *cellularUsageBytes*: optional, integer.
@@ -1001,6 +1016,8 @@ Response Attributes:
 + Response 200 (application/json)
 
         {
+            "id": "cg-0090E8001234",
+            "aliasName": "CG-08",
             "isOnline": true,
             "lastUpdateTime": "2014-02-12T14:31:49.298123",
             "cellularUsageBytes": 29891893,
@@ -1008,7 +1025,6 @@ Response Attributes:
             "equipmentCount": 20,
             "onlineEquipmentCount": 15,
             "metas": {
-                "aliasName": "CG-01",
                 "latitude": "41.428342",
                 "longitude": "2.94482"
             }
@@ -1032,7 +1048,7 @@ Response Attributes:
 
         {
             "metas": {
-                "aliasName": "CG-0001"
+                "latitude": "41.428342",
             }
         }
 
