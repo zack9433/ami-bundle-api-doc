@@ -1396,11 +1396,13 @@ Response Attributes:
 
 # group Equipment Management
 
-## Multiple Equipments [/mxcs/equipments?cgName={cgName}&gid={gid}&pageSize={pageSize}&page={page}]
+## Multiple Equipments [/mxcs/equipments?cgName={cgName}&gid={gid}&page={page}&pageSize={pageSize}]
 
 Query Attributes:
-- *cgName*: optional, string. Only Equipments related to this Cloud Gateway is returned.
-- *gid*: optional, integer. Only Equipments that are in the Group(type=*equipments*) are returned.
+- *cgName*: optional, string.
+  Only Equipments related to this Cloud Gateway is returned.
+- *gid*: optional, integer.
+  Only Equipments that are in the Group(type=*equipments*) are returned.
 - *page*: optional, integer. Default *1*.
 - *pageSize*: optional, integer. Default *30*.
 
@@ -1410,9 +1412,9 @@ Response Attributes:
 - *totalCount*: required, integer. Number of Equipments in the list.
 - *pageSize*: required, integer.
 - *page*: required, integer.
-- *onlineCount*: required, integer. Number of Equipments that are currently online.
 - *eqList*: required, object list.
-    - *name*: required, string. Equipment Name.
+    - *id*: required, string. Equipment ID.
+    - *isOnline*: required, boolean.
     - *readingCount*: required, integer.
 
 + Response 200 (application/json)
@@ -1423,39 +1425,40 @@ Response Attributes:
             "page": 1,
             "eqList": [
                 {
-                    "name": "uc-81xx-0090e800e5ee",
-                    "status": "online",
+                    "id": "uc-81xx-0090e800e5ee",
+                    "isOnline": true,
                     "readingCount": 2048
                 },
                 {
-                    "name": "iologik-e2242",
-                    "status": "online",
+                    "id": "iologik-e2242",
+                    "isOnline": true,
                     "readingCount": 1037
                 }
             ]
         }
 
-## Single Equipment [/mxcs/equipments/{equipment_name}]
+## Single Equipment [/mxcs/equipments/{equipment_id}]
 
 Resource Attributes:
-- *equipment_name*: string.
+- *equipment_id*: string.
 
 ### Get Specific Equipment Information [GET]
 
 Response Attributes:
-- *status*: required, string. Can either be "online" or "offline".
+- *isOnline*: required, boolean.
 - *readingCount*: required, integer. Number of Readings reported by this Equipment.
 
 + Response 200 (application/json)
 
         {
-            "status": "online",
+            "id": "uc-81xx-0090e800e5ee",
+            "isOnline": true,
             "readingCount": 28831
         }
 
 # group Reading Management
 
-## Channels [/mxcs/equipments/{equipment_name}/channels?pageSize={pageSize}&page={page}]
+## Channels [/mxcs/equipments/{equipment_name}/channels&page={page}?pageSize={pageSize}]
 
 Resource Attributes:
 - *equipment_name*: required, string.
