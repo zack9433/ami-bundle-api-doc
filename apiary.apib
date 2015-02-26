@@ -1087,6 +1087,11 @@ Response Attributes:
     - *id*: required, string. Equipment ID.
     - *isOnline*: required, boolean.
     - *readingCount*: required, integer.
+    - *lastUpdateTime*: required, string in *Datetime* format.
+    - *lastUpdateGateway*: required, string.
+      The Gateway this Equipment last reported through.
+    - *metas*: required, object.
+      Contains a dictionary of key-value pairs to be updated.
 
 + Response 200 (application/json)
 
@@ -1100,6 +1105,7 @@ Response Attributes:
                     "isOnline": true,
                     "readingCount": 2048,
                     "lastUpdateTime": "2015-2-12T14:31:49.298123Z",
+                    "lastUpdateGateway": "cg-0090e8001234",
                     "metas": {
                         "latitude": "41.428342",
                         "longitude": "2.94482"
@@ -1153,8 +1159,14 @@ Resource Attributes:
 ### Get Equipment [GET]
 
 Response Attributes:
+- *id*: required, string. Equipment ID.
 - *isOnline*: required, boolean.
-- *readingCount*: required, integer. Number of Readings reported by this Equipment.
+- *readingCount*: required, integer.
+- *lastUpdateTime*: required, string in *Datetime* format.
+- *lastUpdateGateway*: required, string.
+  The Gateway this Equipment last reported through.
+- *metas*: required, object.
+  Contains a dictionary of key-value pairs to be updated.
 
 + Response 200 (application/json)
 
