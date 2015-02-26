@@ -881,7 +881,7 @@ Query Attributes:
 - *page*: optional, integer. Default *1*.
 - *pageSize*: optional, integer. Default *30*.
 
-### Get Cloud Gateway List [GET]
+### Get [GET]
 
 Response Attributes:
 - *totalCount*: required, integer. Number of CGs in the list.
@@ -908,10 +908,10 @@ Response Attributes:
             "page": 1,
             "cgList": [
                 {
-                    "id": "cg-0090E8001234",
+                    "id": "cg-0090e8001234",
                     "aliasName": "CG-01",
                     "isOnline": true,
-                    "lastUpdateTime": "2014-02-12T14:31:49.298123",
+                    "lastUpdateTime": "2014-02-12T14:31:49.298123Z",
                     "cellularUsageBytes": 29891893,
                     "runtimeVersion": "1.0.0",
                     "equipmentCount": 20,
@@ -922,10 +922,10 @@ Response Attributes:
                     }
                 },
                 {
-                    "id": "cg-0090E8004321",
+                    "id": "cg-0090e8004321",
                     "aliasName": "CG-02",
                     "isOnline": false,
-                    "lastUpdateTime": "2014-02-12T14:31:49.298123",
+                    "lastUpdateTime": "2014-02-12T14:31:49.298123Z",
                     "cellularUsageBytes": 29891893,
                     "runtimeVersion": "1.0.0",
                     "equipmentCount": 20,
@@ -938,7 +938,7 @@ Response Attributes:
             ]
         }
 
-## Create Cloud Gateway [/mxcs/cgs]
+## Manage Cloud Gateway [/mxcs/cgs]
 
 ### Create Cloud Gateway [POST]
 
@@ -955,7 +955,7 @@ Response Attributes:
 + Request (application/json)
 
         {
-            "id": "cg-0090E8001234",
+            "id": "cg-0090e8001234",
             "aliasName": "CG-03",
             "metas": {
                 "latitude": "41.428342",
@@ -966,10 +966,10 @@ Response Attributes:
 + Response 200 (application/json)
 
         {
-            "id": "cg-0090E8001234"
+            "id": "cg-0090e8001234"
         }
 
-### Delete Cloud Gateways [DELETE]
+### Delete Cloud Gateway List [DELETE]
 
 Request Attributes:
 - *cgList*: required, string array.
@@ -983,8 +983,8 @@ Response Attributes:
 
         {
             "cgList": [
-                "cg-0090E8001234",
-                "cg-0090E8004321"
+                "cg-0090e8001234",
+                "cg-0090e8004321"
             ]
         }
 
@@ -994,12 +994,12 @@ Response Attributes:
             "message": "success"
         }
 
-## Cloud Gateway Management [/mxcs/cgs/{cg_id}]
+## Get Cloud Gateway [/mxcs/cgs/{cg_id}]
 
 Resource Attributes:
-- *cg_id*: required. ID of the CG to be queried.
+- *cg_id*: required. The ID of CG of interest.
 
-### Get Cloud Gateway Information [GET]
+### Get [GET]
 
 Response Attributes:
 - *id*: required, string.
@@ -1020,7 +1020,7 @@ Response Attributes:
             "id": "cg-0090E8001234",
             "aliasName": "CG-08",
             "isOnline": true,
-            "lastUpdateTime": "2014-02-12T14:31:49.298123",
+            "lastUpdateTime": "2014-02-12T14:31:49.298123Z",
             "cellularUsageBytes": 29891893,
             "runtimeVersion": "1.0.0",
             "equipmentCount": 20,
@@ -1032,6 +1032,9 @@ Response Attributes:
         }
 
 ## Manage Meta Entries [/mxcs/cgs/{cg_id}/metas]
+
+Resource Attributes:
+- *cg_id*: string.
 
 ### Update Meta Entries [PUT]
 
@@ -1050,6 +1053,175 @@ Response Attributes:
         {
             "metas": {
                 "latitude": "41.428342",
+            }
+        }
+
++ Response 200 (application/json)
+
+        {
+            "message": "success"
+        }
+
+# group Equipment Management
+
+## Get Equipment List [/mxcs/equipments?cgName={cgName}&gid={gid}&keyword={keyword}&page={page}&pageSize={pageSize}]
+
+Query Attributes:
+- *cgName*: optional, string.
+  Only Equipments related to this Cloud Gateway is returned.
+  (not implemented yet).
+- *gid*: optional, integer.
+  Only Equipments that are in the Group(type=*equipments*) are returned.
+- *keyword*: optional, string.
+  Return only Equipments with *id* similar to the given string.
+- *page*: optional, integer. Default *1*.
+- *pageSize*: optional, integer. Default *30*.
+
+### Get [GET]
+
+Response Attributes:
+- *totalCount*: required, integer. Number of Equipments in the list.
+- *pageSize*: required, integer.
+- *page*: required, integer.
+- *eqList*: required, object list.
+    - *id*: required, string. Equipment ID.
+    - *isOnline*: required, boolean.
+    - *readingCount*: required, integer.
+
++ Response 200 (application/json)
+
+        {
+            "totalCount": 2,
+            "pageSize": 10,
+            "page": 1,
+            "eqList": [
+                {
+                    "id": "uc-81xx-0090e800e5ee",
+                    "isOnline": true,
+                    "readingCount": 2048,
+                    "lastUpdateTime": "2015-2-12T14:31:49.298123Z",
+                    "metas": {
+                        "latitude": "41.428342",
+                        "longitude": "2.94482"
+                    }
+                },
+                {
+                    "id": "iologik-e2242",
+                    "isOnline": true,
+                    "readingCount": 1037,
+                    "lastUpdateTime": "2015-2-12T14:31:49.298123Z",
+                    "lastUpdateGateway": "cg-0090e8004321",
+                    "metas": {
+                    }
+                }
+            ]
+        }
+
+## Delete Equipment List [/mxcs/equipments]
+
+### Delete [DELETE]
+
+Deleting an Equipment deletes all the *Readings* reported by that Equipment.
+
+Request Attributes:
+- *eqList*: required, string array.
+  Contains a list of IDs of the Equipments to be deleted.
+
+Response Attributes:
+- *message*: required, string.
+  Human-readable message.
+
++ Request (application/json)
+
+        {
+            "eqList": [
+                "uc-81xx-0090e800e5ee"
+            ]
+        }
+
++ Response 200 (application/json)
+
+        {
+            "message": "success"
+        }
+
+## Manage Equipment [/mxcs/equipments/{equipment_id}]
+
+Resource Attributes:
+- *equipment_id*: string.
+
+### Get Equipment [GET]
+
+Response Attributes:
+- *isOnline*: required, boolean.
+- *readingCount*: required, integer. Number of Readings reported by this Equipment.
+
++ Response 200 (application/json)
+
+        {
+            "id": "iologik-e2242",
+            "isOnline": true,
+            "readingCount": 1037,
+            "lastUpdateTime": "2015-2-12T14:31:49.298123Z",
+            "lastUpdateGateway": "cg-0090e8004321",
+            "metas": {
+                "latitude": "40.428342",
+                "longitude": "1.94482"
+            }
+        }
+
+## Manage Meta Entries [/mxcs/equipments/{equipment_id}/metas]
+
+Resource Attributes:
+- *equipment_id*: string.
+
+### Update Meta Entries [PUT]
+
+Update key-value pairs that are already exist.
+
+Request Attributes:
+- *metas*: required, object.
+  Contains a dictionary of key-value pairs to be updated.
+
+Response Attributes:
+- *message*: required, string.
+  Human-readable message.
+
++ Request (application/json)
+
+        {
+            "metas": {
+                "latitude": "41.428342",
+            }
+        }
+
++ Response 200 (application/json)
+
+        {
+            "message": "success"
+        }
+
+### Create Meta Entries [POST]
+
+Create new key-value pairs.
+
+If any of the keys in *metas* already exists, none of the key-value pairs would
+be created and error will be reponsed.
+
+Request Attributes:
+- *metas*: required, object.
+  Contains a dictionary of key-value pairs to be created.
+
+Response Attributes:
+- *message*: required, string.
+  Human-readable message.
+
++ Request (application/json)
+
+        {
+            "metas": {
+                "latitude": "41.428342",
+                "longitude": "2.94482"
             }
         }
 
@@ -1256,206 +1428,9 @@ Response Attributes:
                 "equipmentTotalCount": 20
             }
 
-## Cloud Gateway Meta Information Management [/mxcs/cgs/{cg_name}/metas]
-
-Resource Attributes:
-- *cg_name*: required. ID of the CG to be queried.
-
-Query Attributes:
-- *pageSize*: optional, integer. Default *30*.
-- *page*: optional, integer. Default *1*.
-
-### Get Meta Information [GET]
-
-Response Attributes:
-- *key*: required, string.
-- *value*: required, string.
-
-Returned key-value list is sorted by *key*.
-
-+ Response 200 (application/json)
-
-        [
-            {
-                "key": "latitude",
-                "value": "41.40338"
-            },
-            {
-                "key": "longitude",
-                "value": "2.17403"
-            }
-        ]
-
-### Replace All Meta Information [PUT]
-
-Request Attriutes:
-- *key*: required, string.
-- *value*: required, string.
-
-Response Attributes:
-- Same as *GET* response.
-
-+ Request (application/json)
-
-        [
-            {
-                "key": "latitude",
-                "value": "41.40338"
-            },
-            {
-                "key": "longitude",
-                "value": "2.17403"
-            }
-        ]
-
-+ Response 200 (application/json)
-
-        [
-            {
-                "key": "latitude",
-                "value": "41.40338"
-            },
-            {
-                "key": "longitude",
-                "value": "2.17403"
-            }
-        ]
-
-### Create New Key Value [POST]
-
-Request Attriutes:
-- Same as *PUT* request.
-
-Response Attributes:
-- Same as *GET* response.
-
-+ Request (application/json)
-
-        {
-            "key": "latitude",
-            "value": "41.40338"
-        }
-
-+ Response 200 (application/json)
-
-        [
-            {
-                "key": "latitude",
-                "value": "41.40338"
-            },
-            {
-                "key": "longitude",
-                "value": "2.17403"
-            }
-        ]
-
-## Single Meta Key Value [/mxcs/cgs/{cg_name}/metas/{key}]
-
-Resource Attributes:
-- *cg_name*: string.
-- *key*: string.
-
-### Get Single Key Value [GET]
-
-Response Attributes:
-- *value*: required, string.
-
-+ Response 200 (application/json)
-
-        {
-            "value": "41.40338"
-        }
-
-### Update Single Key Value [PUT]
-
-Request Attributes:
-- *value*: required, string.
-
-Response Attributes:
-- Same as *GET* response.
-
-+ Request (application/json)
-
-        {
-            "value": "41.40338"
-        }
-
-+ Response 200 (application/json)
-
-        {
-            "value": "41.40338"
-        }
-
-### Delete Single Key Value [DELETE]
-
-+ Response 200 (application/json)
-
-        {
-            "message": "Delete {key} successful."
-        }
-
-# group Equipment Management
-
-## Multiple Equipments [/mxcs/equipments?cgName={cgName}&gid={gid}&pageSize={pageSize}&page={page}]
-
-Query Attributes:
-- *cgName*: optional, string. Only Equipments related to this Cloud Gateway is returned.
-- *gid*: optional, integer. Only Equipments that are in the Group(type=*equipments*) are returned.
-- *page*: optional, integer. Default *1*.
-- *pageSize*: optional, integer. Default *30*.
-
-### Get Equipment List [GET]
-
-Response Attributes:
-- *totalCount*: required, integer. Number of Equipments in the list.
-- *pageSize*: required, integer.
-- *page*: required, integer.
-- *onlineCount*: required, integer. Number of Equipments that are currently online.
-- *eqList*: required, object list.
-    - *name*: required, string. Equipment Name.
-    - *readingCount*: required, integer.
-
-+ Response 200 (application/json)
-
-        {
-            "totalCount": 2,
-            "pageSize": 10,
-            "page": 1,
-            "eqList": [
-                {
-                    "name": "uc-81xx-0090e800e5ee",
-                    "status": "online",
-                    "readingCount": 2048
-                },
-                {
-                    "name": "iologik-e2242",
-                    "status": "online",
-                    "readingCount": 1037
-                }
-            ]
-        }
-
-## Single Equipment [/mxcs/equipments/{equipment_name}]
-
-Resource Attributes:
-- *equipment_name*: string.
-
-### Get Specific Equipment Information [GET]
-
-Response Attributes:
-- *status*: required, string. Can either be "online" or "offline".
-- *readingCount*: required, integer. Number of Readings reported by this Equipment.
-
-+ Response 200 (application/json)
-
-        {
-            "status": "online",
-            "readingCount": 28831
-        }
-
 # group Reading Management
 
-## Channels [/mxcs/equipments/{equipment_name}/channels?pageSize={pageSize}&page={page}]
+## Channels [/mxcs/equipments/{equipment_name}/channels&page={page}?pageSize={pageSize}]
 
 Resource Attributes:
 - *equipment_name*: required, string.
