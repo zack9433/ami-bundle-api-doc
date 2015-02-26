@@ -972,7 +972,7 @@ Response Attributes:
 ### Delete Cloud Gateway List [DELETE]
 
 Request Attributes:
-- *cgList*: required, string array.
+- *idList*: required, string array.
   Contains a list of IDs of the CGs to be deleted.
 
 Response Attributes:
@@ -982,7 +982,7 @@ Response Attributes:
 + Request (application/json)
 
         {
-            "cgList": [
+            "idList": [
                 "cg-0090e8001234",
                 "cg-0090e8004321"
             ]
@@ -1130,7 +1130,7 @@ Response Attributes:
 Deleting an Equipment deletes all the *Readings* reported by that Equipment.
 
 Request Attributes:
-- *eqList*: required, string array.
+- *idList*: required, string array.
   Contains a list of IDs of the Equipments to be deleted.
 
 Response Attributes:
@@ -1140,7 +1140,7 @@ Response Attributes:
 + Request (application/json)
 
         {
-            "eqList": [
+            "idList": [
                 "uc-81xx-0090e800e5ee"
             ]
         }
