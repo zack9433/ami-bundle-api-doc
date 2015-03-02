@@ -945,6 +945,7 @@ Response Attributes:
 Request Attributes:
 - *id*: required. ID of the CG to be created.
 - *aliasName*: required, string.
+  Can be empty-string.
 - *metas: optional, object.
   Contains a dictionary of key-value pairs to be stored relative to the newly
   created CG.
@@ -1244,6 +1245,160 @@ Response Attributes:
         }
 
 # group Manage Groups in CS
+
+## Get CG Group List [/mxcs/cg-groups?page={page}&pageSize={pageSize}]
+
+Query Attributes:
+- page: optional, integer. Default *1*.
+- pageSize: optional, integer. Default *30*.
+
+### Get [GET]
+
+Response Attributes:
+- *totalCount*: required, integer.
+- *pageSize*: required, integer.
+- *page*: required, integer.
+- *groupList*: required, object list.
+    - *id*: required, string.
+      Group ID.
+    - *aliasName*: required, string.
+      Group alias name.
+    - *cgList*: required, string array.
+      IDs of the CGs in the Group.
+
++ Response 200 (application/json)
+
+        {
+            "totalCount": 2,
+            "pageSize": 30,
+            "page": 1,
+            "cgGroupList": [
+                {
+                    "id": "moxa-2014",
+                    "aliasName": "moxa-2014",
+                    "cgList": [
+                        "cg-0090e8001234",
+                        "cg-0090e8004321"
+                    ]
+                },
+                {
+                    "id": "moxa-2015",
+                    "aliasName": "moxa-2015",
+                    "cgList": [
+                    ]
+                }
+            ]
+        }
+
+## Manage CG Group [/mxcs/cg-groups]
+
+### Create CG Group [POST]
+
+Request Attributes:
+- *id*: required, string.
+- *aliasName*: required, string.
+  Can be empty-string.
+- *gatewayList*: required, string list.
+  A list of CG IDs to be inserted into the group.
+
+Response Attributes:
+- *id*: required, ID of the CG Group just created.
+
++ Request (application/json)
+
+        {
+            "id": "moxa-2014",
+            "aliasName": "moxa-2014",
+            "gatewayList": [
+                "cg-0090e8001234",
+                "cg-0090e8004321"
+            ]
+        }
+
++ Response 200 (application/json)
+
+        {
+            "id": "moxa-2014"
+        }
+
+### Delete CG Group List [DELETE]
+
+Request Attributes:
+- *cgGroupList*: required, string array.
+  Contains a list of IDs of the CGs to be deleted.
+
+Response Attributes:
+- *message*: required, string.
+  Human-readable message.
+
++ Request (application/json)
+
+        {
+            "cgGroupList": [
+                "moxa-2014",
+                "moxa-2015"
+            ]
+        }
+
++ Response 200 (application/json)
+
+        {
+            "message": "success"
+        }
+
+## Manage CG Group [/mxcs/cg-groups/{cg_group_id}]
+
+Resource Attributes:
+- *cg_group_id*: required.
+  The ID of the CG Group of interest.
+
+### Get [GET]
+
+Response Attributes:
+- *id*: required, string.
+  Group ID.
+- *aliasName*: required, string.
+  Group alias name.
+- *cgList*: required, string array.
+  IDs of the CGs in the Group.
+
++ Response 200 (application/json)
+
+        {
+            "id": "moxa-2014",
+            "aliasName": "moxa-2014",
+            "cgList": [
+                "cg-0090e8001234",
+                "cg-0090e8004321"
+            ]
+        }
+
+### Update CG Group [PUT]
+
+Request Attributes:
+- *id*: optional, string.
+  If given, the value should match *cg_group_id* in resource URI.
+- *aliasName*: optional, string.
+- *cgList*: optional, string array.
+
+Response Attributes:
+- *message*: required, string.
+  Human-readable message.
+
++ Request (application/json)
+
+        {
+            "aliasName": "moxa-2014",
+            "cgList": [
+                "cg-0090e8001234"
+            ]
+        }
+
++ Response 200 (application/json)
+
+        {
+            "mesage": "success"
+        }
 
 ## Groups Collection [/mxcs/groups?pageSize={pageSize}&page={page}]
 
