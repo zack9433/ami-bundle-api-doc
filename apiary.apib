@@ -1246,9 +1246,11 @@ Response Attributes:
 
 # group Manage Groups in CS
 
-## Get CG Group List [/mxcs/cg-groups?page={page}&pageSize={pageSize}]
+## Get CG Group List [/mxcs/cg-groups?keyword={keyword}&page={page}&pageSize={pageSize}]
 
 Query Attributes:
+- keyword: optional, string.
+  Return only CG Groups with *id* similar to the given string.
 - page: optional, integer. Default *1*.
 - pageSize: optional, integer. Default *30*.
 
@@ -1410,9 +1412,11 @@ Response Attributes:
             "message": "success"
         }
 
-## Get Equipment Group List [/mxcs/eq-groups?page={page}&pageSize={pageSize}]
+## Get Equipment Group List [/mxcs/eq-groups?keyword={keyword}&page={page}&pageSize={pageSize}]
 
 Query Attributes:
+- keyword: optional, string.
+  Return only Equipment Groups with *id* similar to the given string.
 - page: optional, integer. Default *1*.
 - pageSize: optional, integer. Default *30*.
 
