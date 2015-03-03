@@ -1065,14 +1065,13 @@ Response Attributes:
 
 # group Equipment Management
 
-## Get Equipment List [/mxcs/equipments?cgName={cgName}&gid={gid}&keyword={keyword}&page={page}&pageSize={pageSize}]
+## Get Equipment List [/mxcs/equipments?cgName={cgName}&groupId={groupId}&keyword={keyword}&page={page}&pageSize={pageSize}]
 
 Query Attributes:
 - *cgName*: optional, string.
   Only Equipments related to this Cloud Gateway is returned.
-- *gid*: optional, integer.
-  Only Equipments that are in the Group(type=*equipments*) are returned.
-  (not implemented yet).
+- *groupId*: optional, string.
+  Only Equipments that are in the Group are returned.
 - *keyword*: optional, string.
   Return only Equipments with *id* similar to the given string.
   (not implmemented yet).
@@ -1408,7 +1407,7 @@ Response Attributes:
 + Response 200 (application/json)
 
         {
-            "mesage": "success"
+            "message": "success"
         }
 
 ## Get Equipment Group List [/mxcs/eq-groups?page={page}&pageSize={pageSize}]
@@ -1508,6 +1507,64 @@ Response Attributes:
             "eqGroupList": [
                 "moxa-2014",
                 "moxa-2015"
+            ]
+        }
+
++ Response 200 (application/json)
+
+        {
+            "message": "success"
+        }
+
+## Manage Equipment Group [/mxcs/eq-groups/{eq_group_id}]
+
+Resource Attributes:
+- *eq_group_id*: required.
+  The ID of the Equipment Group of interest.
+
+### Get [GET]
+
+(not implemented yet)
+
+Response Attributes:
+- *id*: required, string.
+  Group ID.
+- *aliasName*: required, string.
+  Group alias name.
+- *eqList*: required, string array.
+  IDs of the Equipments in the Group.
+
++ Response 200 (application/json)
+
+        {
+            "id": "moxa-2014",
+            "aliasName": "moxa-2014",
+            "eqList": [
+                "iologik",
+                "uc-8100"
+            ]
+        }
+
+### Update CG Group [PUT]
+
+(not implemented yet)
+
+Request Attributes:
+- *id*: optional, string.
+  If given, the value should match *eq_group_id* in resource URI.
+- *aliasName*: optional, string.
+- *eqList*: optional, string array.
+
+Response Attributes:
+- *message*: required, string.
+  Human-readable message.
+
++ Request (application/json)
+
+        {
+            "aliasName": "moxa-2014",
+            "eqList": [
+                "iologik",
             ]
         }
 
