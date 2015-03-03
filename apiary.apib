@@ -1070,7 +1070,6 @@ Response Attributes:
 Query Attributes:
 - *cgName*: optional, string.
   Only Equipments related to this Cloud Gateway is returned.
-  (not implemented yet).
 - *gid*: optional, integer.
   Only Equipments that are in the Group(type=*equipments*) are returned.
   (not implemented yet).
@@ -1129,8 +1128,6 @@ Response Attributes:
 ## Delete Equipment List [/mxcs/equipments]
 
 ### Delete [DELETE]
-
-(not implemented yet)
 
 Deleting an Equipment deletes all the *Readings* reported by that Equipment.
 
@@ -1194,8 +1191,6 @@ Resource Attributes:
 
 ### Update Meta Entries [PUT]
 
-(not implemented yet)
-
 Update key-value pairs that are already exist.
 
 Request Attributes:
@@ -1221,8 +1216,6 @@ Response Attributes:
         }
 
 ### Create Meta Entries [POST]
-
-(not implemented yet)
 
 Create new key-value pairs.
 
@@ -1268,7 +1261,7 @@ Response Attributes:
 - *totalCount*: required, integer.
 - *pageSize*: required, integer.
 - *page*: required, integer.
-- *groupList*: required, object list.
+- *cgGroupList*: required, object list.
     - *id*: required, string.
       Group ID.
     - *aliasName*: required, string.
@@ -1418,151 +1411,110 @@ Response Attributes:
             "mesage": "success"
         }
 
-## Groups Collection [/mxcs/groups?pageSize={pageSize}&page={page}]
+## Get Equipment Group List [/mxcs/eq-groups?page={page}&pageSize={pageSize}]
 
 Query Attributes:
 - page: optional, integer. Default *1*.
 - pageSize: optional, integer. Default *30*.
 
-### Get Groups List [GET]
+### Get [GET]
+
+(not implemented yet)
 
 Response Attributes:
 - *totalCount*: required, integer.
 - *pageSize*: required, integer.
 - *page*: required, integer.
-- *groupList*: required, object list.
-    - *gid*: required, integer. Group ID. (gid=1, type=gateway) != (gid=1, type=equipmet) they are 2 different resource.
-    - *name*: required, string. Group name.
-    - *type*: required, string([gateways|equipments]). Group item's type.
-    - *itemList*: required, string list. Either GatewayIDs or EquipmentIDs, according to *type*.
+- *eqGroupList*: required, object list.
+    - *id*: required, string.
+      Group ID.
+    - *aliasName*: required, string.
+      Group alias name.
+    - *eqList*: required, string array.
+      IDs of the Equipments in the Group.
 
 + Response 200 (application/json)
 
         {
             "totalCount": 2,
-            "pageSize": 10,
+            "pageSize": 30,
             "page": 1,
-            "groupList": [
+            "eqGroupList": [
                 {
-                    "gid": 1,
-                    "name": "CG_Group",
-                    "type": "gateways",
-                    "itemList": [
-                        "cg-0090E8000001",
-                        "cg-0090E8000002",
-                        "cg-0090E8000003"
+                    "id": "moxa-2014",
+                    "aliasName": "moxa-2014",
+                    "eqList": [
+                        "iologik",
+                        "uc-8100"
                     ]
                 },
                 {
-                    "gid": 1,
-                    "name": "Eq_Group",
-                    "type": "equipments",
-                    "itemList": [
-                        "uc-8100-0090E8000001",
-                        "iologik-e2243-1",
-                        "uc-8100-0090E8000002",
-                        "meter-protecsa-1"
+                    "id": "moxa-2015",
+                    "aliasName": "moxa-2015",
+                    "eqList": [
                     ]
                 }
             ]
         }
 
-## Group Creation [/mxcs/groups]
+## Manage Equipment Group [/mxcs/eq-groups]
 
-### Create New Group [POST]
+### Create Equipment Group [POST]
+
+(not implemented yet)
 
 Request Attributes:
-- *name*: required, string. Group name.
-- *type*: required, string([gateways|equipments]). Group item's type.
-- *itemList*: required, string list.
+- *id*: required, string.
+- *aliasName*: required, string.
+  Can be empty-string.
+- *eqList*: required, string list.
+  A list of CG IDs to be inserted into the group.
 
 Response Attributes:
-- *gid*: required, integer. Group ID. (gid=1, type=gateway) != (gid=1, type=equipmet) they are 2 different resource.
-- *name*: required, string. Group name.
-- *type*: required, string([gateways|equipments]). Group item's type.
-- *itemList*: required, string list.
+- *id*: required, ID of the Equipment Group just created.
 
 + Request (application/json)
 
         {
-            "name": "Eq_Group",
-            "type": "equipments",
-            "itemList": [
-                "uc-8100-0090E8000001",
-                "iologik-e2243-1",
-                "uc-8100-0090E8000002",
-                "meter-protecsa-1"
+            "id": "moxa-2014",
+            "aliasName": "moxa-2014",
+            "eqList": [
+                "iologik",
+                "uc-8100"
             ]
         }
-
-+ Response 200 (appliation/json)
-
-        {
-            "gid": 1,
-            "name": "Eq_Group",
-            "type": "equipments",
-            "itemList": [
-                "uc-8100-0090E8000001",
-                "iologik-e2243-1",
-                "uc-8100-0090E8000002",
-                "meter-protecsa-1"
-            ]
-        }
-
-## Specific Group Information [/mxcs/groups/{gid}?type={type}]
-
-Resource Attributes:
-- *gid*: Group ID.
-
-Query Attributes:
-- *type*: required, string([gateway|equipment]). Group Type.
-
-### Modify Group [PUT]
-
-Request Attributes:
-- *gid*: required, integer. Group ID. (gid=1, type=gateway) != (gid=1, type=equipmet) they are 2 different resource.
-- *name*: required, string. Group name.
-- *type*: required, string([gateways|equipments]). Group item's type.
-- *itemList*: required, string list.
-
-Response Attributes:
-- *gid*: required, integer. Group ID, (gid=1, type=gateway) != (gid=1, type=equipmet) they are 2 different resource.
-- *name*: required, string. Group name.
-- *type*: required, string([gateways|equipments]). Group item's type.
-- *itemList*: required, string list.
-
-+ Request (application/json)
-
-        {
-            "name": "Eq_Group",
-            "type": "equipments",
-            "itemList": [
-                "uc-8100-0090E8000001",
-                "iologik-e2243-1",
-                "uc-8100-0090E8000002",
-                "meter-protecsa-1"
-            ]
-        }
-
-+ Response 200 (appliation/json)
-
-        {
-            "name": "Eq_Group",
-            "type": "equipments",
-            "itemList": [
-                "uc-8100-0090E8000001",
-                "iologik-e2243-1",
-                "uc-8100-0090E8000002",
-                "meter-protecsa-1"
-            ]
-        }
-
-### Delete Group [DELETE]
 
 + Response 200 (application/json)
 
         {
-            "message": "Delete Group ID={gid} OK"
+            "id": "moxa-2014"
+        }
+
+### Delete Equipment Group List [DELETE]
+
+(not implemented yet)
+
+Request Attributes:
+- *eqGroupList*: required, string array.
+  Contains a list of IDs of the Equipments to be deleted.
+
+Response Attributes:
+- *message*: required, string.
+  Human-readable message.
+
++ Request (application/json)
+
+        {
+            "eqGroupList": [
+                "moxa-2014",
+                "moxa-2015"
+            ]
+        }
+
++ Response 200 (application/json)
+
+        {
+            "message": "success"
         }
 
 # group Profile of Equipments and CGs
