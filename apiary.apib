@@ -1065,16 +1065,15 @@ Response Attributes:
 
 # group Equipment Management
 
-## Get Equipment List [/mxcs/equipments?cgName={cgName}&groupId={groupId}&keyword={keyword}&page={page}&pageSize={pageSize}]
+## Get Equipment List [/mxcs/equipments?cgId={cgId}&groupId={groupId}&keyword={keyword}&page={page}&pageSize={pageSize}]
 
 Query Attributes:
-- *cgName*: optional, string.
+- *cgId*: optional, string.
   Only Equipments related to this Cloud Gateway is returned.
 - *groupId*: optional, string.
   Only Equipments that are in the Group are returned.
 - *keyword*: optional, string.
   Return only Equipments with *id* similar to the given string.
-  (not implmemented yet).
 - *page*: optional, integer. Default *1*.
 - *pageSize*: optional, integer. Default *30*.
 
@@ -1422,8 +1421,6 @@ Query Attributes:
 
 ### Get [GET]
 
-(not implemented yet)
-
 Response Attributes:
 - *totalCount*: required, integer.
 - *pageSize*: required, integer.
@@ -1464,8 +1461,6 @@ Response Attributes:
 
 ### Create Equipment Group [POST]
 
-(not implemented yet)
-
 Request Attributes:
 - *id*: required, string.
 - *aliasName*: required, string.
@@ -1494,8 +1489,6 @@ Response Attributes:
         }
 
 ### Delete Equipment Group List [DELETE]
-
-(not implemented yet)
 
 Request Attributes:
 - *eqGroupList*: required, string array.
@@ -1528,8 +1521,6 @@ Resource Attributes:
 
 ### Get [GET]
 
-(not implemented yet)
-
 Response Attributes:
 - *id*: required, string.
   Group ID.
@@ -1550,8 +1541,6 @@ Response Attributes:
         }
 
 ### Update CG Group [PUT]
-
-(not implemented yet)
 
 Request Attributes:
 - *id*: optional, string.
