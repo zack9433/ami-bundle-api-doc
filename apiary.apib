@@ -9,13 +9,6 @@ Resources provided by Cloud Server are categorized in */mxcs/** related resource
 
 # Common Notations
 
-## Date Format
-
-    date  = year "-" month "-" day
-    year  = 4DIGIT
-    month = 2DIGIT
-    day   = 2DIGIT
-
 ## Datetime Format
 
     datetime = date "T" time "Z"
@@ -36,44 +29,44 @@ Resources provided by Cloud Server are categorized in */mxcs/** related resource
 ### Get Configuration [GET]
 
 Response Attributes:
-- *sensorDataForwardCron*: required, string.
-- *sensorDataExpireTimeSec*: required, integer.
+- *readingForwardCron*: required, string.
+- *readingExpireTimeSec*: required, integer.
 
 + Response 200 (application/json)
 
         {
-            "sensorDataForwardCron": "* * * * *",
-            "sensorDataExpireTimeSec": 86400
+            "readingForwardCron": "* * * * *",
+            "readingExpireTimeSec": 86400
         }
 
 ### Update Configuration [PUT]
 
 Request Attributes:
-- *sensorDataForwardCron*: required, string.
-- *sensorDataExpireTimeSec*: required, integer.
+- *readingForwardCron*: optional, string.
+- *readingExpireTimeSec*: optional, integer.
 
 Response Attributes:
-- Same as *GET* response.
+- *message*: required, string.
+  Human-readable message.
 
 + Request (application/json)
 
         {
-            "sensorDataForwardCron": "* * * * *",
-            "sensorDataExpireTimeSec": 86400
+            "readingForwardCron": "* * * * *",
+            "readingExpireTimeSec": 86400
         }
 
 + Response 200 (application/json)
 
         {
-            "sensorDataForwardCron": "* * * * *",
-            "sensorDataExpireTimeSec": 86400
+            "message": "success"
         }
 
-# group Reading Drop Count
+# group CG Status
 
-## Drop Count [/mxc/dropcount]
+## Get CG Status [/mxc/status]
 
-### Get Drop Count [GET]
+### Get [GET]
 
 Response Attributes:
 - *storDropCount*: required, integer. Number of Readings dropped, caused by out-of-storage.
@@ -1092,6 +1085,98 @@ Response Attributes:
             "message": "success"
         }
 
+# group Reading Management
+
+## Get Channel List [/mxcs/equipments/{equipment_id}/channels?pageSize={pageSize}&page={page}]
+
+Resource Attributes:
+- *equipment_id*: required, string.
+
+Query Attributes:
+- *pageSize*: optional, integer.
+  Default *30*.
+- *page*: optional, integer.
+  Default *1*.
+
+### Get [GET]
+
+Response Attributes:
+- *totalCount*: required, integer.
+- *pageSize*: required, integer.
+- *page*: required, integer.
+- *channelList*: required, object array.
+    - *id*: required, string.
+      Channel ID.
+    - *value*: required, string or float.
+      Latest value received.
+    - *time*: required, string in Datetime format.
+      Latest value receiving time.
+
++ Response 200 (application/json)
+
+        {
+            "totalCount": 2,
+            "pageSize": 10,
+            "page": 1,
+            "channelList": [
+                {
+                    "id": "ai0",
+                    "value": 1.0264739990234375,
+                    "time": "2015-01-14T07:43:46.814000Z"
+                },
+                {
+                    "id": "di0",
+                    "value": "on",
+                    "time": "2015-01-14T10:08:51.181000Z"
+                }
+            ]
+        }
+
+## Get Reading List [/mxcs/equipments/{equipment_id}/channels/{channel_id}/readings?startTime={startTime}&endTime={endTime}&page={page}&pageSize={pageSize}&asc={asc}]
+
+Resource Attributes:
+- *equipment_id*: required, string.
+- *channel_id*: required, string.
+
+Query Attributes:
+- *startTime*: optional, string in *Datetime* format.
+- *endTime*: optional, string in *Datetime* format.
+- *page*: optional, integer.
+  Default *1*.
+- *pageSize*: optional, integer.
+  Default *30*.
+- *asc*: optional, boolean.
+  Return Readings in ascending order.
+  Default *false*.
+
+### Get [GET]
+
+Response Attributes:
+- *totalCount*: required, integer.
+- *pageSize*: required, integer.
+- *page*: required, integer.
+- *readingList*: required, object list.
+    - *value*: required, string or float.
+    - *time*: required, string in Datetime format.
+
++ Response 200 (application/json)
+
+        {
+            "totalCount": 2,
+            "pageSize": 10,
+            "page": 1,
+            "readingList": [
+                {
+                    "value": 1.0255584716796875,
+                    "time": "2015-01-14T10:08:51.181000Z"
+                },
+                {
+                    "value": 1.0264739990234375,
+                    "time": "2015-01-14T07:43:46.814000Z"
+                }
+            ]
+        }
+
 # group Manage Groups in CS
 
 ## Get CG Group List [/mxcs/cg-groups?keyword={keyword}&page={page}&pageSize={pageSize}]
@@ -1410,185 +1495,79 @@ Response Attributes:
 
 # group Profile of Equipments and CGs
 
-## All CGs [/mxcs/profile/cgs?gid={gid}&type={type}]
-(not implemented yet)
-(used in Control Center)
-(fixme)
+## All CGs [/mxcs/profile/cgs?cgGroupId={cgGroupId}]
+
+Query Attributes:
+- *cgGroupId*: optional, string.
+  If given, only CGs in CG Group and Equipments reported by CG in that Group is taken into account.
 
 ### Get Specific Group information [GET]
 
-Response Attributes:
-- gatewayOnlineCount: required, integer.
-- gatewayTotalCount: required, integer.
-- equipmentOnlineCount: required, integer.
-- equipmentTotalCount: required, integer.
+(not implemented yet)
 
-Note:
-- CG Online Rate = *gatewayOnlineCount* / *gatewayTotalCount*
+Response Attributes:
+- cgCount: required, integer.
+  Number of CGs that are taken into account.
+- cgOnlineCount: required, integer.
+  Number of CGs that are currently online.
+- equipmentCount: required, integer.
+  Number of Equipments that are taken into account.
+- equipmentOnlineCount: required, integer.
+  Number of Equipments that are currently online.
 
 + Response 200 (application/json)
 
-    + Body
+        {
+            "cgCount": 10,
+            "cgOnlineCount": 9,
+            "equipmentCount": 20
+            "equipmentOnlineCount": 15,
+        }
 
-            {
-                "gatewayOnlineCount": 9,
-                "gatewayTotalCount": 10,
-                "equipmentOnlineCount": 15,
-                "equipmentTotalCount": 20
-            }
+## All Equipments [/mxcs/profile/equipments?cgGroupId={cgGroupId}&eqGroupId={eqGroupId}]
 
-## All Equipments [/mxcs/profile/equipments?gid={gid}&type={type}]
-(not implemented yet)
-(used in Control Center)
+Query Attributes:
+- *cgGroupId*: optional, string.
+  If given, only Equipments reported by CG in that Group is taken into account.
+- *eqGroupId*: optional, string.
+  If given, only Equipments in that Group is taken into account.
 
 ### Get Specific Group information [GET]
 
+(not implemented yet)
+
 Response Attributes:
+- equipmentCount: required, integer.
+  Number of Equipments that are taken into account.
 - equipmentOnlineCount: required, integer.
-- equipmentTotalCount: required, integer.
+  Number of Equipments that are currently online.
 
 + Response 200 (application/json)
 
-    + Body
+        {
+            "equipmentCount": 20
+            "equipmentOnlineCount": 15,
+        }
 
-            {
-                "equipmentOnlineCount": 15,
-                "equipmentTotalCount": 20
-            }
+# group CG Online Count
 
-# group Reading Management
-
-## Channels [/mxcs/equipments/{equipment_name}/channels&page={page}?pageSize={pageSize}]
-
-Resource Attributes:
-- *equipment_name*: required, string.
+## Get History CG Online Count [/mxcs/history/cg-online-count?cgGroupId={cgGroupId}&startTime={startTime}&endTime={endTime}&type={type}]
 
 Query Attributes:
-- *page*: optional, integer. Default *1*.
-- *pageSize*: optional, integer. Default *30*.
+- *cgGroupId*: optional, string.
+  If given, only CGs in this Group is taken into account.
+- *startTime*: required, string in Datetime format.
+- *endTime*: required, string in Datetime format.
+- *type*: optional, string.
+  Could be one of *daily*.
+  Default *daily*.
 
-### Get Channel List [GET]
-
-Response Attributes:
-- *totalCount*: required, integer. Number of Channels in the list.
-- *pageSize*: required, integer.
-- *page*: required, integer.
-- *chanList*: required, object list.
-    - *name*: required, string. Channel name.
-    - *value*: required, string or float. Latest value received.
-    - *time*: required, string in Datetime format. Latest value received time.
-
-+ Response 200 (application/json)
-
-        {
-            "totalCount": 2,
-            "pageSize": 10,
-            "page": 1,
-            "chanList": [
-                {
-                    "name": "ai0",
-                    "value": 1.0264739990234375,
-                    "time": "2015-01-14T07:43:46.814000Z"
-                },
-                {
-                    "name": "di0",
-                    "value": "on",
-                    "time": "2015-01-14T10:08:51.181000Z"
-                }
-            ]
-        }
-
-## Readings [/mxcs/equipments/{equipment_name}/channels/{channel_name}/readings?startTime={startTime}&endTime={endTime}&page={page}&pageSize={pageSize}&asc={asc}]
-
-Resource Attributes:
-- *equipment_name*: required, string.
-- *channel_name*: required, string.
-
-Query Attributes:
-- *startTime*: optional, string in *Datetime* format.
-- *endTime*: optional, string in *Datetime* format.
-- *page*: optional, integer. Default *1*.
-- *pageSize*: optional, integer. Default *30*.
-- *asc*: optional, boolean. true: ascend(oldest first), false: descend(latest first). Default *false*.
-
-### Query Sensor Data [GET]
+### Get [GET]
 
 Response Attributes:
-- *totalCount*: required, integer. Number of Readings in the list.
-- *pageSize*: required, integer.
-- *page*: required, integer.
-- *readingList*: required, object list.
-    - *value*: required, string or float.
-    - *time*: required, string in Datetime format.
-
-+ Response 200 (application/json)
-
-        {
-            "totalCount": 2,
-            "pageSize": 10,
-            "page": 1,
-            "readingList": [
-                {
-                    "value": 1.0255584716796875,
-                    "time": "2015-01-14T10:08:51.181000Z"
-                },
-                {
-                    "value": 1.0264739990234375,
-                    "time": "2015-01-14T07:43:46.814000Z"
-                }
-            ]
-        }
-
-# group Cloud Server Configuration
-
-## Configuration  [/mxcs/config]
-
-### Get Configuration [GET]
-
-Response Attributes:
-- *expireTimeDay*: required, integer. Reading expire time in days.
-
-+ Response 200 (application/json)
-
-        {
-            "expireTimeDay": 90
-        }
-
-### Update Configuration [PUT]
-
-Request Attributes:
-- *expireTimeDay*: required, integer.
-
-Response Attributes:
-- *expireTimeDay*: required, integer.
-
-+ Request (application/json)
-
-        {
-            "expireTimeDay": 90
-        }
-
-+ Response 200 (application/json)
-
-        {
-            "expireTimeDay": 90
-        }
-
-# Group CG Online Count
-
-## CG Online Count [/mxcs/history/cg-online-count?gid={gid}&type={type}&endDate={endDate}&limit={limit}]
-
-Query Attributes:
-- *gid*: optional, integer. Group ID.
-- *type*: optional, string. Must be "gateway". Must exist when *gid* is given.
-- *endDate*: required, string in *Date* format.
-- *limit*: required. integer. Days to return.
-
-### Get CG Online Count Data [GET]
-
-Response Attributes:
-- *historyList*: required, object list.
-    - *date*: required, string in *Date* format.
+- *historyList*: required, object array.
+    - *startTime*: required, string in Datetime format.
+    - *endTime*: required, string in Datetime format.
     - *count*: required, integer.
 
 + Response 200 (application/json)
@@ -1596,51 +1575,64 @@ Response Attributes:
         {
             "historyList": [
                 {
-                    "date": "2015-01-10",
+                    "startTime": "2015-01-10T00:00:00.000000Z",
+                    "endTime": "2015-01-11T00:00:00.000000Z",
                     "count": 10
                 },
                 {
-                    "date": "2015-01-11",
+                    "startTime": "2015-01-11T00:00:00.000000Z",
+                    "endTime": "2015-01-12T00:00:00.000000Z",
                     "count": 11
                 },
                 {
-                    "date": "2015-01-12",
+                    "startTime": "2015-01-12T00:00:00.000000Z",
+                    "endTime": "2015-01-13T00:00:00.000000Z",
                     "count": 19
                 },
                 {
-                    "date": "2015-01-13",
+                    "startTime": "2015-01-13T00:00:00.000000Z",
+                    "endTime": "2015-01-14T00:00:00.000000Z",
                     "count": 12
                 },
                 {
-                    "date": "2015-01-14",
+                    "startTime": "2015-01-14T00:00:00.000000Z",
+                    "endTime": "2015-01-15T00:00:00.000000Z",
                     "count": 15
                 },
                 {
-                    "date": "2015-01-15",
+                    "startTime": "2015-01-15T00:00:00.000000Z",
+                    "endTime": "2015-01-16T00:00:00.000000Z",
                     "count": 20
                 },
                 {
-                    "date": "2015-01-16",
+                    "startTime": "2015-01-16T00:00:00.000000Z",
+                    "endTime": "2015-01-17T00:00:00.000000Z",
                     "count": 25
                 }
             ]
         }
 
-# Group Equipment Online Count
+# group Equipment Online Count
 
-## Equipment Online Count [/mxcs/history/equipment-online-count?gid={gid}&type={type}&endDate={endDate}&limit={limit}]
+## Get History Equipment Online Count [/mxcs/history/equipment-online-count?cgGroupId={cgGroupId}&eqGroupId={eqGroupId}&startTime={startTime}&endTime={endTime}&type={type}]
 
 Query Attribute:
-- *gid*: optional, integer. Group ID.
-- *type*: optional, string([gateway|equipment]).
-- *endDate*: optional, string in *Date* format. Default *current-date*.
-- *limit*: optional, integer. Default *7*.
+- *cgGroupId*: optional, string.
+  If given, only Equipments that was reported by CGs in the CG Group is taken into account.
+- *eqGroupId*: optional, string.
+  If given, only Equipments in the Equipment Group is taken into account.
+- *startTime*: required, string in Datetime format.
+- *endTime*: required, string in Datetime format.
+- *type*: optional, string.
+  Could be one of *daily*.
+  Default *daily*.
 
-### Get Equipment Online Count Data [GET]
+### Get [GET]
 
 Response Attribute:
-- *historyList*: required, object list.
-    - *date*: required, string in *Date* format.
+- *historyList*: required, object array.
+    - *startTime*: required, string in Datetime format.
+    - *endTime*: required, string in Datetime format.
     - *count*: required, integer.
 
 + Response 200 (application/json)
@@ -1648,31 +1640,38 @@ Response Attribute:
         {
             "historyList": [
                 {
-                    "date": "2015-01-10",
+                    "startTime": "2015-01-10T00:00:00.000000Z",
+                    "endTime": "2015-01-11T00:00:00.000000Z",
                     "count": 10
                 },
                 {
-                    "date": "2015-01-11",
+                    "startTime": "2015-01-11T00:00:00.000000Z",
+                    "endTime": "2015-01-12T00:00:00.000000Z",
                     "count": 11
                 },
                 {
-                    "date": "2015-01-12",
+                    "startTime": "2015-01-12T00:00:00.000000Z",
+                    "endTime": "2015-01-13T00:00:00.000000Z",
                     "count": 19
                 },
                 {
-                    "date": "2015-01-13",
+                    "startTime": "2015-01-13T00:00:00.000000Z",
+                    "endTime": "2015-01-14T00:00:00.000000Z",
                     "count": 12
                 },
                 {
-                    "date": "2015-01-14",
+                    "startTime": "2015-01-14T00:00:00.000000Z",
+                    "endTime": "2015-01-15T00:00:00.000000Z",
                     "count": 15
                 },
                 {
-                    "date": "2015-01-15",
+                    "startTime": "2015-01-15T00:00:00.000000Z",
+                    "endTime": "2015-01-16T00:00:00.000000Z",
                     "count": 20
                 },
                 {
-                    "date": "2015-01-16",
+                    "startTime": "2015-01-16T00:00:00.000000Z",
+                    "endTime": "2015-01-17T00:00:00.000000Z",
                     "count": 25
                 }
             ]
@@ -1680,73 +1679,23 @@ Response Attribute:
 
 # group CG Reading Count
 
-## CG Reading Count [/mxcs/history/cg-reading-count?gid={gid}&type={type}&endDate={endDate}&limit={limit}]
+## Get History CG Reading Count [/mxcs/history/cg-reading-count?cgGroupId={cgGroupId}&startTime={startTime}&endTime={endTime}&type={type}]
 
 Query Attribute:
-- *gid*: optional, integer. Group ID.
-- *type*: optional, string. Must be "gateway" when *gid* is given.
-- *endDate*: optional, string in *Date* format. Default *current-date*.
-- *limit*: optional, integer. Number of records to return. Default *7*.
+- *cgGroupId*: optional, string.
+  If given, only CGs in this Group is taken into account.
+- *startTime*: required, string in Datetime format.
+- *endTime*: required, string in Datetime format.
+- *type*: optional, string.
+  Could be one of *daily*.
+  Default *daily*.
 
-### Get CG Reading Count [GET]
-
-Response Attribute:
-- *historyList*: required. If no data will return [].
-    - *date*: required, string.
-    - *count*: required, decimal or string.
-
-+ Response 200 (application/json)
-
-        {
-            "historyList": [
-                {
-                    "date": "2015-01-10",
-                    "count": 10
-                },
-                {
-                    "date": "2015-01-11",
-                    "count": 11
-                },
-                {
-                    "date": "2015-01-12",
-                    "count": 19
-                },
-                {
-                    "date": "2015-01-13",
-                    "count": 12
-                },
-                {
-                    "date": "2015-01-14",
-                    "count": 15
-                },
-                {
-                    "date": "2015-01-15",
-                    "count": 20
-                },
-                {
-                    "date": "2015-01-16",
-                    "count": 25
-                }
-            ]
-        }
-
-# Group Equipment Reading Count
-
-## Equipment Reading Count [/mxcs/history/equipment-reading-count?gid={gid}&type={type}&endDate={endDate}&limit={limit}]
-
-Provide the number of Readings reported by all or a group of Equipments.
-
-Query Attribute:
-- *gid*: optional, integer. Group ID.
-- *type*: optional, string([gateway|equipment]).
-- *endDate*: optional, string *Date* format. Default *current-date*.
-- *limit*: optional, integer. Number of records to return. Default *7*.
-
-### Get Equipment Reading Count [GET]
+### Get [GET]
 
 Response Attribute:
 - *historyList*: required, object list.
-    - *date*: required, string in *Datetime* format.
+    - *startTime*: required, string in Datetime format.
+    - *endTime*: required, string in Datetime format.
     - *count*: required, integer.
 
 + Response 200 (application/json)
@@ -1754,31 +1703,105 @@ Response Attribute:
         {
             "historyList": [
                 {
-                    "date": "2015-01-10",
+                    "startTime": "2015-01-10T00:00:00.000000Z",
+                    "endTime": "2015-01-11T00:00:00.000000Z",
                     "count": 10
                 },
                 {
-                    "date": "2015-01-11",
+                    "startTime": "2015-01-11T00:00:00.000000Z",
+                    "endTime": "2015-01-12T00:00:00.000000Z",
                     "count": 11
                 },
                 {
-                    "date": "2015-01-12",
+                    "startTime": "2015-01-12T00:00:00.000000Z",
+                    "endTime": "2015-01-13T00:00:00.000000Z",
                     "count": 19
                 },
                 {
-                    "date": "2015-01-13",
+                    "startTime": "2015-01-13T00:00:00.000000Z",
+                    "endTime": "2015-01-14T00:00:00.000000Z",
                     "count": 12
                 },
                 {
-                    "date": "2015-01-14",
+                    "startTime": "2015-01-14T00:00:00.000000Z",
+                    "endTime": "2015-01-15T00:00:00.000000Z",
                     "count": 15
                 },
                 {
-                    "date": "2015-01-15",
+                    "startTime": "2015-01-15T00:00:00.000000Z",
+                    "endTime": "2015-01-16T00:00:00.000000Z",
                     "count": 20
                 },
                 {
-                    "date": "2015-01-16",
+                    "startTime": "2015-01-16T00:00:00.000000Z",
+                    "endTime": "2015-01-17T00:00:00.000000Z",
+                    "count": 25
+                }
+            ]
+        }
+
+# group Equipment Reading Count
+
+## Get History Equipment Reading Count [/mxcs/history/equipment-reading-count?cgGroupId={cgGroupId}&eqGroupId={eqGroupId}&startTime={startTime}&endTime={endTime}&type={type}]
+
+Provide the number of Readings reported by Equipments.
+
+Query Attribute:
+- *cgGroupId*: optional, string.
+  If given, only Equipments that was reported by CGs in the CG Group is taken into account.
+- *eqGroupId*: optional, string.
+  If given, only Equipments in the Equipment Group is taken into account.
+- *startTime*: required, string in Datetime format.
+- *endTime*: required, string in Datetime format.
+- *type*: optional, string.
+  Could be one of *daily*.
+  Default *daily*.
+
+### Get [GET]
+
+Response Attribute:
+- *historyList*: required, object array.
+    - *startTime*: required, string in Datetime format.
+    - *endTime*: required, string in Datetime format.
+    - *count*: required, integer.
+
++ Response 200 (application/json)
+
+        {
+            "historyList": [
+                {
+                    "startTime": "2015-01-10T00:00:00.000000Z",
+                    "endTime": "2015-01-11T00:00:00.000000Z",
+                    "count": 10
+                },
+                {
+                    "startTime": "2015-01-11T00:00:00.000000Z",
+                    "endTime": "2015-01-12T00:00:00.000000Z",
+                    "count": 11
+                },
+                {
+                    "startTime": "2015-01-12T00:00:00.000000Z",
+                    "endTime": "2015-01-13T00:00:00.000000Z",
+                    "count": 19
+                },
+                {
+                    "startTime": "2015-01-13T00:00:00.000000Z",
+                    "endTime": "2015-01-14T00:00:00.000000Z",
+                    "count": 12
+                },
+                {
+                    "startTime": "2015-01-14T00:00:00.000000Z",
+                    "endTime": "2015-01-15T00:00:00.000000Z",
+                    "count": 15
+                },
+                {
+                    "startTime": "2015-01-15T00:00:00.000000Z",
+                    "endTime": "2015-01-16T00:00:00.000000Z",
+                    "count": 20
+                },
+                {
+                    "startTime": "2015-01-16T00:00:00.000000Z",
+                    "endTime": "2015-01-17T00:00:00.000000Z",
                     "count": 25
                 }
             ]
