@@ -86,639 +86,300 @@ Response Attributes:
             "fwdDropCount": 99
         }
 
-# group Scheduled Jobs
+# group Job Management
 
-## Scheduled Jobs Configuration [/mxc/schedules]
-
-### Get Multiple Job Configurations [GET]
-
-Response Attributes:
-- *id*: required, integer, starting from 0.
-- *name*: required, string.
-- *command*: required, string.
-- *logCount*: required, integer.
-- *schedule*: required, object.
-    - *type*: required, string. Should be one of "cron", "periodical-sec" or "startup".
-    - *time*: required when *type="cron"*, cron schedule string.
-    - *sec*: required when *type="periodical-sec"*, integer. Period second.
-    - *mode*: required when *type="periodical-sec"*. Should be one of the following:
-        - *SCHEDULE_FIRST*: schedule the job for future triggering.
-        - *TRIGGER_FIRST*: trigger the job after the configurations were loaded.
-- *isRunning*: required, boolean. Indicates whether the job is running.
-- *executionCount*: required, integer.
-- *lastExecution*: required, object. If the job hasn't been executed yet, the content would be empty.
-    - *startTime*: optional, string in Datetime format.
-    - *endTime*: optional, string in Datetime format.
-    - *exitStatus*: optional, integer.
-        - *0*: Last execution success.
-        - *others*: Last execution failed.
-
-+ Response 200 (application/json)
-
-        [
-            {
-                "id": 1,
-                "name": "Read Register Data",
-                "command": "bin/ansi --read-register-data",
-                "logCount": 30,
-                "schedule":
-                {
-                    "type": "cron",
-                    "time": "0 * * * *"
-                },
-                "isRunning": false,
-                "executionCount": 15,
-                "lastExecution":
-                {
-                    "startTime": "2014-11-24T04:42:17.260861Z",
-                    "endTime": "2014-11-24T04:42:19.073265Z",
-                    "exitStatus": 0
-                }
-            },
-            {
-                "id": 2,
-                "name": "Read Load Profile",
-                "command": "bin/ansi --read-load-profile",
-                "logCount": 30,
-                "schedule":
-                {
-                    "type": "periodical-sec",
-                    "sec": 900,
-                    "mode": "SCHEDULE_FIRST"
-                },
-                "isRunning": false,
-                "executionCount": 0,
-                "lastExecution": {}
-            },
-            {
-                "id": 3,
-                "name": "Read ioLogik E2242",
-                "command": "iologik_e2242",
-                "logCount": 30,
-                "schedule":
-                {
-                    "type": "periodical-sec",
-                    "sec": 1,
-                    "mode": "TRIGGER_FIRST"
-                },
-                "isRunning": false,
-                "executionCount": 0,
-                "lastExecution": {}
-            }
-        ]
-
-
-### Update Multiple Job Configurations [PUT]
-
-Request Attributes:
-- *id*: required, integer, starting from 0.
-- *name*: required, string.
-- *command*: required, string.
-- *logCount*: required, integer.
-- *schedule*: required, object.
-    - *type*: required, string. Should be one of "cron", "periodical-sec" or "startup".
-    - *time*: required when *type="cron"*, cron schedule string.
-    - *sec*: required when *type="periodical-sec"*, integer. Period second.
-    - *mode*: required when *type="periodical-sec"*. Should be one of the following:
-        - *SCHEDULE_FIRST*: schedule the job for future triggering.
-        - *TRIGGER_FIRST*: trigger the job after the configurations were loaded.
-- *isRunning*: optional, boolean. Ignored.
-- *executionCount*: optional, integer. Ignored.
-- *lastExecution*: optional, object. Ignored.
-
-Response Attributes:
-- Same as in *GET* response.
-
-+ Request (application/json)
-
-        [
-            {
-                "id": 1
-                "name": "Read Register Data",
-                "command": "bin/ansi --read-register-data",
-                "logCount": 30,
-                "schedule":
-                {
-                    "type": "cron",
-                    "time": "0 * * * *"
-                }
-            },
-            {
-                "id": 2,
-                "name": "Read Load Profile",
-                "command": "bin/ansi --read-load-profile",
-                "logCount": 30,
-                "schedule":
-                {
-                    "type": "periodical-sec",
-                    "sec": 900,
-                    "mode": "SCHEDULE_FIRST"
-                },
-                "isRunning": false,
-                "executionCount": 0,
-                "lastExecution": {}
-            }
-        ]
-
-+ Response 200 (application/json)
-
-        [
-            {
-                "id": 1
-                "name": "Read Register Data",
-                "command": "bin/ansi --read-register-data",
-                "logCount": 30,
-                "schedule":
-                {
-                    "type": "cron",
-                    "time": "0 * * * *"
-                },
-                "isRunning": false,
-                "executionCount": 15,
-                "lastExecution":
-                {
-                    "startTime": "2014-11-24T04:42:17.260861Z",
-                    "endTime": "2014-11-24T04:42:19.073265Z",
-                    "exitStatus": 0
-                }
-            },
-            {
-                "id": 2,
-                "name": "Read Load Profile",
-                "command": "bin/ansi --read-load-profile",
-                "logCount": 30,
-                "schedule":
-                {
-                    "type": "periodical-sec",
-                    "sec": 900,
-                    "mode": "SCHEDULE_FIRST"
-                },
-                "isRunning": false,
-                "executionCount": 0,
-                "lastExecution": {}
-            }
-        ]
-
-### Create New Job [POST]
-
-Request Attributes:
-- *name*: required, string.
-- *command*: required, string.
-- *logCount*: required, integer.
-- *schedule*: required, object.
-    - *type*: required, string. Should be one of "cron", "periodical-sec" or "startup".
-    - *time*: required when *type="cron"*, cron schedule string.
-    - *sec*: required when *type="periodical-sec"*, integer. Period second.
-    - *mode*: required when *type="periodical-sec"*. Should be one of the following:
-        - *SCHEDULE_FIRST*: schedule the job for future triggering.
-        - *TRIGGER_FIRST*: trigger the job after the configurations were loaded.
-- *isRunning*: optional, boolean. Ignored.
-- *executionCount*: optional, integer. Ignored.
-- *lastExecution*: optional, object. Ignored.
-
-Response Attributes:
-- Same as *GET* response.
-
-+ Request (application/json)
-
-        {
-            "name": "Read Register Data",
-            "command": "bin/ansi --read-register-data",
-            "logCount": 30,
-            "schedule":
-            {
-                "type": "cron",
-                "time": "0 * * * *"
-            }
-        }
-
-+ Response 200 (application/json)
-
-        {
-            "id": 5,
-            "name": "Read Register Data",
-            "command": "bin/ansi --read-register-data",
-            "logCount": 30,
-            "schedule":
-            {
-                "type": "cron",
-                "time": "0 * * * *"
-            },
-            "isRunning": false,
-            "executionCount": 0,
-            "lastExecution": {}
-        }
-
-## Scheduled Job Configuration [/mxc/schedules/{id}]
-
-Resource Attributes:
-- *id*: integer. Schedule ID.
-
-### Get Single Job Configuration [GET]
-
-Response Attributes:
-- *name*: required, string.
-- *command*: required, string. Shell command to be executed.
-- *logCount*: required, integer. Number of logs to keep on Cloud Gateways.
-- *schedule*: required, object.
-    - *type*: required, string. Should be one of "cron", "periodical-sec" or "startup".
-    - *time*: required when *type="cron"*, cron schedule string.
-    - *sec*: required when *type="periodical-sec"*, integer. Period second.
-    - *mode*: required when *type="periodical-sec"*. Should be one of the following:
-        - *SCHEDULE_FIRST*: schedule the job for future triggering.
-        - *TRIGGER_FIRST*: trigger the job after the configurations were loaded.
-- *isRunning*: required, boolean. Indicates whether the job is running.
-- *executionCount*: required, integer.
-- *lastExecution*: required, object. If the job hasn't been executed yet, the content would be empty.
-    - *startTime*: optional, string in Datetime format.
-    - *endTime*: optional, string in Datetime format.
-    - *exitStatus*: optional, integer.
-        - *0*: Last execution success.
-        - *others*: Last execution failed.
-
-+ Response 200 (application/json)
-
-        {
-            "name": "Read Register Data",
-            "command": "bin/ansi --read-register-data",
-            "logCount": 30,
-            "schedule":
-            {
-                "type": "cron",
-                "time": "0 * * * *"
-            },
-            "isRunning": false,
-            "executionCount": 0,
-            "lastExecution": {}
-        }
-
-### Update Single Job Configuration [PUT]
-
-Request Attributes:
-
-Response Attributes:
-- Same as *GET* response.
-
-+ Request (application/json)
-
-        {
-            "name": "Read Register Data",
-            "command": "bin/ansi --read-register-data",
-            "logCount": 30,
-            "schedule":
-            {
-                "type": "cron",
-                "time": "0 * * * *"
-            }
-        }
-
-+ Response 200 (application/json)
-
-        {
-            "name": "Read Register Data",
-            "command": "bin/ansi --read-register-data",
-            "logCount": 30,
-            "schedule":
-            {
-                "type": "cron",
-                "time": "0 * * * *"
-            },
-            "isRunning": false,
-            "executionCount": 0,
-            "lastExecution": {}
-        }
-
-### Delete Single Job Configuration [DELETE]
-
-+ Response 200 (application/json)
-
-        {
-            "message": "Delete scheduler job on cg-123456789715 successfully."
-        }
-
-## Log Management [/mxc/schedules/{sched_id}/logs?pageSize={pageSize}&page={page}]
-
-### Get Log List [GET]
+## Get Job List [/mxc/jobs?pageSize={pageSize}&page={page}]
 
 Query Attributes:
 - *pageSize*: Default *30*.
 - *page*: Start from *1*. Default *1*.
 
-Response Attributes:
-- *totalCount*: required, integer. Number of items in the list.
+### Get [GET]
+
+Resposne Attributes:
+- *totalCount*: required, integer.
 - *pageSize*: required, integer.
 - *page*: required, integer.
-- *logList*: required, object list.
-    - *id*: required, string. Log ID.
-    - *startTime*: required, string in Datetime format.
-    - *endTime*: required, string in Datetime format.
-    - *exitStatus*: required, integer.
-        - *0*: success.
-        - *others*: failure.
+- *jobList*: required, object array.
+    - *id*: required, integer.
+      Job ID.
+    - *name*: required, string.
+      Given job name.
+    - *command*: required, string.
+      Shell command to execute.
+    - *logCount*: required, integer.
+      Number of logs to keep on Cloud Gateway.
+    - *scheduleList*: required, object array.
+        - *id*: required, integer.
+          Schedule ID.
+        - *name*: required, string.
+          Given schedule name.
+        - *enabled*: required, boolean.
+          Enable/disable current schedule.
+        - *period-sec*: optional, integer.
+          Triggered periodically.
+        - *cron*: optional, string.
+          Cron schedule string.
+    - *isRunning*: required, boolean.
+      Indicates whether the job is running.
+    - *executionCount*: required, integer.
+    - *lastExecution*: required, object.
+      If the job hasn't been executed yet, all values below would not present.
+        - *startTime*: optional, string in Datetime format.
+        - *endTime*: optional, string in Datetime format.
+        - *exitStatus*: optional, integer.
+          Value *0* indicates success, *non-0* indicates failure.
 
-Log list returned is ordered by *startTime* in decending order.
+In a schedule configuration, only one of *period-sec* and *cron* should present.
 
 + Response 200 (application/json)
 
         {
-            "totalCount": 40,
+            "totalCount": 2,
             "pageSize": 30,
             "page": 1,
-            "logList":
-            [
+            "jobList": [
                 {
-                    "id": "20141124045217",
-                    "startTime": "2014-11-24T04:52:17Z",
-                    "endTime": "2014-11-24T04:53:17Z",
-                    "exitStatus": 127
+                    "id": 1,
+                    "name": "read iologik",
+                    "command": "mxcdemo_iologik 192.168.31.75"
+                    "logCount": 30,
+                    "scheduleList": [
+                        {
+                            "id": 1,
+                            "name": "every 10 seconds",
+                            "enabled": true,
+                            "period-sec": 10
+                        },
+                        {
+                            "id": 2,
+                            "name": "every minute",
+                            "enabled": false,
+                            "cron": "* * * * *"
+                        }
+                    ],
+                    "isRunning": false,
+                    "executionCount": 15,
+                    "lastExecution": {
+                        "startTime": "2014-11-24T04:42:17.260861Z",
+                        "endTime": "2014-11-24T04:42:19.073265Z",
+                        "exitStatus": 0
+                    }
                 },
                 {
-                    "id": "20141124044217",
-                    "startTime": "2014-11-24T04:42:17Z",
-                    "endTime": "2014-11-24T04:43:17Z",
-                    "exitStatus": 0
+                    "id": 2,
+                    "name": "read load profile",
+                    "command": "bin/ansi --read-load-profile",
+                    "logCount": 7,
+                    "scheduleList": [
+                        {
+                            "id": 1,
+                            "name": "every quarter",
+                            "enabled": true,
+                            "cron": "*/15 * * * *"
+                        }
+                    ],
+                    "isRunning": true,
+                    "executionCount": 36,
+                    "lastExecution": {
+                        "startTime": "2015-03-05T00:03:04.299312Z",
+                        "endTime": "2015-03-05T00:03:18.488753Z",
+                        "exitStatus": 0
+                    }
                 }
             ]
         }
 
-## Export Log Files [/mxc/schedules/{sched_id}/logs/{log_id}/export]
+## Manage Job [/mxcs/jobs]
 
-Resource Attributes:
-- *sched_id*: integer. Schedule ID.
-- *log_id*: string. Log ID.
-
-### Retrieve Single Log File [POST]
-
-This request causes Cloud Gateway to *POST* the *Log File* to the designated *url*.
+### Create Job [POST]
 
 Request Attributes:
-- *url*: required, string. URL given for Cloud Gateway to *POST* the log file to.
-
-Response Attributes:
-- *startTime*: required, string in *Datetime* format. Time when *POST* started.
-- *endTime*: required, string in *Datetime* format. Time when *POST* ended.
-- *url*: required, string.
-
-+ Request (application/json)
-
-        {
-            "url": "https://mxc-cs/log/upload/JEJC9bbc832k1Sc"
-        }
-
-+ Response 200 (application/json)
-
-        {
-            "startTime": "2014-12-03T04:42:17.260861Z",
-            "endTime": "2014-12-03T04:48:36.992303Z",
-            "url": "https://mxc-cs/log/upload/JEJC9bbc832k1Sc"
-        }
-
-# group Trigger Jobs
-After Custom Bundle upload to CG, CG will decompress the Custom Bundle.
-
-But **NO** any Trigger Configuration will be created.
-
-All Trigger Configuration **NEED** be created from WEB by using **POST** API.
-
-## Trigger Jobs Configuration [/mxc/triggers]
-
-### Get Multiple Job Configurations [GET]
-
-Response Attributes:
-- *id*: required, integer, starting from 0.
 - *name*: required, string.
 - *command*: required, string.
 - *logCount*: required, integer.
-- *isRunning*: required, boolean. Indicates whether the job is running.
-- *executionCount*: required, integer. Number of times the job is executed.
-- *lastExecution*: require, object.
-    - *startTime*: optional, string in *Datetime* format.
-    - *endTime*: optional, string in *Datetime* format.
-    - *exitStatus*: optional, integer.
-        - *0*: Last execution success.
-        - *others*: Last execution fail.
-
-+ Response 200 (application/json)
-
-        [
-            {
-                "id": 0,
-                "name": "Read Register Data",
-                "command": "bin/ansi --read-register-data",
-                "logCount": 30,
-                "isRunning": false,
-                "executionCount": 15,
-                "lastExecution":
-                {
-                    "startTime": "2014-11-24T04:42:17.260861Z",
-                    "endTime": "2014-11-24T04:42:19.073265Z",
-                    "exitStatus": 0
-                }
-            },
-            {
-                "id": 1,
-                "name": "Read Load Profile",
-                "command": "bin/ansi --read-load-profile",
-                "logCount": 30,
-                "isRunning": false,
-                "executionCount": 0,
-                "lastExecution": {}
-            }
-        ]
-
-### Update Multiple Job Configurations [PUT]
-All the jobs in CG would be replaced.
-
-Request Attribure:
-- *id*: required, integer, starting from 0.
-- *name*: required, string.
-- *command*: required, string.
-- *logCount*: required, integer.
-- *isRunning*: optional, boolean. Ignored.
-- *executionCount*: optional, integer. Ignored.
-- *lastExecution*: optional, object. Ignored.
+- *scheduleList*: optional, object array.
+    - *name*: required, string.
+    - *enabled*: optional, boolean.
+      Default *true*.
+    - *period-sec*: optional, integer.
+    - *cron*: optional, string.
 
 Response Attributes:
-- Same as *GET* request.
++ *id*: required, ID of the Job created.
+
+Only one of *period-sec* and *cron* should present in a schedule description.
 
 + Request (application/json)
 
-        [
-            {
-                "id": 4,
-                "name": "Hello world",
-                "command": "bin/ansi --read-register-data",
-                "isRunning": false,
-                "logCount": 30,
-                "executionCount": 0,
-                "lastExecution": {}
-            },
-            {
-                "id": 7,
-                "name": "Read Load Profile",
-                "command": "bin/ansi --read-load-profile",
-                "logCount": 30,
-                "executionCount": 15,
-                "lastExecution":
+        {
+            "name": "read load profile",
+            "command": "bin/ansi --read-load-profile",
+            "logCount": 15,
+            "scheduleList": [
                 {
-                    "startTime": "2014-11-24T04:42:17.260861Z",
-                    "endTime": "2014-11-24T04:42:19.073265Z",
-                    "exitStatus": 0
+                    "name": "every quarter",
+                    "enabled": true,
+                    "cron": "1/16/31/46 * * * *",
                 }
-            }
-        ]
+            ]
+        }
 
 + Response 200 (application/json)
 
-        [
-            {
-                "id": 4,
-                "name": "Hello world",
-                "command": "bin/ansi --read-register-data",
-                "isRunning": false,
-                "logCount": 30,
-                "executionCount": 0,
-                "lastExecution": {}
-            },
-            {
-                "id": 7,
-                "name": "Read Load Profile",
-                "command": "bin/ansi --read-load-profile",
-                "isRunning": false,
-                "logCount": 30,
-                "executionCount": 15,
-                "lastExecution":
-                {
-                    "startTime": "2014-11-24T04:42:17.260861Z",
-                    "endTime": "2014-11-24T04:42:19.073265Z",
-                    "exitStatus": 0
-                }
-            }
-        ]
+        {
+            "id": 3
+        }
 
-### Create New Job [POST]
+### Delete Job List [DELETE]
 
 Request Attributes:
-- Same as *PUT* request.
+- *idList*: required, integer array.
+  A list of Job IDs to be deleted.
 
 Response Attributes:
-- Same as *GET* response.
+- *message*: required, string.
+  Human-readable message.
 
 + Request (application/json)
 
         {
-            "name": "Hello world",
-            "command": "bin/ansi --read-load-profile",
-            "logCount": 30
+            "idList": [
+                1, 3, 4
+            ]
         }
 
 + Response 200 (application/json)
 
         {
-            "id": 8,
-            "name": "Hello world",
-            "command": "bin/ansi --read-load-profile",
-            "isRunning": false,
-            "logCount": 30,
-            "executionCount": 0,
-            "lastExecution": {}
+            "message": "success"
         }
 
-## Job [/mxc/triggers/{id}]
+## Manage Job [/mxc/job/{job_id}]
 
 Resource Attributes:
-- id: integer. Trigger ID.
+- *job_id*: required.
+  The ID of Job of interest.
 
-### Get Single Job Configuration [GET]
-(not implemented yet)
+### Get [GET]
 
 Response Attributes:
+- *id*: required, integer.
+  Job ID.
 - *name*: required, string.
+  Given job name.
 - *command*: required, string.
+  Shell command to execute.
+- *logCount*: required, integer.
+  Number of logs to keep on Cloud Gateway.
+- *scheduleList*: required, object array.
+    - *id*: required, integer.
+      Schedule ID.
+    - *name*: required, string.
+      Given schedule name.
+    - *enabled*: required, boolean.
+      Enable/disable current schedule.
+    - *period-sec*: optional, integer.
+      Triggered periodically.
+    - *cron*: optional, string.
+      Cron schedule string.
 - *isRunning*: required, boolean.
-- *logCount*: required, integer.
+  Indicates whether the job is running.
 - *executionCount*: required, integer.
 - *lastExecution*: required, object.
-    - *startTime*: optional, string in *Datetime* format.
-    - *endTime*: optional, string in *Datetime* format.
+  If the job hasn't been executed yet, all values below would not present.
+    - *startTime*: optional, string in Datetime format.
+    - *endTime*: optional, string in Datetime format.
     - *exitStatus*: optional, integer.
+      Value *0* indicates success, *non-0* indicates failure.
 
 + Response 200 (application/json)
 
         {
-            "name": "Read Load Profile",
-            "command": "bin/ansi --read-load-profile"
-            "isRunning": false,
-            "logCount": 30,
-            "executionCount": 15,
-            "lastExecution":
             {
-                "startTime": "2014-11-24T04:42:17.260861Z",
-                "endTime": "2014-11-24T04:42:19.073265Z",
-                "exitStatus": 0
+                "id": 1,
+                "name": "read iologik",
+                "command": "mxcdemo_iologik 192.168.31.75"
+                "logCount": 30,
+                "scheduleList": [
+                    {
+                        "id": 1,
+                        "name": "every 10 seconds",
+                        "enabled": true,
+                        "period-sec": 10
+                    },
+                    {
+                        "id": 2,
+                        "name": "every minute",
+                        "enabled": false,
+                        "cron": "* * * * *"
+                    }
+                ],
+                "isRunning": false,
+                "executionCount": 15,
+                "lastExecution": {
+                    "startTime": "2014-11-24T04:42:17.260861Z",
+                    "endTime": "2014-11-24T04:42:19.073265Z",
+                    "exitStatus": 0
+                }
             }
         }
 
-### Update Single Job Configuration [PUT]
-(not implemented yet)
+### Put [PUT]
 
 Request Attributes:
-- *name*: required, string.
-- *command*: required, string.
-- *logCount*: required, integer.
-- *isRunning*: optional, boolean. Ignored.
-- *executionCount*: optional, integer. Ignored.
-- *lastExecution*: optional, object. Ignored.
+- *id*: optional, integer.
+  If present, it should match *job_id* in resource string.
+- *name*: optional, string.
+- *command*: optional, string.
+- *logCount*: optional, integer.
+- *scheduleList*: optional, object array.
+    - *name*: required, string.
+    - *enabled*: optional, boolean.
+      Default *true*.
+    - *period-sec*: optional, integer.
+    - *cron*: optional, string.
+- *isRunning*: optional, boolean.
+  Ignored.
+- *executionCount*: optional, integer.
+  Ignored.
+- *lastExecution*: optional, object.
+  Ignored.
 
 Response Attributes:
-- Same as *GET* response.
+- *message*: required, string.
+  Human-readable message.
+
+If *scheduleList* exist, it replaces all schedule configurations.
 
 + Request (application/json)
 
         {
-            "name": "Hello world",
-            "command": "bin/ansi --read-load-profile"
-            "logCount": 30,
-            "isRunning": false,
-            "executionCount": 15,
-            "lastExecution":
-            {
-                "startTime": "2014-11-24T04:42:17.260861Z",
-                "endTime": "2014-11-24T04:42:19.073265Z",
-                "exitStatus": 0
-            }
+            "name": "read load profile every 15 minutes",
+            "command": "bin/ansi --read-load-profile",
+            "logCount": 120,
+            "scheduleList": [
+                {
+                    "name": "every 15 minutes",
+                    "enabled": true,
+                    "period-sec": 900
+                }
+            ]
         }
 
 + Response 200 (application/json)
 
         {
-            "name": "Read Load Profile",
-            "command": "bin/ansi --read-load-profile"
-            "isRunning": false,
-            "logCount": 30,
-            "executionCount": 15,
-            "lastExecution":
-            {
-                "startTime": "2014-11-24T04:42:17.260861Z",
-                "endTime": "2014-11-24T04:42:19.073265Z",
-                "exitStatus": 0
-            }
+            "id": 3
         }
 
-### Delete Single Job [DELETE]
-
-+ Response 200 (application/json)
-
-        {
-            "message": "Delete trigger-job on cg-123456789715 successful."
-        }
-
-## On-demand Trigger [/mxc/triggers/{id}/trigger]
+## On-demand Trigger [/mxc/jobs/{job_id}/trigger]
 
 Resource Attributes:
-- *id*: integer. Trigger ID.
+- *job_id*: integer.
+  Job ID.
 
-### Trigger Single Job to execute [POST]
+### Post [POST]
 
 Response Attributes:
 - *startTime*: required, string in *Datetime* format.
@@ -733,35 +394,177 @@ Response Attributes:
             "exitStatus": 0
         }
 
-## Log Management [/mxc/triggers/{id}/logs?pageSize={pageSize}&page={page}]
+## Manage Schedule List [/mxc/jobs/{job_id}/schedules]
+
+### Get Schedule List [GET]
+
+Response Attributes:
+- *scheduleList*: required, object array.
+    - *id*: required, integer.
+      Schedule ID.
+    - *name*: required, string.
+      Given schedule name.
+    - *enabled*: required, boolean.
+      Enable/disable current schedule.
+    - *period-sec*: optional, integer.
+      Triggered periodically.
+    - *cron*: optional, string.
+      Cron schedule string.
+
++ Response 200 (application/json)
+
+        {
+            "scheduleList": [
+                {
+                    "id": 1,
+                    "name": "every 10 seconds",
+                    "enabled": true,
+                    "period-sec": 10
+                },
+                {
+                    "id": 2,
+                    "name": "every minute",
+                    "enabled": false,
+                    "cron": "* * * * *"
+                }
+            ]
+        }
+
+### Create Schedule [POST]
+
+Request Attributes:
+- *name*: required, string.
+- *enabled*: optional, boolean.
+  Default *true*.
+- *period-sec*: optional, integer.
+- *cron*: optional, string.
+
+Only one of *period-sec* and *cron* should exist.
+
+Response Attributes:
+- *id*: required, integer.
+  ID of the Schedule created.
+
++ Request (application/json)
+
+        {
+            "name": "every quarter",
+            "enabled": true,
+            "cron": "1/16/31/46 * * * *"
+        }
+
++ Response 200 (application/json)
+
+        {
+            "id": 4
+        }
+
+### Delete Schedule List [DELETE]
+
+Request Attributes:
+- *idList*: required, integer array.
+  A list of Schedule IDs to be deleted.
+
+Response Attributes:
+- *message*: required, string.
+  Human-readable message.
+
++ Request (application/json)
+
+        {
+            "idList": [
+                1, 3, 4
+            ]
+        }
+
++ Response 200 (application/json)
+
+        {
+            "message": "success"
+        }
+
+## Manage Schedule [/mxc/jobs/{job_id}/schedules/{schedule_id}]
 
 Resource Attributes:
-- *id*: integer. Trigger ID.
 
-### Get Log List [GET]
+### Get Schedule [GET]
+
+Response Attributes:
+- *id*: required, integer.
+  Schedule ID.
+- *name*: required, string.
+  Given schedule name.
+- *enabled*: required, boolean.
+  Enable/disable current schedule.
+- *period-sec*: optional, integer.
+  Triggered periodically.
+- *cron*: optional, string.
+  Cron schedule string.
+
++ Response 200 (application/json)
+
+        {
+            "id": 1,
+            "name": "every 10 seconds",
+            "enabled": true,
+            "period-sec": 10
+        }
+
+### Update Schedule [PUT]
+
+Request Attributes:
+- *id*: optional, integer.
+  If given, it should match *schedule_id* in resource string.
+- *name*: optioanl, string.
+- *enabled*: optional, boolean.
+  Default *true*.
+- *period-sec*: optional, integer.
+- *cron*: optional, string.
+
+Response Attributes:
+- *message*: required, string.
+  Human-readable message.
+
++ Request (application/json)
+
+        {
+            "name": "every 15 minutes",
+            "enabled": true,
+            "period-sec": 900
+        }
+
++ Response 200 (application/json)
+
+        {
+            "message": "success"
+        }
+
+## Get Log List [/mxc/jobs/{job_id}/logs?pageSize={pageSize}&page={page}]
 
 Query Attributes:
-- *pageSize*: optional, integer. Default *30*.
-- *page*: optional, integer. Start from *1*. Default *1*.
+- *pageSize*: Default *30*.
+- *page*: Start from *1*. Default *1*.
+
+### Get [GET]
 
 Response Attributes:
 - *totalCount*: required, integer.
 - *pageSize*: required, integer.
 - *page*: required, integer.
-- *logList*: required, object list.
-    - *id*: required, string. Log ID.
-    - *startTime*: required, string in *Datetime* format.
-    - *endTime*: required, string in *Datetime* format.
+- *logList*: required, object array.
+    - *id*: required, string.
+      Log ID.
+    - *startTime*: required, string in Datetime format.
+    - *endTime*: required, string in Datetime format.
     - *exitStatus*: required, integer.
-        - *0*: success.
-        - *others*: failure.
+      Value *0* indicates success, *non-0* indicates failure.
 
-Log list returned is ordered by startTime in decending order.
+Log list returned is ordered by *startTime* in decending order.
 
 + Response 200 (application/json)
 
         {
-            "totalCount": 40,
+            "totalCount": 2,
             "pageSize": 30,
             "page": 1,
             "logList":
@@ -781,23 +584,28 @@ Log list returned is ordered by startTime in decending order.
             ]
         }
 
-## Export Log Files [/mxc/triggers/{trigger_id}/logs/{log_id}/export]
+## Export Log [/mxc/jobs/{job_id}/logs/{log_id}/export]
 
 Resource Attributes:
-- *trigger_id*: integer.
-- *log_id*: integer.
+- *job_id*: integer.
+  Job ID.
+- *log_id*: string.
+  Log ID.
 
-### Retrieve Single Log File [POST]
+### Post [POST]
+
+This request causes Cloud Gateway to *POST* the *Log File* to the designated *url*.
 
 Request Attributes:
 - *url*: required, string.
+  URL given for Cloud Gateway to *POST* the log file to.
 
 Response Attributes:
 - *startTime*: required, string in *Datetime* format.
+  Time when *POST* started.
 - *endTime*: required, string in *Datetime* format.
+  Time when *POST* ended.
 - *url*: required, string.
-
-This request causes Cloud Gateway to upload the *Log File* to the designated *url*.
 
 + Request (application/json)
 
