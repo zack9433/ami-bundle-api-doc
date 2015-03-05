@@ -109,7 +109,7 @@ Resposne Attributes:
           Given schedule name.
         - *enabled*: required, boolean.
           Enable/disable current schedule.
-        - *period-sec*: optional, integer.
+        - *periodSec*: optional, integer.
           Triggered periodically.
         - *cron*: optional, string.
           Cron schedule string.
@@ -123,7 +123,7 @@ Resposne Attributes:
         - *exitStatus*: optional, integer.
           Value *0* indicates success, *non-0* indicates failure.
 
-In a schedule configuration, only one of *period-sec* and *cron* should present.
+In a schedule configuration, only one of *periodSec* and *cron* should present.
 
 + Response 200 (application/json)
 
@@ -142,7 +142,7 @@ In a schedule configuration, only one of *period-sec* and *cron* should present.
                             "id": 1,
                             "name": "every 10 seconds",
                             "enabled": true,
-                            "period-sec": 10
+                            "periodSec": 10
                         },
                         {
                             "id": 2,
@@ -195,13 +195,13 @@ Request Attributes:
     - *name*: required, string.
     - *enabled*: optional, boolean.
       Default *true*.
-    - *period-sec*: optional, integer.
+    - *periodSec*: optional, integer.
     - *cron*: optional, string.
 
 Response Attributes:
 + *id*: required, ID of the Job created.
 
-Only one of *period-sec* and *cron* should present in a schedule description.
+Only one of *periodSec* and *cron* should present in a schedule description.
 
 + Request (application/json)
 
@@ -272,7 +272,7 @@ Response Attributes:
       Given schedule name.
     - *enabled*: required, boolean.
       Enable/disable current schedule.
-    - *period-sec*: optional, integer.
+    - *periodSec*: optional, integer.
       Triggered periodically.
     - *cron*: optional, string.
       Cron schedule string.
@@ -299,7 +299,7 @@ Response Attributes:
                         "id": 1,
                         "name": "every 10 seconds",
                         "enabled": true,
-                        "period-sec": 10
+                        "periodSec": 10
                     },
                     {
                         "id": 2,
@@ -330,7 +330,7 @@ Request Attributes:
     - *name*: required, string.
     - *enabled*: optional, boolean.
       Default *true*.
-    - *period-sec*: optional, integer.
+    - *periodSec*: optional, integer.
     - *cron*: optional, string.
 - *isRunning*: optional, boolean.
   Ignored.
@@ -355,7 +355,7 @@ If *scheduleList* exist, it replaces all schedule configurations.
                 {
                     "name": "every 15 minutes",
                     "enabled": true,
-                    "period-sec": 900
+                    "periodSec": 900
                 }
             ]
         }
@@ -399,7 +399,7 @@ Response Attributes:
       Given schedule name.
     - *enabled*: required, boolean.
       Enable/disable current schedule.
-    - *period-sec*: optional, integer.
+    - *periodSec*: optional, integer.
       Triggered periodically.
     - *cron*: optional, string.
       Cron schedule string.
@@ -412,7 +412,7 @@ Response Attributes:
                     "id": 1,
                     "name": "every 10 seconds",
                     "enabled": true,
-                    "period-sec": 10
+                    "periodSec": 10
                 },
                 {
                     "id": 2,
@@ -429,10 +429,10 @@ Request Attributes:
 - *name*: required, string.
 - *enabled*: optional, boolean.
   Default *true*.
-- *period-sec*: optional, integer.
+- *periodSec*: optional, integer.
 - *cron*: optional, string.
 
-Only one of *period-sec* and *cron* should exist.
+Only one of *periodSec* and *cron* should exist.
 
 Response Attributes:
 - *id*: required, integer.
@@ -489,7 +489,7 @@ Response Attributes:
   Given schedule name.
 - *enabled*: required, boolean.
   Enable/disable current schedule.
-- *period-sec*: optional, integer.
+- *periodSec*: optional, integer.
   Triggered periodically.
 - *cron*: optional, string.
   Cron schedule string.
@@ -500,7 +500,7 @@ Response Attributes:
             "id": 1,
             "name": "every 10 seconds",
             "enabled": true,
-            "period-sec": 10
+            "periodSec": 10
         }
 
 ### Update Schedule [PUT]
@@ -511,7 +511,7 @@ Request Attributes:
 - *name*: optioanl, string.
 - *enabled*: optional, boolean.
   Default *true*.
-- *period-sec*: optional, integer.
+- *periodSec*: optional, integer.
 - *cron*: optional, string.
 
 Response Attributes:
@@ -523,7 +523,7 @@ Response Attributes:
         {
             "name": "every 15 minutes",
             "enabled": true,
-            "period-sec": 900
+            "periodSec": 900
         }
 
 + Response 200 (application/json)
@@ -1508,20 +1508,20 @@ Query Attributes:
 Response Attributes:
 - cgCount: required, integer.
   Number of CGs that are taken into account.
-- cgOnlineCount: required, integer.
+- onlineCgCount: required, integer.
   Number of CGs that are currently online.
 - equipmentCount: required, integer.
   Number of Equipments that are taken into account.
-- equipmentOnlineCount: required, integer.
+- onlineEquipmentCount: required, integer.
   Number of Equipments that are currently online.
 
 + Response 200 (application/json)
 
         {
             "cgCount": 10,
-            "cgOnlineCount": 9,
+            "onlineCgCount": 9,
             "equipmentCount": 20
-            "equipmentOnlineCount": 15,
+            "onlineEquipmentCount": 15,
         }
 
 ## All Equipments [/mxcs/profile/equipments?cgGroupId={cgGroupId}&eqGroupId={eqGroupId}]
@@ -1539,14 +1539,14 @@ Query Attributes:
 Response Attributes:
 - equipmentCount: required, integer.
   Number of Equipments that are taken into account.
-- equipmentOnlineCount: required, integer.
+- onlineEquipmentCount: required, integer.
   Number of Equipments that are currently online.
 
 + Response 200 (application/json)
 
         {
             "equipmentCount": 20
-            "equipmentOnlineCount": 15,
+            "onlineEquipmentCount": 15,
         }
 
 # group CG Online Count
