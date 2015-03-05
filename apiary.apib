@@ -1508,20 +1508,20 @@ Query Attributes:
 Response Attributes:
 - cgCount: required, integer.
   Number of CGs that are taken into account.
-- cgOnlineCount: required, integer.
+- onlineCgCount: required, integer.
   Number of CGs that are currently online.
 - equipmentCount: required, integer.
   Number of Equipments that are taken into account.
-- equipmentOnlineCount: required, integer.
+- onlineEquipmentCount: required, integer.
   Number of Equipments that are currently online.
 
 + Response 200 (application/json)
 
         {
             "cgCount": 10,
-            "cgOnlineCount": 9,
+            "onlineCgCount": 9,
             "equipmentCount": 20
-            "equipmentOnlineCount": 15,
+            "onlineEquipmentCount": 15,
         }
 
 ## All Equipments [/mxcs/profile/equipments?cgGroupId={cgGroupId}&eqGroupId={eqGroupId}]
@@ -1539,14 +1539,14 @@ Query Attributes:
 Response Attributes:
 - equipmentCount: required, integer.
   Number of Equipments that are taken into account.
-- equipmentOnlineCount: required, integer.
+- onlineEquipmentCount: required, integer.
   Number of Equipments that are currently online.
 
 + Response 200 (application/json)
 
         {
             "equipmentCount": 20
-            "equipmentOnlineCount": 15,
+            "onlineEquipmentCount": 15,
         }
 
 # group CG Online Count
