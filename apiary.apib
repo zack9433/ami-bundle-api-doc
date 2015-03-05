@@ -870,12 +870,11 @@ Response Attributes:
 
 # group Cloud Gateway Management
 
-## Get Cloud Gateway List [/mxcs/cgs?gid={gid}&keyword={keyword}&page={page}&pageSize={pageSize}]
+## Get Cloud Gateway List [/mxcs/cgs?cgGroupId={cgGroupId}&keyword={keyword}&page={page}&pageSize={pageSize}]
 
 Query Attributes:
-- *gid*: optional, integer.
+- *cgGroupId*: optional, integer.
   If given, only CGs in the given group are returned.
-  (not implemented yet)
 - *keyword*: optional, string.
   Return only Cloud Gateways with *id* or *aliasName* similar to the given string.
 - *page*: optional, integer. Default *1*.
@@ -1032,6 +1031,48 @@ Response Attributes:
             }
         }
 
+### Put [PUT]
+
+Request Attributes:
+- *id*: optional, string.
+  If exist, should match *cg_id* in resource string.
+- *aliasName*: optional, string.
+  Replaces aliasName.
+- *isOnline*: optional, boolean.
+  Ignored.
+- *lastUpdateTime*: optional, string.
+  Ignored.
+- *cellularUsageBytes*: optional, integer.
+  Ignored.
+- *runtimeVersion*: optional, string.
+  Ignored.
+- *equipmentCount*: optional, integer.
+  Ignored.
+- *onlineEquipmentCount*: optional, integer.
+  Ignored.
+- *metas*: optional, object.
+  Replaces metas currently stored.
+
+Response Attributes:
+- *message*: required, string.
+  Human-readable message.
+
++ Request (application/json)
+
+        {
+            "aliasName": "new-alias-name",
+            "metas": {
+                "latitude": "44.323123",
+                "longitude": "1.932132",
+            }
+        }
+
++ Response 200 (application/json)
+
+        {
+            "message": "success"
+        }
+
 ## Manage Meta Entries [/mxcs/cgs/{cg_id}/metas]
 
 Resource Attributes:
@@ -1156,7 +1197,7 @@ Response Attributes:
 Resource Attributes:
 - *equipment_id*: string.
 
-### Get Equipment [GET]
+### Get [GET]
 
 Response Attributes:
 - *id*: required, string. Equipment ID.
@@ -1255,8 +1296,6 @@ Query Attributes:
 
 ### Get [GET]
 
-(not implemented yet)
-
 Response Attributes:
 - *totalCount*: required, integer.
 - *pageSize*: required, integer.
@@ -1328,8 +1367,6 @@ Response Attributes:
 
 ### Delete CG Group List [DELETE]
 
-(not implemented yet)
-
 Request Attributes:
 - *cgGroupList*: required, string array.
   Contains a list of IDs of the CGs to be deleted.
@@ -1361,8 +1398,6 @@ Resource Attributes:
 
 ### Get [GET]
 
-(not implemented yet)
-
 Response Attributes:
 - *id*: required, string.
   Group ID.
@@ -1383,8 +1418,6 @@ Response Attributes:
         }
 
 ### Update CG Group [PUT]
-
-(not implemented yet)
 
 Request Attributes:
 - *id*: optional, string.
