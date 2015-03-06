@@ -183,7 +183,7 @@ In a schedule configuration, only one of *periodSec* and *cron* should present.
             ]
         }
 
-## Manage Job [/mxcs/jobs]
+## Manage Job [/mxc/jobs]
 
 ### Create Job [POST]
 
@@ -213,7 +213,7 @@ Only one of *periodSec* and *cron* should present in a schedule description.
                 {
                     "name": "every quarter",
                     "enabled": true,
-                    "cron": "1/16/31/46 * * * *",
+                    "cron": "1,16,31,46 * * * *",
                 }
             ]
         }
@@ -443,7 +443,7 @@ Response Attributes:
         {
             "name": "every quarter",
             "enabled": true,
-            "cron": "1/16/31/46 * * * *"
+            "cron": "1,16,31,46 * * * *"
         }
 
 + Response 200 (application/json)
