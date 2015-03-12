@@ -29,20 +29,17 @@ Resources provided by Cloud Server are categorized in */mxcs/** related resource
 ### Get Configuration [GET]
 
 Response Attributes:
-- *readingForwardCron*: required, string.
 - *readingExpireTimeSec*: required, integer.
 
 + Response 200 (application/json)
 
         {
-            "readingForwardCron": "* * * * *",
             "readingExpireTimeSec": 86400
         }
 
 ### Update Configuration [PUT]
 
 Request Attributes:
-- *readingForwardCron*: optional, string.
 - *readingExpireTimeSec*: optional, integer.
 
 Response Attributes:
@@ -52,7 +49,6 @@ Response Attributes:
 + Request (application/json)
 
         {
-            "readingForwardCron": "* * * * *",
             "readingExpireTimeSec": 86400
         }
 
@@ -69,8 +65,10 @@ Response Attributes:
 ### Get [GET]
 
 Response Attributes:
-- *storDropCount*: required, integer. Number of Readings dropped, caused by out-of-storage.
-- *fwdDropCount*: required, integer. Number of Readings dropped, caused by readings-expired.
+- *storDropCount*: required, integer.
+  Number of Readings dropped, caused by out-of-storage.
+- *fwdDropCount*: required, integer.
+  Number of Readings dropped, caused by readings-expired.
 
 + Response 200 (application/json)
 
