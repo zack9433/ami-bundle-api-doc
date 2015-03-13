@@ -923,12 +923,12 @@ Response Attributes:
 
 # group Equipment Management
 
-## Get Equipment List [/mxcs/equipments?cgId={cgId}&groupId={groupId}&keyword={keyword}&page={page}&pageSize={pageSize}]
+## Get Equipment List [/mxcs/equipments?cgId={cgId}&eqGroupId={eqGroupId}&keyword={keyword}&page={page}&pageSize={pageSize}]
 
 Query Attributes:
 - *cgId*: optional, string.
   Only Equipments related to this Cloud Gateway is returned.
-- *groupId*: optional, string.
+- *eqGroupId*: optional, string.
   Only Equipments that are in the Group are returned.
 - *keyword*: optional, string.
   Return only Equipments with *id* similar to the given string.
@@ -1287,7 +1287,7 @@ Response Attributes:
 + Request (application/json)
 
         {
-            "cgGroupList": [
+            "idList": [
                 "moxa-2014",
                 "moxa-2015"
             ]
@@ -1443,7 +1443,7 @@ Response Attributes:
 + Request (application/json)
 
         {
-            "eqGroupList": [
+            "idList": [
                 "moxa-2014",
                 "moxa-2015"
             ]
