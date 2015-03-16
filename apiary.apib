@@ -29,20 +29,17 @@ Resources provided by Cloud Server are categorized in */mxcs/** related resource
 ### Get Configuration [GET]
 
 Response Attributes:
-- *readingForwardCron*: required, string.
 - *readingExpireTimeSec*: required, integer.
 
 + Response 200 (application/json)
 
         {
-            "readingForwardCron": "* * * * *",
             "readingExpireTimeSec": 86400
         }
 
 ### Update Configuration [PUT]
 
 Request Attributes:
-- *readingForwardCron*: optional, string.
 - *readingExpireTimeSec*: optional, integer.
 
 Response Attributes:
@@ -52,7 +49,6 @@ Response Attributes:
 + Request (application/json)
 
         {
-            "readingForwardCron": "* * * * *",
             "readingExpireTimeSec": 86400
         }
 
@@ -69,8 +65,10 @@ Response Attributes:
 ### Get [GET]
 
 Response Attributes:
-- *storDropCount*: required, integer. Number of Readings dropped, caused by out-of-storage.
-- *fwdDropCount*: required, integer. Number of Readings dropped, caused by readings-expired.
+- *storDropCount*: required, integer.
+  Number of Readings dropped, caused by out-of-storage.
+- *fwdDropCount*: required, integer.
+  Number of Readings dropped, caused by readings-expired.
 
 + Response 200 (application/json)
 
@@ -118,6 +116,7 @@ Resposne Attributes:
     - *executionCount*: required, integer.
     - *lastExecution*: required, object.
       If the job hasn't been executed yet, all values below would not present.
+        - *id*: optional, string.
         - *startTime*: optional, string in Datetime format.
         - *endTime*: optional, string in Datetime format.
         - *exitStatus*: optional, integer.
@@ -154,8 +153,9 @@ In a schedule configuration, only one of *periodSec* and *cron* should present.
                     "isRunning": false,
                     "executionCount": 15,
                     "lastExecution": {
-                        "startTime": "2014-11-24T04:42:17.260861Z",
-                        "endTime": "2014-11-24T04:42:19.073265Z",
+                        "id": "20141124-044217_20141124-044219_00",
+                        "startTime": "2014-11-24T04:42:17Z",
+                        "endTime": "2014-11-24T04:42:19Z",
                         "exitStatus": 0
                     }
                 },
@@ -175,8 +175,9 @@ In a schedule configuration, only one of *periodSec* and *cron* should present.
                     "isRunning": true,
                     "executionCount": 36,
                     "lastExecution": {
-                        "startTime": "2015-03-05T00:03:04.299312Z",
-                        "endTime": "2015-03-05T00:03:18.488753Z",
+                        "id": "20150305-000304_20150305-000318_00",
+                        "startTime": "2015-03-05T00:03:04Z",
+                        "endTime": "2015-03-05T00:03:18Z",
                         "exitStatus": 0
                     }
                 }
@@ -281,6 +282,7 @@ Response Attributes:
 - *executionCount*: required, integer.
 - *lastExecution*: required, object.
   If the job hasn't been executed yet, all values below would not present.
+    - *id*: optional, string.
     - *startTime*: optional, string in Datetime format.
     - *endTime*: optional, string in Datetime format.
     - *exitStatus*: optional, integer.
@@ -311,8 +313,9 @@ Response Attributes:
                 "isRunning": false,
                 "executionCount": 15,
                 "lastExecution": {
-                    "startTime": "2014-11-24T04:42:17.260861Z",
-                    "endTime": "2014-11-24T04:42:19.073265Z",
+                    "id": "20141124-044217_20141124-044219_00",
+                    "startTime": "2014-11-24T04:42:17Z",
+                    "endTime": "2014-11-24T04:42:19Z",
                     "exitStatus": 0
                 }
             }
@@ -382,8 +385,9 @@ Response Attributes:
 + Response 200 (application/json)
 
         {
-            "startTime": "2014-11-24T04:42:17.260861Z",
-            "endTime": "2014-11-24T04:42:19.073265Z",
+            "id": "20141124-044217_20141124-044219_00",
+            "startTime": "2014-11-24T04:42:17Z",
+            "endTime": "2014-11-24T04:42:19Z",
             "exitStatus": 0
         }
 
@@ -508,7 +512,7 @@ Response Attributes:
 Request Attributes:
 - *id*: optional, integer.
   If given, it should match *schedule_id* in resource string.
-- *name*: optioanl, string.
+- *name*: optional, string.
 - *enabled*: optional, boolean.
   Default *true*.
 - *periodSec*: optional, integer.
@@ -692,11 +696,14 @@ Response Attributes:
     - *aliasName*: required, string.
     - *isOnline*: required, boolean.
     - *lastUpdateTime*: required, string in *Datetime* format.
-    - *cellularUsageBytes*: optional, integer.
-      Exists only when CG has Cellular Modules.
     - *runtimeVersion*: required, string.
     - *equipmentCount*: required, integer.
     - *onlineEquipmentCount*: required, integer.
+    - *cellular*: optional, object.
+      - *usageByte*: optional, integer.
+        Exists only when CG has Cellular Modules.
+      - *thresholdByte*: optional, integer
+        Exists only when CG has Cellular Modules.
     - *metas*: required, object.
       Contains a dictionary of previously stored key-value pairs.
 
@@ -712,10 +719,13 @@ Response Attributes:
                     "aliasName": "CG-01",
                     "isOnline": true,
                     "lastUpdateTime": "2014-02-12T14:31:49.298123Z",
-                    "cellularUsageBytes": 29891893,
                     "runtimeVersion": "1.0.0",
                     "equipmentCount": 20,
                     "onlineEquipmentCount": 15,
+                    "cellular": {
+                        "usageByte": 29891893,
+                        "thresholdByte": 1073741824
+                    },
                     "metas": {
                         "latitude": "41.428342",
                         "longitude": "2.94482"
@@ -726,10 +736,10 @@ Response Attributes:
                     "aliasName": "CG-02",
                     "isOnline": false,
                     "lastUpdateTime": "2014-02-12T14:31:49.298123Z",
-                    "cellularUsageBytes": 29891893,
                     "runtimeVersion": "1.0.0",
                     "equipmentCount": 20,
                     "onlineEquipmentCount": 15,
+                    "cellular": {},
                     "metas": {
                         "latitude": "41.428342",
                         "longitude": "2.94482"
@@ -807,11 +817,14 @@ Response Attributes:
 - *aliasName*: required, string.
 - *isOnline*: required, boolean.
 - *lastUpdateTime*: required, string in *Datetime* format.
-- *cellularUsageBytes*: optional, integer.
-  Exists only when CG has Cellular Modules.
 - *runtimeVersion*: required, string.
 - *equipmentCount*: required, integer.
 - *onlineEquipmentCount*: required, integer.
+- *cellular*: optional, object.
+  - *usageByte*: optional, integer.
+    Exists only when CG has Cellular Modules.
+  - *thresholdByte*: optional, integer
+    Exists only when CG has Cellular Modules.
 - *metas*: required, object.
   Contains a dictionary of previously stored key-value pairs.
 
@@ -822,10 +835,13 @@ Response Attributes:
             "aliasName": "CG-08",
             "isOnline": true,
             "lastUpdateTime": "2014-02-12T14:31:49.298123Z",
-            "cellularUsageBytes": 29891893,
             "runtimeVersion": "1.0.0",
             "equipmentCount": 20,
             "onlineEquipmentCount": 15,
+                "cellular": {
+                    "usageByte": 29891893,
+                    "thresholdByte": 1073741824
+                },
             "metas": {
                 "latitude": "41.428342",
                 "longitude": "2.94482"
@@ -843,13 +859,13 @@ Request Attributes:
   Ignored.
 - *lastUpdateTime*: optional, string.
   Ignored.
-- *cellularUsageBytes*: optional, integer.
-  Ignored.
 - *runtimeVersion*: optional, string.
   Ignored.
 - *equipmentCount*: optional, integer.
   Ignored.
 - *onlineEquipmentCount*: optional, integer.
+  Ignored.
+- *cellular": optional, object.
   Ignored.
 - *metas*: optional, object.
   Replaces metas currently stored.
@@ -907,12 +923,12 @@ Response Attributes:
 
 # group Equipment Management
 
-## Get Equipment List [/mxcs/equipments?cgId={cgId}&groupId={groupId}&keyword={keyword}&page={page}&pageSize={pageSize}]
+## Get Equipment List [/mxcs/equipments?cgId={cgId}&eqGroupId={eqGroupId}&keyword={keyword}&page={page}&pageSize={pageSize}]
 
 Query Attributes:
 - *cgId*: optional, string.
   Only Equipments related to this Cloud Gateway is returned.
-- *groupId*: optional, string.
+- *eqGroupId*: optional, string.
   Only Equipments that are in the Group are returned.
 - *keyword*: optional, string.
   Return only Equipments with *id* similar to the given string.
@@ -1271,7 +1287,7 @@ Response Attributes:
 + Request (application/json)
 
         {
-            "cgGroupList": [
+            "idList": [
                 "moxa-2014",
                 "moxa-2015"
             ]
@@ -1427,7 +1443,7 @@ Response Attributes:
 + Request (application/json)
 
         {
-            "eqGroupList": [
+            "idList": [
                 "moxa-2014",
                 "moxa-2015"
             ]
@@ -1524,13 +1540,15 @@ Response Attributes:
             "onlineEquipmentCount": 15
         }
 
-## All Equipments [/mxcs/profile/equipments?cgGroupId={cgGroupId}&eqGroupId={eqGroupId}]
+## All Equipments [/mxcs/profile/equipments?cgId={cgId}&cgGroupId={cgGroupId}&eqGroupId={eqGroupId}]
 
 Query Attributes:
+- *cgId*: optional, string.
+  If given, only Equipments reported by this CG are taken into account.
 - *cgGroupId*: optional, string.
-  If given, only Equipments reported by CG in that Group is taken into account.
+  If given, only Equipments reported by CG in that Group are taken into account.
 - *eqGroupId*: optional, string.
-  If given, only Equipments in that Group is taken into account.
+  If given, only Equipments in that Group are taken into account.
 
 ### Get Specific Group information [GET]
 
