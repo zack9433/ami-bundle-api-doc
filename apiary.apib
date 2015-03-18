@@ -40,7 +40,7 @@ Response Attributes:
 ### Update Configuration [PUT]
 
 Request Attributes:
-- *readingExpireTimeSec*: optional, integer.
+- *readingExpireTimeSec*: required, integer.
 
 Response Attributes:
 - *message*: required, string.
@@ -225,6 +225,82 @@ Only one of *periodSec* and *cron* should present in a schedule description.
             "id": 3
         }
 
+### Replace All Jobs [PUT]
+
+Request Attributes:
+- *jobList*: required, object array.
+    - *id*: optional, integer.
+      Ignored.
+    - *name*: required, string.
+      Given job name.
+    - *command*: required, string.
+      Shell command to execute.
+    - *logCount*: required, integer.
+      Number of logs to keep on Cloud Gateway.
+    - *scheduleList*: required, object array.
+        - *id*: optional, integer.
+          Ignored.
+        - *name*: required, string.
+          Given schedule name.
+        - *enabled*: required, boolean.
+          Enable/disable current schedule.
+        - *periodSec*: optional, integer.
+          Triggered periodically.
+        - *cron*: optional, string.
+          Cron schedule string.
+    - *isRunning*: optional, boolean.
+      Ignored.
+    - *executionCount*: required, integer.
+      Ignored.
+    - *lastExecution*: required, object.
+      Ignored.
+
+Response Attributes:
+- *message*: required, string.
+  Human-readable message.
+
++ Request (application/json)
+
+        {
+            "jobList": [
+                {
+                    "name": "read iologik",
+                    "command": "mxcdemo_iologik 192.168.31.75",
+                    "logCount": 30,
+                    "scheduleList": [
+                        {
+                            "name": "every 10 seconds",
+                            "enabled": true,
+                            "periodSec": 10
+                        },
+                        {
+                            "name": "every minute",
+                            "enabled": false,
+                            "cron": "* * * * *"
+                        }
+                    ]
+                },
+                {
+                    "name": "read load profile",
+                    "command": "bin/ansi --read-load-profile",
+                    "logCount": 7,
+                    "scheduleList": [
+                        {
+                            "name": "every quarter",
+                            "enabled": true,
+                            "cron": "*/15 * * * *"
+                        }
+                    ]
+                }
+            ]
+        }
+
++ Response 200 (application/json)
+
+        {
+            "message": "success"
+        }
+
 ### Delete Job List [DELETE]
 
 Request Attributes:
@@ -326,13 +402,12 @@ Response Attributes:
 Request Attributes:
 - *id*: optional, integer.
   If present, it should match *job_id* in resource string.
-- *name*: optional, string.
-- *command*: optional, string.
-- *logCount*: optional, integer.
-- *scheduleList*: optional, object array.
+- *name*: required, string.
+- *command*: required, string.
+- *logCount*: required, integer.
+- *scheduleList*: required, object array.
     - *name*: required, string.
-    - *enabled*: optional, boolean.
-      Default *true*.
+    - *enabled*: required, boolean.
     - *periodSec*: optional, integer.
     - *cron*: optional, string.
 - *isRunning*: optional, boolean.
@@ -512,9 +587,8 @@ Response Attributes:
 Request Attributes:
 - *id*: optional, integer.
   If given, it should match *schedule_id* in resource string.
-- *name*: optional, string.
-- *enabled*: optional, boolean.
-  Default *true*.
+- *name*: required, string.
+- *enabled*: required, boolean.
 - *periodSec*: optional, integer.
 - *cron*: optional, string.
 
@@ -853,7 +927,7 @@ Response Attributes:
 Request Attributes:
 - *id*: optional, string.
   If exist, should match *cg_id* in resource string.
-- *aliasName*: optional, string.
+- *aliasName*: required, string.
   Replaces aliasName.
 - *isOnline*: optional, boolean.
   Ignored.
@@ -867,7 +941,7 @@ Request Attributes:
   Ignored.
 - *cellular": optional, object.
   Ignored.
-- *metas*: optional, object.
+- *metas*: required, object.
   Replaces metas currently stored.
 
 Response Attributes:
@@ -897,7 +971,7 @@ Resource Attributes:
 
 ### Update Meta Entries [PUT]
 
-Update key-value pairs that are already exist.
+Replaces all key-value pairs stored.
 
 Request Attributes:
 - *metas*: required, object.
@@ -1047,7 +1121,7 @@ Resource Attributes:
 
 ### Update Meta Entries [PUT]
 
-Update key-value pairs that are already exist.
+Replaces all key-value pairs stored.
 
 Request Attributes:
 - *metas*: required, object.
@@ -1326,13 +1400,13 @@ Response Attributes:
             ]
         }
 
-### Update CG Group [PUT]
+### Put [PUT]
 
 Request Attributes:
 - *id*: optional, string.
   If given, the value should match *cg_group_id* in resource URI.
-- *aliasName*: optional, string.
-- *cgList*: optional, string array.
+- *aliasName*: required, string.
+- *cgList*: required, string array.
 
 Response Attributes:
 - *message*: required, string.
@@ -1482,13 +1556,13 @@ Response Attributes:
             ]
         }
 
-### Update CG Group [PUT]
+### Put [PUT]
 
 Request Attributes:
 - *id*: optional, string.
   If given, the value should match *eq_group_id* in resource URI.
-- *aliasName*: optional, string.
-- *eqList*: optional, string array.
+- *aliasName*: required, string.
+- *eqList*: required, string array.
 
 Response Attributes:
 - *message*: required, string.
