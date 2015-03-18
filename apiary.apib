@@ -40,7 +40,7 @@ Response Attributes:
 ### Update Configuration [PUT]
 
 Request Attributes:
-- *readingExpireTimeSec*: optional, integer.
+- *readingExpireTimeSec*: required, integer.
 
 Response Attributes:
 - *message*: required, string.
@@ -326,13 +326,12 @@ Response Attributes:
 Request Attributes:
 - *id*: optional, integer.
   If present, it should match *job_id* in resource string.
-- *name*: optional, string.
-- *command*: optional, string.
-- *logCount*: optional, integer.
-- *scheduleList*: optional, object array.
+- *name*: required, string.
+- *command*: required, string.
+- *logCount*: required, integer.
+- *scheduleList*: required, object array.
     - *name*: required, string.
-    - *enabled*: optional, boolean.
-      Default *true*.
+    - *enabled*: required, boolean.
     - *periodSec*: optional, integer.
     - *cron*: optional, string.
 - *isRunning*: optional, boolean.
@@ -512,9 +511,8 @@ Response Attributes:
 Request Attributes:
 - *id*: optional, integer.
   If given, it should match *schedule_id* in resource string.
-- *name*: optional, string.
-- *enabled*: optional, boolean.
-  Default *true*.
+- *name*: required, string.
+- *enabled*: required, boolean.
 - *periodSec*: optional, integer.
 - *cron*: optional, string.
 
@@ -853,7 +851,7 @@ Response Attributes:
 Request Attributes:
 - *id*: optional, string.
   If exist, should match *cg_id* in resource string.
-- *aliasName*: optional, string.
+- *aliasName*: required, string.
   Replaces aliasName.
 - *isOnline*: optional, boolean.
   Ignored.
@@ -867,7 +865,7 @@ Request Attributes:
   Ignored.
 - *cellular": optional, object.
   Ignored.
-- *metas*: optional, object.
+- *metas*: required, object.
   Replaces metas currently stored.
 
 Response Attributes:
@@ -897,7 +895,7 @@ Resource Attributes:
 
 ### Update Meta Entries [PUT]
 
-Update key-value pairs that are already exist.
+Replaces all key-value pairs stored.
 
 Request Attributes:
 - *metas*: required, object.
@@ -1047,7 +1045,7 @@ Resource Attributes:
 
 ### Update Meta Entries [PUT]
 
-Update key-value pairs that are already exist.
+Replaces all key-value pairs stored.
 
 Request Attributes:
 - *metas*: required, object.
@@ -1331,8 +1329,8 @@ Response Attributes:
 Request Attributes:
 - *id*: optional, string.
   If given, the value should match *cg_group_id* in resource URI.
-- *aliasName*: optional, string.
-- *cgList*: optional, string array.
+- *aliasName*: required, string.
+- *cgList*: required, string array.
 
 Response Attributes:
 - *message*: required, string.
@@ -1487,8 +1485,8 @@ Response Attributes:
 Request Attributes:
 - *id*: optional, string.
   If given, the value should match *eq_group_id* in resource URI.
-- *aliasName*: optional, string.
-- *eqList*: optional, string array.
+- *aliasName*: required, string.
+- *eqList*: required, string array.
 
 Response Attributes:
 - *message*: required, string.
