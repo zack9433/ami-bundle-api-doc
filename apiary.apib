@@ -225,6 +225,82 @@ Only one of *periodSec* and *cron* should present in a schedule description.
             "id": 3
         }
 
+### Replace All Jobs [PUT]
+
+Request Attributes:
+- *jobList*: required, object array.
+    - *id*: optional, integer.
+      Ignored.
+    - *name*: required, string.
+      Given job name.
+    - *command*: required, string.
+      Shell command to execute.
+    - *logCount*: required, integer.
+      Number of logs to keep on Cloud Gateway.
+    - *scheduleList*: required, object array.
+        - *id*: optional, integer.
+          Ignored.
+        - *name*: required, string.
+          Given schedule name.
+        - *enabled*: required, boolean.
+          Enable/disable current schedule.
+        - *periodSec*: optional, integer.
+          Triggered periodically.
+        - *cron*: optional, string.
+          Cron schedule string.
+    - *isRunning*: optional, boolean.
+      Ignored.
+    - *executionCount*: required, integer.
+      Ignored.
+    - *lastExecution*: required, object.
+      Ignored.
+
+Response Attributes:
+- *message*: required, string.
+  Human-readable message.
+
++ Request (application/json)
+
+        {
+            "jobList": [
+                {
+                    "name": "read iologik",
+                    "command": "mxcdemo_iologik 192.168.31.75",
+                    "logCount": 30,
+                    "scheduleList": [
+                        {
+                            "name": "every 10 seconds",
+                            "enabled": true,
+                            "periodSec": 10
+                        },
+                        {
+                            "name": "every minute",
+                            "enabled": false,
+                            "cron": "* * * * *"
+                        }
+                    ]
+                },
+                {
+                    "name": "read load profile",
+                    "command": "bin/ansi --read-load-profile",
+                    "logCount": 7,
+                    "scheduleList": [
+                        {
+                            "name": "every quarter",
+                            "enabled": true,
+                            "cron": "*/15 * * * *"
+                        }
+                    ]
+                }
+            ]
+        }
+
++ Response 200 (application/json)
+
+        {
+            "message": "success"
+        }
+
 ### Delete Job List [DELETE]
 
 Request Attributes:
@@ -1324,7 +1400,7 @@ Response Attributes:
             ]
         }
 
-### Update CG Group [PUT]
+### Put [PUT]
 
 Request Attributes:
 - *id*: optional, string.
@@ -1480,7 +1556,7 @@ Response Attributes:
             ]
         }
 
-### Update CG Group [PUT]
+### Put [PUT]
 
 Request Attributes:
 - *id*: optional, string.
