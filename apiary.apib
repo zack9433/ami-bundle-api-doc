@@ -1119,7 +1119,7 @@ Response Attributes:
 Resource Attributes:
 - *equipment_id*: string.
 
-### Update Meta Entries [PUT]
+### Put [PUT]
 
 Replaces all key-value pairs stored.
 
@@ -1145,7 +1145,7 @@ Response Attributes:
             "message": "success"
         }
 
-### Create Meta Entries [POST]
+### Post [POST]
 
 Create new key-value pairs.
 
@@ -1175,7 +1175,34 @@ Response Attributes:
             "message": "success"
         }
 
-# group Reading Management
+### Delete [DELETE]
+
+Delete key-value pairs.
+
+Request Attributes:
+- *keyList*: required, string array.
+  Keys to be deleted.
+
+Resonse Attributes:
+- *message*: required, string.
+  Human-readable message.
+
++ Request (application/json)
+
+        {
+            "KeyList": [
+                "latitude",
+                "longitude"
+            ]
+        }
+
++ Response 200 (application/json)
+
+        {
+            "message": "success"
+        }
+
+# group Query Readings
 
 ## Get Channel List [/mxcs/equipments/{equipment_id}/channels?pageSize={pageSize}&page={page}]
 
@@ -1200,6 +1227,8 @@ Response Attributes:
     - *value*: required, string or float.
       Latest value received.
     - *time*: required, string in Datetime format.
+      Latest value time.
+    - *receivedTime*: required, string in Datetime format.
       Latest value receiving time.
 
 + Response 200 (application/json)
@@ -1212,17 +1241,19 @@ Response Attributes:
                 {
                     "id": "ai0",
                     "value": 1.0264739990234375,
-                    "time": "2015-01-14T07:43:46.814000Z"
+                    "time": "2015-01-14T07:43:46.814000Z",
+                    "receivedTime": "2015-01-14T08:01:42.283000Z"
                 },
                 {
                     "id": "di0",
                     "value": "on",
-                    "time": "2015-01-14T10:08:51.181000Z"
+                    "time": "2015-01-14T10:08:51.181000Z",
+                    "receivedTime": "2015-01-14T08:01:43.283000Z"
                 }
             ]
         }
 
-## Get Reading List [/mxcs/equipments/{equipment_id}/channels/{channel_id}/readings?startTime={startTime}&endTime={endTime}&page={page}&pageSize={pageSize}&asc={asc}]
+## Get Readings [/mxcs/equipments/{equipment_id}/channels/{channel_id}/readings?startTime={startTime}&endTime={endTime}&intervalSec={intervalSec}&page={page}&pageSize={pageSize}&asc={asc}]
 
 Resource Attributes:
 - *equipment_id*: required, string.
@@ -1231,6 +1262,8 @@ Resource Attributes:
 Query Attributes:
 - *startTime*: optional, string in *Datetime* format.
 - *endTime*: optional, string in *Datetime* format.
+- *intervalSec*: optional, integer.
+  Return Readings with interval.
 - *page*: optional, integer.
   Default *1*.
 - *pageSize*: optional, integer.
