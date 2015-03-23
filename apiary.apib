@@ -69,12 +69,15 @@ Response Attributes:
   Number of Readings dropped, caused by out-of-storage.
 - *fwdDropCount*: required, integer.
   Number of Readings dropped, caused by readings-expired.
+- *fwdCount*: required, integer.
+  Number of Readings sent by this CG.
 
 + Response 200 (application/json)
 
         {
             "storDropCount": 120,
-            "fwdDropCount": 99
+            "fwdDropCount": 99,
+            "fwdCount": 2391
         }
 
 # group Job Management
