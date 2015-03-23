@@ -740,20 +740,20 @@ Starting a request while a previous request is in progress, results in error.
 ### Get [GET]
 
 Response Attributes:
-- *readingValidityPeriodDay*: required, integer.
-  Number of days that a received Reading would be kept on Cloud Server.
+- *readingValidityPeriodSec*: required, integer.
+  Number of seconds that a received Reading would be kept on Cloud Server.
 
 + Response 200 (application/json)
 
         {
-            "readingValidityPeriodDay": 90
+            "readingValidityPeriodSec": 7776000
         }
 
 ### Put [PUT]
 
 Request Attributes:
-- *readingValidityPeriodDay*: required, integer.
-  Number of days that a received Reading would be kept on Cloud Server.
+- *readingValidityPeriodSec*: required, integer.
+  Number of seconds that a received Reading would be kept on Cloud Server.
   Setting this valid to *0* results in *not deleting any Readings*.
 
 Response Attributes:
@@ -763,7 +763,7 @@ Response Attributes:
 + Request (application/json)
 
         {
-            "readingValidityPeriodDay": 30
+            "readingValidityPeriodSec": 2592000
         }
 
 + Response 200 (application/json)
