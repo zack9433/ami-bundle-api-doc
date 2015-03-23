@@ -730,25 +730,6 @@ Starting a request while a previous request is in progress, results in error.
 
 + Response 200 (application/json)
 
-### Get Deployment Status [GET]
-
-(not supported yet)
-
-Response Attributes:
-- *name*: required, string.
-- *url*: required, string.
-- *progress*: required, float. Indcating overall progress, *1.0* indicates complete.
-- *status*: required, string. Can be one of "idle", "inprogress", "failed".
-
-+ Response 200 (application/json)
-
-        {
-            "name": "my-application-bundle.tgz",
-            "url": "https://mxc-cs/client-bundles/UD63CVU7QPLE",
-            "progress": 0.39,
-            "status": "inprogress"
-        }
-
 # group Cloud Server Configuration
 
 ## Cloud Server Configuration [/mxcs/config]
