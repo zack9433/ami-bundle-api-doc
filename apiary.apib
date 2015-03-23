@@ -69,12 +69,15 @@ Response Attributes:
   Number of Readings dropped, caused by out-of-storage.
 - *fwdDropCount*: required, integer.
   Number of Readings dropped, caused by readings-expired.
+- *fwdCount*: required, integer.
+  Number of Readings sent by this CG.
 
 + Response 200 (application/json)
 
         {
             "storDropCount": 120,
-            "fwdDropCount": 99
+            "fwdDropCount": 99,
+            "fwdCount": 2391
         }
 
 # group Job Management
@@ -730,21 +733,43 @@ Starting a request while a previous request is in progress, results in error.
 
 + Response 200 (application/json)
 
-### Get Deployment Status [GET]
+# group Cloud Server Configuration
+
+## Cloud Server Configuration [/mxcs/config]
+
+### Get [GET]
 
 Response Attributes:
-- *name*: required, string.
-- *url*: required, string.
-- *progress*: required, float. Indcating overall progress, *1.0* indicates complete.
-- *status*: required, string. Can be one of "idle", "inprogress", "failed".
+- *readingValidityPeriodDay*: required, integer.
+  Number of days that a received Reading would be kept on Cloud Server.
 
 + Response 200 (application/json)
 
         {
-            "name": "my-application-bundle.tgz",
-            "url": "https://mxc-cs/client-bundles/UD63CVU7QPLE",
-            "progress": 0.39,
-            "status": "inprogress"
+            "readingValidityPeriodDay": 90
+        }
+
+### Put [PUT]
+
+Request Attributes:
+- *readingValidityPeriodDay*: required, integer.
+  Number of days that a received Reading would be kept on Cloud Server.
+  Setting this valid to *0* results in *not deleting any Readings*.
+
+Response Attributes:
+- *message*: required, string.
+  Human-readable message.
+
++ Request (application/json)
+
+        {
+            "readingValidityPeriodDay": 30
+        }
+
++ Response 200 (application/json)
+
+        {
+            "message": "success"
         }
 
 # group Cloud Gateway Management
@@ -1684,7 +1709,7 @@ Query Attributes:
 - *startTime*: required, string in Datetime format.
 - *endTime*: required, string in Datetime format.
 - *type*: optional, string.
-  Could be one of *daily*.
+  Only *daily* is supported.
   Default *daily*.
 
 ### Get [GET]
@@ -1749,7 +1774,7 @@ Query Attribute:
 - *startTime*: required, string in Datetime format.
 - *endTime*: required, string in Datetime format.
 - *type*: optional, string.
-  Could be one of *daily*.
+  Only *daily* is supported.
   Default *daily*.
 
 ### Get [GET]
@@ -1812,7 +1837,7 @@ Query Attribute:
 - *startTime*: required, string in Datetime format.
 - *endTime*: required, string in Datetime format.
 - *type*: optional, string.
-  Could be one of *daily*.
+  Only *daily* is supported.
   Default *daily*.
 
 ### Get [GET]
@@ -1879,7 +1904,7 @@ Query Attribute:
 - *startTime*: required, string in Datetime format.
 - *endTime*: required, string in Datetime format.
 - *type*: optional, string.
-  Could be one of *daily*.
+  Only *daily* is supported.
   Default *daily*.
 
 ### Get [GET]
