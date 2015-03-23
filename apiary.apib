@@ -749,6 +749,44 @@ Response Attributes:
             "status": "inprogress"
         }
 
+# group Cloud Server Configuration
+
+## Cloud Server Configuration [/mxcs/config]
+
+### Get [GET]
+
+Response Attributes:
+- *readingValidityPeriodDay*: required, integer.
+  Number of days that a received Reading would be kept on Cloud Server.
+
++ Response 200 (application/json)
+
+        {
+            "readingValidityPeriodDay": 90
+        }
+
+### Put [PUT]
+
+Request Attributes:
+- *readingValidityPeriodDay*: required, integer.
+  Number of days that a received Reading would be kept on Cloud Server.
+
+Response Attributes:
+- *message*: required, string.
+  Human-readable message.
+
++ Request (application/json)
+
+        {
+            "readingValidityPeriodDay": 30
+        }
+
++ Response 200 (application/json)
+
+        {
+            "message": "success"
+        }
+
 # group Cloud Gateway Management
 
 ## Get Cloud Gateway List [/mxcs/cgs?cgGroupId={cgGroupId}&keyword={keyword}&page={page}&pageSize={pageSize}]
