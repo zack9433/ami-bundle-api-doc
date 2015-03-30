@@ -22,6 +22,10 @@ Resources provided by Cloud Server are categorized in */mxcs/** related resource
     second   = 2DIGIT
     fragment = 1*6DIGIT
 
+## HexDigit format
+
+    hexdigit = 1*(HEXDIG)
+
 # group MXC Settings
 
 ## MXC Configuration [/mxc/config]
@@ -805,6 +809,9 @@ Response Attributes:
         Exists only when CG has Cellular Modules.
     - *metas*: required, object.
       Contains a dictionary of previously stored key-value pairs.
+    - *security*: optional, object.
+      Required when the whole system is running with security enabled.
+      - *tls-psk*: required, string in *HexDigit* format.
 
 + Response 200 (application/json)
 
@@ -828,6 +835,9 @@ Response Attributes:
                     "metas": {
                         "latitude": "41.428342",
                         "longitude": "2.94482"
+                    },
+                    "security": {
+                        "tls-psk": "0123456789ABCDEF"
                     }
                 },
                 {
@@ -842,6 +852,9 @@ Response Attributes:
                     "metas": {
                         "latitude": "41.428342",
                         "longitude": "2.94482"
+                    },
+                    "security": {
+                        "tls-psk": "0123456789ABCDEF"
                     }
                 }
             ]
@@ -858,6 +871,9 @@ Request Attributes:
 - *metas: optional, object.
   Contains a dictionary of key-value pairs to be stored relative to the newly
   created CG.
+- *security*: optional, object.
+  Required when the whole system is running with security enabled.
+  - *tls-psk*: required, string in *HexDigit* format.
 
 Response Attributes:
 - *id*: required, ID of the CG just created.
@@ -870,6 +886,9 @@ Response Attributes:
             "metas": {
                 "latitude": "41.428342",
                 "longitude": "294482"
+            },
+            "security": {
+                "tls-psk": "DEADBEEF"
             }
         }
 
@@ -926,6 +945,9 @@ Response Attributes:
     Exists only when CG has Cellular Modules.
 - *metas*: required, object.
   Contains a dictionary of previously stored key-value pairs.
+- *security*: optional, object.
+  Required when the whole system is running with security enabled.
+  - *tls-psk*: required, string in *HexDigit* format.
 
 + Response 200 (application/json)
 
@@ -944,6 +966,9 @@ Response Attributes:
             "metas": {
                 "latitude": "41.428342",
                 "longitude": "2.94482"
+            },
+            "security": {
+                "tls-psk": "DEADBEEF"
             }
         }
 
@@ -968,6 +993,9 @@ Request Attributes:
   Ignored.
 - *metas*: required, object.
   Replaces metas currently stored.
+- *security*: optional, object.
+  Required when the whole system is running with security enabled.
+  - *tls-psk*: required, string in *HexDigit* format.
 
 Response Attributes:
 - *message*: required, string.
@@ -980,6 +1008,9 @@ Response Attributes:
             "metas": {
                 "latitude": "44.323123",
                 "longitude": "1.932132",
+            },
+            "security": {
+                "tls-psk": "DEADBEEF"
             }
         }
 
