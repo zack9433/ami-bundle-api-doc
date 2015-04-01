@@ -776,6 +776,21 @@ Response Attributes:
             "message": "success"
         }
 
+# group Cloud Server Status
+
+## Cloud Server Status [/mxcs/status]
+
+### Get [GET]
+
+Response Attributes:
+- *securityEnabled*: required, boolean.
+
++ Response 200 (application/json)
+
+        {
+            "securityEnabled": true
+        }
+
 # group Cloud Gateway Management
 
 ## Get Cloud Gateway List [/mxcs/cgs?cgGroupId={cgGroupId}&keyword={keyword}&page={page}&pageSize={pageSize}]
