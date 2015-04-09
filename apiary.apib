@@ -1996,3 +1996,61 @@ Response Attribute:
                 }
             ]
         }
+
+# group Cellular Usage Distribution
+
+## Get History Cellular Usage Distribution [/mxcs/history/cellular-usage?startTime={startTime}&endTime={endTime}&upperBoundBytes={upperBoundBytes}&categoryCount={categoryCount}]
+
+Query Attribute:
+- *startTime*: required, string in Datetime format.
+- *endTime*: required, string in Datetime format.
+- *upperBoundBytes*: optional, integer.
+  If given, it sets the highest usage category.
+  If not given, the value would be determined dynamically.
+- *categoryCount*: optional, integer.
+  If given, it sets the number of usage categories returned.
+  Should be greater than 2.
+  Default 5.
+
+### Get [GET]
+
+Response Attributes:
+- *usageCategoryList*: required, object array.
+    - *lowerBoundByte*: required, integer.
+      Represent the lower bound of usage.
+      Not exist in the first element of *usageCategoryList*.
+    - *upperBoundByte*: required, integer.
+      Represent the upper bound of usage.
+      Not exist in the last element of *usageCategoryList*.
+    - *count*: required, integer.
+      Number of CGs with cellular usage lies in the boundary given by *lowerBoundByte* and *upperBoundByte*.
+
++ Response 200 (application/json)
+
+        {
+            "usageCategoryList": [
+                {
+                    "upperBoundByte": 134217728,
+                    "count": 3
+                },
+                {
+                    "lowerBoundByte": 134217728,
+                    "upperBoundByte": 268435456,
+                    "count": 2
+                },
+                {
+                    "lowerBoundByte": 268435456,
+                    "upperBoundByte": 536870912,
+                    "count": 9
+                },
+                {
+                    "lowerBoundByte": 536870912,
+                    "upperBoundByte": 1073741824,
+                    "count": 1
+                },
+                {
+                    "lowerBoundByte": 1073741824,
+                    "count": 1
+                }
+            ]
+        }
