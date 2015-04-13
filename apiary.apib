@@ -796,7 +796,7 @@ Response Attributes:
 ## Get Cloud Gateway List [/mxcs/cgs?cgGroupId={cgGroupId}&keyword={keyword}&page={page}&pageSize={pageSize}]
 
 Query Attributes:
-- *cgGroupId*: optional, integer.
+- *cgGroupId*: optional, string.
   If given, only CGs in the given group are returned.
 - *keyword*: optional, string.
   Return only Cloud Gateways with *id* or *aliasName* similar to the given string.
@@ -1999,9 +1999,11 @@ Response Attribute:
 
 # group Cellular Usage Distribution
 
-## Get History Cellular Usage Distribution [/mxcs/history/cellular-usage?startTime={startTime}&endTime={endTime}&upperBoundBytes={upperBoundBytes}&categoryCount={categoryCount}]
+## Get History Cellular Usage Distribution [/mxcs/history/cellular-usage?cgGroupId={cgGroupId}&startTime={startTime}&endTime={endTime}&upperBoundBytes={upperBoundBytes}&categoryCount={categoryCount}]
 
 Query Attribute:
+- *cgGroupId*: optional, string.
+  If given, only CGs in the given group are taken into account.
 - *startTime*: required, string in Datetime format.
 - *endTime*: required, string in Datetime format.
 - *upperBoundBytes*: optional, integer.
@@ -2030,6 +2032,7 @@ Response Attributes:
         {
             "usageCategoryList": [
                 {
+                    "lowerBoundByte": 0,
                     "upperBoundByte": 134217728,
                     "count": 3
                 },
