@@ -940,31 +940,29 @@ Response Attributes:
             "message": "success"
         }
 
-## Import Cloud Gateway List (backend interface) [/mxcs/cgs/import]
+## Import Cloud Gateway List - backend interface [/mxcs/cgs/import]
 
 ### Post [POST]
 
+// (to Backend)
 + Request (multiplart/form-data;boundary=TheBoundary)
     + Body
 
-        --TheBoundary
-        Content-Disposition: form-data; name="cglist"; filename="cglist.csv"
-        Content-Type: text/csv
-        "cg-id","name","latitude","longitude","tls-psk"
-        "cg-0090e84a38cd","CG@192.168.31.80","0.000","0.000","0123456789abcdef"
-        "cg-0090e84a0001","CG@nowhere","0.000","0.000","0123456789abcdef"
-        --TheBoundary--
+            --TheBoundary
+            Content-Disposition: form-data; name="cglist"; filename="cglist.csv"
+            Content-Type: text/csv
+            "cg-id","name","latitude","longitude","tls-psk"
+            "cg-0090e84a38cd","CG@192.168.31.80","0.000","0.000","0123456789abcdef"
+            "cg-0090e84a0001","CG@nowhere","0.000","0.000","0123456789abcdef"
+            --TheBoundary--
 
 + Response 200(application/json)
 
         {}
 
-## Import Cloud Gateway List (bundle interface) [/mxcs/cgs/import]
-
-### Post [POST]
-
 + Request (application/json)
 
+        // (to Bundle)
         {
             "_file": {
                 "files": [
