@@ -107,6 +107,7 @@ Resposne Attributes:
       Shell command to execute.
     - *logCount*: required, integer.
       Number of logs to keep on Cloud Gateway.
+      *0* indicates no logs will be deleted.
     - *scheduleList*: required, object array.
         - *id*: required, integer.
           Schedule ID.
@@ -244,6 +245,7 @@ Request Attributes:
       Shell command to execute.
     - *logCount*: required, integer.
       Number of logs to keep on Cloud Gateway.
+      *0* indicates no logs will be deleted.
     - *scheduleList*: required, object array.
         - *id*: optional, integer.
           Ignored.
@@ -349,6 +351,7 @@ Response Attributes:
   Shell command to execute.
 - *logCount*: required, integer.
   Number of logs to keep on Cloud Gateway.
+  *0* indicates no logs will be deleted.
 - *scheduleList*: required, object array.
     - *id*: required, integer.
       Schedule ID.
@@ -469,10 +472,14 @@ Response Attributes:
 + Response 200 (application/json)
 
         {
-            "id": "20141124-044217_20141124-044219_00",
-            "startTime": "2014-11-24T04:42:17Z",
-            "endTime": "2014-11-24T04:42:19Z",
-            "exitStatus": 0
+            "isRunning": false,
+            "executionCount": 31,
+            "lastExecution": {
+                "id": "20141124-044217_20141124-044219_00",
+                "startTime": "2014-11-24T04:42:17Z",
+                "endTime": "2014-11-24T04:42:19Z",
+                "exitStatus": 0
+            }
         }
 
 ## Manage Schedule List [/mxc/jobs/{job_id}/schedules]
@@ -674,6 +681,8 @@ Resource Attributes:
 
 ### Post [POST]
 
+(to Bundle)
+
 This request causes Cloud Gateway to *POST* the *Log File* to the designated *url*.
 
 Request Attributes:
@@ -690,14 +699,15 @@ Response Attributes:
 + Request (application/json)
 
         {
-            "url": "https://mxc-cs/log/upload/JEJC9bbc832k1Sc"
+            "url": "https://mxc-cs/log/upload",
+            "headers": {
+                "accessToken": "MOXAMOXA-TEST-SYSTEM"
+            }
         }
 
 + Response 200 (application/json)
 
         {
-            "startTime": "2014-12-03T04:42:17.260861Z",
-            "endTime": "2014-12-03T04:48:36.992303Z",
             "url": "https://mxc-cs/log/upload/JEJC9bbc832k1Sc"
         }
 
