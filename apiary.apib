@@ -726,7 +726,6 @@ Response Attributes:
 
 Response Attributes:
 - *name*: required, string.
-- *url*: required, string.
 
 Get information about currently deployed client-bundle.
 
@@ -734,7 +733,6 @@ Get information about currently deployed client-bundle.
 
         {
             "name": "my-application-bundle.tgz",
-            "url": "https://mxc-cs/client-bundles/UD63CVU7QPLE"
         }
 
 ## Deploy Custom Bundle [/mxc/custom-bundle/update]
@@ -751,7 +749,10 @@ Starting a request while a previous request is in progress, results in error.
 
         {
             "name": "my-application-bundle.tgz",
-            "url": "https://mxc-cs/client-bundles/UD63CVU7QPLE"
+            "url": "https://mxc-cs/client-bundles/UD63CVU7QPLE",
+            "headers": {
+                "X-Mx-AccessToken": "some-access-token"
+            }
         }
 
 + Response 200 (application/json)
