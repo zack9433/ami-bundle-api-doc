@@ -679,6 +679,13 @@ Resource Attributes:
 - *log_id*: string.
   Log ID.
 
+### Get [Get]
+(to Backend)
+
++ Response 200 (application/octet-stream)
+
+        ```binary data goes here```
+
 ### Post [POST]
 
 (to Bundle)
@@ -719,7 +726,6 @@ Response Attributes:
 
 Response Attributes:
 - *name*: required, string.
-- *url*: required, string.
 
 Get information about currently deployed client-bundle.
 
@@ -727,7 +733,6 @@ Get information about currently deployed client-bundle.
 
         {
             "name": "my-application-bundle.tgz",
-            "url": "https://mxc-cs/client-bundles/UD63CVU7QPLE"
         }
 
 ## Deploy Custom Bundle [/mxc/custom-bundle/update]
@@ -744,7 +749,10 @@ Starting a request while a previous request is in progress, results in error.
 
         {
             "name": "my-application-bundle.tgz",
-            "url": "https://mxc-cs/client-bundles/UD63CVU7QPLE"
+            "url": "https://mxc-cs/client-bundles/UD63CVU7QPLE",
+            "headers": {
+                "X-Mx-AccessToken": "some-access-token"
+            }
         }
 
 + Response 200 (application/json)
@@ -952,41 +960,29 @@ Response Attributes:
 
 ## Import Cloud Gateway List - backend interface [/mxcs/cgs/import]
 
+Files being imported should be a CSV file having content like:
+```
+    "cg-id","name","latitude","longitude","tls-psk"
+    "cg-0090e84a38cd","CG@192.168.31.80","0.000","0.000","0123456789abcdef"
+    "cg-0090e84a0001","CG@nowhere","0.000","0.000","0123456789abcdef"
+```
+
 ### Post [POST]
-
-// (to Backend)
-+ Request (multiplart/form-data;boundary=TheBoundary)
-    + Body
-
-            --TheBoundary
-            Content-Disposition: form-data; name="cglist"; filename="cglist.csv"
-            Content-Type: text/csv
-            "cg-id","name","latitude","longitude","tls-psk"
-            "cg-0090e84a38cd","CG@192.168.31.80","0.000","0.000","0123456789abcdef"
-            "cg-0090e84a0001","CG@nowhere","0.000","0.000","0123456789abcdef"
-            --TheBoundary--
-
-+ Response 200(application/json)
-
-        {}
 
 + Request (application/json)
 
-        // (to Bundle)
         {
-            "_file": {
-                "files": [
-                    "cglist.csv"
-                ],
-                "publicLink": {
-                    "cglist.csv": "https://192.168.31.81/api/v1/download/120983yruixhnpojd8y123"
-                }
+            "url": "http://192.168.31.81:5000/api/v1/download/1234",
+            "headers": {
+                "X-Mx-AccessToken": "some-access-token"
             }
         }
 
 + Response 200 (application/json)
 
-        {}
+        {
+            "message": "success"
+        }
 
 ## Get Cloud Gateway [/mxcs/cgs/{cg_id}]
 
