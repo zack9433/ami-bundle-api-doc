@@ -2045,13 +2045,11 @@ Response Attribute:
 
 # group Cellular Usage Distribution
 
-## Get History Cellular Usage Distribution [/mxcs/history/cellular-usage?cgGroupId={cgGroupId}&startTime={startTime}&endTime={endTime}&upperBoundBytes={upperBoundBytes}&categoryCount={categoryCount}]
+## Get History Cellular Usage Distribution [/mxcs/history/cellular-usage?cgGroupId={cgGroupId}&upperBoundBytes={upperBoundBytes}&categoryCount={categoryCount}]
 
 Query Attribute:
 - *cgGroupId*: optional, string.
   If given, only CGs in the given group are taken into account.
-- *startTime*: required, string in Datetime format.
-- *endTime*: required, string in Datetime format.
 - *upperBoundBytes*: optional, integer.
   If given, it sets the highest usage category.
   If not given, the value would be determined dynamically.
