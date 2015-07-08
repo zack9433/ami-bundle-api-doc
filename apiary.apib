@@ -2100,3 +2100,355 @@ Response Attributes:
                 }
             ]
         }
+
+# Group Modbus Equipment Template
+
+## Get List [/mxc/modbus/equipment-templates]
+
+### Get [GET]
+
+Response attributes:
+- **templateList** (required, object array)
+    - **id** (required, integer, `1`): Template ID.
+    - **name** (required, string, `ioLogik-E2210`): Template name.
+
++ Response 200 (application/json)
+
+        {
+            "templateList": [
+                {
+                    "id": 1,
+                    "name": "ioLogik-E2210"
+                },
+                {
+                    "id": 2,
+                    "name": "ioLogik-E2214"
+                }
+            ]
+        }
+
+## Manage Configuration [/mxc/modbus/equipment-templates/{id}/configuration]
+
+### Get [GET]
+
+Response attributes:
+- **id** (required, integer, `1`): Template ID.
+- **name** (required, string, `ioLogik-E2210`): Template name.
+- **tagList** (required, object array)
+    - **name** (required, string, `di0`): Tag name.
+    - **unit** (optional, string, `Volt`): Tag unit.
+    - **function** (required, string, `read-coils`): Function to retrieve the Tag value. Can be one of `read-coils`, `read-input-registers`, `read-holding-registers`.
+    - **address** (required, integer, `0`): Address of the tag.
+    - **quantity** (required, integer, `1`): Tag length.
+    - **type** (required, string, `UINT16`): Tag data type.
+    - **byteOrder** (optional, string, `CDAB`): Switch input byte order. Can be any permutation of `AB`, `ABCD`, `ABCDEF`, `ABCDEFGH`.
+    - **slope** (optional, number, `3.14`): `V = input * S + O`.
+    - **offset** (optional, number, `-0.33`): `V = input * S + O`.
+    - **invalidValue** (optional, integer, `65535`): `if input == INVALID_VALUE, assume the value is not valid`.
+    - **description** (required, string, `alarm input`): User edited description.
+
++ Response 200 (application/json)
+
+        {
+            "id": 1,
+            "name": "ioLogik-E2242",
+            "tagList": [
+                {
+                    "name": "di0",
+                    "function": "read-coils",
+                    "address": 0,
+                    "quantity": 1,
+                    "type": "UINT16",
+                    "description": "alarm input"
+                },
+                {
+                    "name": "di1",
+                    "function": "read-coils",
+                    "address": 1,
+                    "quantity": 1,
+                    "type": "UINT16",
+                    "description": ""
+                },
+                {
+                    "name": "di2",
+                    "function": "read-coils",
+                    "address": 2,
+                    "quantity": 1,
+                    "type": "UINT16",
+                    "description": ""
+                },
+                {
+                    "name": "di3",
+                    "function": "read-coils",
+                    "address": 3,
+                    "quantity": 1,
+                    "type": "UINT16",
+                    "description": ""
+                },
+                {
+                    "name": "di4",
+                    "function": "read-coils",
+                    "address": 4,
+                    "quantity": 1,
+                    "type": "UINT16",
+                    "description": ""
+                },
+                {
+                    "name": "di5",
+                    "function": "read-coils",
+                    "address": 5,
+                    "quantity": 1,
+                    "type": "UINT16",
+                    "description": ""
+                },
+                {
+                    "name": "di6",
+                    "function": "read-coils",
+                    "address": 6,
+                    "quantity": 1,
+                    "type": "UINT16",
+                    "description": ""
+                },
+                {
+                    "name": "di7",
+                    "function": "read-coils",
+                    "address": 7,
+                    "quantity": 1,
+                    "type": "UINT16",
+                    "description": ""
+                },
+                {
+                    "name": "di8",
+                    "function": "read-coils",
+                    "address": 8,
+                    "quantity": 1,
+                    "type": "UINT16",
+                    "description": ""
+                },
+                {
+                    "name": "di9",
+                    "function": "read-coils",
+                    "address": 9,
+                    "quantity": 1,
+                    "type": "UINT16",
+                    "description": ""
+                },
+                {
+                    "name": "di10",
+                    "function": "read-coils",
+                    "address": 10,
+                    "quantity": 1,
+                    "type": "UINT16",
+                    "description": ""
+                },
+                {
+                    "name": "di11",
+                    "function": "read-coils",
+                    "address": 11,
+                    "quantity": 1,
+                    "type": "UINT16",
+                    "description": ""
+                },
+                {
+                    "name": "ai0",
+                    "function": "read-input-registers",
+                    "address": 304,
+                    "quantity": 2,
+                    "byteOrder": "CDAB",
+                    "type": "FLOAT32",
+                    "description": ""
+                },
+                {
+                    "name": "ai1",
+                    "function": "read-input-registers",
+                    "address": 306,
+                    "quantity": 2,
+                    "byteOrder": "CDAB",
+                    "type": "FLOAT32",
+                    "description": ""
+                },
+                {
+                    "name": "ai2",
+                    "function": "read-input-registers",
+                    "address": 308,
+                    "quantity": 2,
+                    "byteOrder": "CDAB",
+                    "type": "FLOAT32",
+                    "description": ""
+                },
+                {
+                    "name": "ai3",
+                    "function": "read-input-registers",
+                    "address": 310,
+                    "quantity": 2,
+                    "byteOrder": "CDAB",
+                    "type": "FLOAT32",
+                    "description": ""
+                }
+            ]
+        }
+
+### Put [PUT]
+
+Request attributes:
+- **id** (optional, integer, `1`): Template ID. If given, it should match `{id}` in resource string.
+- **name** (required, string, `ioLogik-E2210`): Template name.
+- **tagList** (required, object array)
+    - **name** (required, string, `di0`): Tag name.
+    - **unit** (optional, string, `Volt`): Tag unit.
+    - **function** (required, string, `read-coils`): Function to retrieve the Tag value. Can be one of `read-coils`, `read-input-registers`, `read-holding-registers`.
+    - **address** (required, integer, `0`): Address of the tag.
+    - **quantity** (required, integer, `1`): Tag length.
+    - **type** (required, string, `UINT16`): Tag data type.
+    - **byteOrder** (optional, string, `CDAB`): Switch input byte order. Can be any permutation of `AB`, `ABCD`, `ABCDEF`, `ABCDEFGH`.
+    - **slope** (optional, number, `3.14`): `V = input * S + O`.
+    - **offset** (optional, number, `-0.33`): `V = input * S + O`.
+    - **invalidValue** (optional, integer, `65535`): `if input == INVALID_VALUE, assume the value is not valid`.
+    - **description** (required, string, `alarm input`): User edited description.
+
++ Request (application/json)
+
+        {
+            "id": 1,
+            "name": "ioLogik-E2242",
+            "tagList": [
+                {
+                    "name": "di0",
+                    "function": "read-coils",
+                    "address": 0,
+                    "quantity": 1,
+                    "type": "UINT16",
+                    "description": "alarm input"
+                },
+                {
+                    "name": "di1",
+                    "function": "read-coils",
+                    "address": 1,
+                    "quantity": 1,
+                    "type": "UINT16",
+                    "description": ""
+                },
+                {
+                    "name": "di2",
+                    "function": "read-coils",
+                    "address": 2,
+                    "quantity": 1,
+                    "type": "UINT16",
+                    "description": ""
+                },
+                {
+                    "name": "di3",
+                    "function": "read-coils",
+                    "address": 3,
+                    "quantity": 1,
+                    "type": "UINT16",
+                    "description": ""
+                },
+                {
+                    "name": "di4",
+                    "function": "read-coils",
+                    "address": 4,
+                    "quantity": 1,
+                    "type": "UINT16",
+                    "description": ""
+                },
+                {
+                    "name": "di5",
+                    "function": "read-coils",
+                    "address": 5,
+                    "quantity": 1,
+                    "type": "UINT16",
+                    "description": ""
+                },
+                {
+                    "name": "di6",
+                    "function": "read-coils",
+                    "address": 6,
+                    "quantity": 1,
+                    "type": "UINT16",
+                    "description": ""
+                },
+                {
+                    "name": "di7",
+                    "function": "read-coils",
+                    "address": 7,
+                    "quantity": 1,
+                    "type": "UINT16",
+                    "description": ""
+                },
+                {
+                    "name": "di8",
+                    "function": "read-coils",
+                    "address": 8,
+                    "quantity": 1,
+                    "type": "UINT16",
+                    "description": ""
+                },
+                {
+                    "name": "di9",
+                    "function": "read-coils",
+                    "address": 9,
+                    "quantity": 1,
+                    "type": "UINT16",
+                    "description": ""
+                },
+                {
+                    "name": "di10",
+                    "function": "read-coils",
+                    "address": 10,
+                    "quantity": 1,
+                    "type": "UINT16",
+                    "description": ""
+                },
+                {
+                    "name": "di11",
+                    "function": "read-coils",
+                    "address": 11,
+                    "quantity": 1,
+                    "type": "UINT16",
+                    "description": ""
+                },
+                {
+                    "name": "ai0",
+                    "function": "read-input-registers",
+                    "address": 304,
+                    "quantity": 2,
+                    "byteOrder": "CDAB",
+                    "type": "FLOAT32",
+                    "description": ""
+                },
+                {
+                    "name": "ai1",
+                    "function": "read-input-registers",
+                    "address": 306,
+                    "quantity": 2,
+                    "byteOrder": "CDAB",
+                    "type": "FLOAT32",
+                    "description": ""
+                },
+                {
+                    "name": "ai2",
+                    "function": "read-input-registers",
+                    "address": 308,
+                    "quantity": 2,
+                    "byteOrder": "CDAB",
+                    "type": "FLOAT32",
+                    "description": ""
+                },
+                {
+                    "name": "ai3",
+                    "function": "read-input-registers",
+                    "address": 310,
+                    "quantity": 2,
+                    "byteOrder": "CDAB",
+                    "type": "FLOAT32",
+                    "description": ""
+                }
+            ]
+        }
+
++ Response 200 (application/json)
+
+        {
+            "message": "success"
+        }
