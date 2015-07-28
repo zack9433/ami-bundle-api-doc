@@ -2105,12 +2105,31 @@ Response Attributes:
 
 ## Get List [/mxc/modbus/equipment-templates]
 
-### Get [GET]
+### Get all equipment templates [GET]
 
 Response attributes:
+
 - **templateList** (required, object array)
     - **id** (required, integer, `1`): Template ID.
     - **name** (required, string, `ioLogik-E2210`): Template name.
+    - **tagList** (required, object array)
+        - **name** (required, string, `di0`): Tag name.
+        - **unit** (optional, string, `Volt`): Tag unit.
+        - **function** (required, string, `read-coils`): Function to retrieve the Tag value. Can be one of `read-coils`, `read-input-registers`, `read-holding-registers`.
+        - **address** (required, integer, `0`): Address of the tag.
+        - **quantity** (required, integer, `1`): Tag length.
+        - **type** (required, string, `UINT16`): Tag data type.
+        - **byteOrder** (optional, string, `CDAB`): Switch input byte order. Can be any permutation of `AB`, `ABCD`, `ABCDEF`, `ABCDEFGH`.
+        - **invalidValue** (optional, integer, `65535`): `if input == INVALID_VALUE, assume the value is not valid`.
+        - **description** (required, string, `alarm input`): User edited description.
+        - **autoScalingMode** (required, string, `intercept`): Auto scaling mode: intercept or point
+        - **autoScaling**
+            - **slope** (required if autoScaling = intercept, number, `3.14`): `V = input * S + O`.
+            - **offset** (required if autoScaling = intercept, number, `-0.33`): `V = input * S + O`.
+            - **sourceMin** (required if autoScaling = point, number, `0`): `output = ((input-sourceMin) * (targetMax-targetMin) / (sourceMax-sourceMin)) + targetMin`.
+            - **sourceMax** (required if autoScaling = point, number, `1`): `output = ((input-sourceMin) * (targetMax-targetMin) / (sourceMax-sourceMin)) + targetMin`.
+            - **targetMin** (required if autoScaling = point, number, `0`): `output = ((input-sourceMin) * (targetMax-targetMin) / (sourceMax-sourceMin)) + targetMin`.
+            - **targetMax** (required if autoScaling = point, number, `100`): `output = ((input-sourceMin) * (targetMax-targetMin) / (sourceMax-sourceMin)) + targetMin`.
 
 + Response 200 (application/json)
 
@@ -2118,34 +2137,368 @@ Response attributes:
             "templateList": [
                 {
                     "id": 1,
-                    "name": "ioLogik-E2210"
+                    "name": "ioLogik-E2242",
+                    "tagList": [
+                        {
+                            "name": "di0",
+                            "function": "read-coils",
+                            "address": 0,
+                            "quantity": 1,
+                            "type": "UINT16",
+                            "description": "alarm input"
+                        },
+                        {
+                            "name": "di1",
+                            "function": "read-coils",
+                            "address": 1,
+                            "quantity": 1,
+                            "type": "UINT16",
+                            "description": ""
+                        },
+                        {
+                            "name": "di2",
+                            "function": "read-coils",
+                            "address": 2,
+                            "quantity": 1,
+                            "type": "UINT16",
+                            "description": ""
+                        },
+                        {
+                            "name": "di3",
+                            "function": "read-coils",
+                            "address": 3,
+                            "quantity": 1,
+                            "type": "UINT16",
+                            "description": ""
+                        },
+                        {
+                            "name": "di4",
+                            "function": "read-coils",
+                            "address": 4,
+                            "quantity": 1,
+                            "type": "UINT16",
+                            "description": ""
+                        },
+                        {
+                            "name": "di5",
+                            "function": "read-coils",
+                            "address": 5,
+                            "quantity": 1,
+                            "type": "UINT16",
+                            "description": ""
+                        },
+                        {
+                            "name": "di6",
+                            "function": "read-coils",
+                            "address": 6,
+                            "quantity": 1,
+                            "type": "UINT16",
+                            "description": ""
+                        },
+                        {
+                            "name": "di7",
+                            "function": "read-coils",
+                            "address": 7,
+                            "quantity": 1,
+                            "type": "UINT16",
+                            "description": ""
+                        },
+                        {
+                            "name": "di8",
+                            "function": "read-coils",
+                            "address": 8,
+                            "quantity": 1,
+                            "type": "UINT16",
+                            "description": ""
+                        },
+                        {
+                            "name": "di9",
+                            "function": "read-coils",
+                            "address": 9,
+                            "quantity": 1,
+                            "type": "UINT16",
+                            "description": ""
+                        },
+                        {
+                            "name": "di10",
+                            "function": "read-coils",
+                            "address": 10,
+                            "quantity": 1,
+                            "type": "UINT16",
+                            "description": ""
+                        },
+                        {
+                            "name": "di11",
+                            "function": "read-coils",
+                            "address": 11,
+                            "quantity": 1,
+                            "type": "UINT16",
+                            "description": ""
+                        },
+                        {
+                            "name": "ai0",
+                            "function": "read-input-registers",
+                            "address": 304,
+                            "quantity": 2,
+                            "byteOrder": "CDAB",
+                            "type": "FLOAT32",
+                            "description": ""
+                        },
+                        {
+                            "name": "ai1",
+                            "function": "read-input-registers",
+                            "address": 306,
+                            "quantity": 2,
+                            "byteOrder": "CDAB",
+                            "type": "FLOAT32",
+                            "description": ""
+                        },
+                        {
+                            "name": "ai2",
+                            "function": "read-input-registers",
+                            "address": 308,
+                            "quantity": 2,
+                            "byteOrder": "CDAB",
+                            "type": "FLOAT32",
+                            "description": ""
+                        },
+                        {
+                            "name": "ai3",
+                            "function": "read-input-registers",
+                            "address": 310,
+                            "quantity": 2,
+                            "byteOrder": "CDAB",
+                            "type": "FLOAT32",
+                            "description": ""
+                        }
+                    ]
                 },
                 {
                     "id": 2,
-                    "name": "ioLogik-E2214"
+                    "name": "ioLogik-E2214",
+                    "tagList": [
+                        {
+                            "name": "di0",
+                            "function": "read-coils",
+                            "address": 0,
+                            "quantity": 1,
+                            "type": "UINT16",
+                            "description": "alarm input"
+                        },
+                        {
+                            "name": "di1",
+                            "function": "read-coils",
+                            "address": 1,
+                            "quantity": 1,
+                            "type": "UINT16",
+                            "description": ""
+                        },
+                        {
+                            "name": "di2",
+                            "function": "read-coils",
+                            "address": 2,
+                            "quantity": 1,
+                            "type": "UINT16",
+                            "description": ""
+                        },
+                        {
+                            "name": "di3",
+                            "function": "read-coils",
+                            "address": 3,
+                            "quantity": 1,
+                            "type": "UINT16",
+                            "description": ""
+                        },
+                        {
+                            "name": "di4",
+                            "function": "read-coils",
+                            "address": 4,
+                            "quantity": 1,
+                            "type": "UINT16",
+                            "description": ""
+                        },
+                        {
+                            "name": "di5",
+                            "function": "read-coils",
+                            "address": 5,
+                            "quantity": 1,
+                            "type": "UINT16",
+                            "description": ""
+                        },
+                        {
+                            "name": "di6",
+                            "function": "read-coils",
+                            "address": 6,
+                            "quantity": 1,
+                            "type": "UINT16",
+                            "description": ""
+                        },
+                        {
+                            "name": "di7",
+                            "function": "read-coils",
+                            "address": 7,
+                            "quantity": 1,
+                            "type": "UINT16",
+                            "description": ""
+                        },
+                        {
+                            "name": "di8",
+                            "function": "read-coils",
+                            "address": 8,
+                            "quantity": 1,
+                            "type": "UINT16",
+                            "description": ""
+                        },
+                        {
+                            "name": "di9",
+                            "function": "read-coils",
+                            "address": 9,
+                            "quantity": 1,
+                            "type": "UINT16",
+                            "description": ""
+                        },
+                        {
+                            "name": "di10",
+                            "function": "read-coils",
+                            "address": 10,
+                            "quantity": 1,
+                            "type": "UINT16",
+                            "description": ""
+                        },
+                        {
+                            "name": "di11",
+                            "function": "read-coils",
+                            "address": 11,
+                            "quantity": 1,
+                            "type": "UINT16",
+                            "description": ""
+                        },
+                        {
+                            "name": "ai0",
+                            "function": "read-input-registers",
+                            "address": 304,
+                            "quantity": 2,
+                            "byteOrder": "CDAB",
+                            "type": "FLOAT32",
+                            "description": ""
+                        },
+                        {
+                            "name": "ai1",
+                            "function": "read-input-registers",
+                            "address": 306,
+                            "quantity": 2,
+                            "byteOrder": "CDAB",
+                            "type": "FLOAT32",
+                            "description": ""
+                        },
+                        {
+                            "name": "ai2",
+                            "function": "read-input-registers",
+                            "address": 308,
+                            "quantity": 2,
+                            "byteOrder": "CDAB",
+                            "type": "FLOAT32",
+                            "description": ""
+                        },
+                        {
+                            "name": "ai3",
+                            "function": "read-input-registers",
+                            "address": 310,
+                            "quantity": 2,
+                            "byteOrder": "CDAB",
+                            "type": "FLOAT32",
+                            "description": ""
+                        }
+                    ]
                 }
             ]
         }
 
-## Manage Configuration [/mxc/modbus/equipment-templates/{id}/configuration]
+### Create a new equipment template [POST]
 
-### Get [GET]
+Request attributes:
+- **name** (required, string, `ioLogik-E2210`): Template name.
+- **tagList** (required, object array)
+    - **name** (required, string, `di0`): Tag name.
+    - **unit** (optional, string, `Volt`): Tag unit.
+    - **function** (required, string, `read-coils`): Function to retrieve the Tag value. Can be one of `read-coils`, `read-input-registers`, `read-holding-registers`.
+    - **address** (required, integer, `0`): Address of the tag.
+    - **quantity** (required, integer, `1`): Tag length.
+    - **type** (required, string, `UINT16`): Tag data type.
+    - **byteOrder** (optional, string, `CDAB`): Switch input byte order. Can be any permutation of `AB`, `ABCD`, `ABCDEF`, `ABCDEFGH`.
+    - **invalidValue** (optional, integer, `65535`): `if input == INVALID_VALUE, assume the value is not valid`.
+    - **description** (required, string, `alarm input`): User edited description.
+    - **autoScalingMode** (required, string, `intercept`): Auto scaling mode: intercept or point
+    - **autoScaling**
+        - **slope** (required if autoScaling = intercept, number, `3.14`): `V = input * S + O`.
+        - **offset** (required if autoScaling = intercept, number, `-0.33`): `V = input * S + O`.
+        - **sourceMin** (required if autoScaling = point, number, `0`): `output = ((input-sourceMin) * (targetMax-targetMin) / (sourceMax-sourceMin)) + targetMin`.
+        - **sourceMax** (required if autoScaling = point, number, `1`): `output = ((input-sourceMin) * (targetMax-targetMin) / (sourceMax-sourceMin)) + targetMin`.
+        - **targetMin** (required if autoScaling = point, number, `0`): `output = ((input-sourceMin) * (targetMax-targetMin) / (sourceMax-sourceMin)) + targetMin`.
+        - **targetMax** (required if autoScaling = point, number, `100`): `output = ((input-sourceMin) * (targetMax-targetMin) / (sourceMax-sourceMin)) + targetMin`.
 
-Response attributes:
++ Request (application/json)
+
+        {
+            "name": "ioLogik-E2242",
+            "tagList": [
+                {
+                    "name": "di0",
+                    "function": "read-coils",
+                    "address": 0,
+                    "quantity": 1,
+                    "type": "UINT16",
+                    "description": "alarm input"
+                }
+            ]
+        }
+
++ Response 200 (application/json)
+
+        {
+            "id": 1
+            "name": "ioLogik-E2242",
+            "tagList": [
+                {
+                    "name": "di0",
+                    "function": "read-coils",
+                    "address": 0,
+                    "quantity": 1,
+                    "type": "UINT16",
+                    "description": "alarm input"
+                }
+            ]
+        }
+
+## Equipment Template [/mxc/modbus/equipment-templates/{id}]
+
++ Parameters
+    + id: 1 (required, number) - The id of equipment template to return
+
+A equipment template object has the following attributes:
+
 - **id** (required, integer, `1`): Template ID.
 - **name** (required, string, `ioLogik-E2210`): Template name.
 - **tagList** (required, object array)
     - **name** (required, string, `di0`): Tag name.
     - **unit** (optional, string, `Volt`): Tag unit.
-    - **function** (required, string, `read-coils`): Function to retrieve the Tag value. Can be one of `read-coils`, `read-discrete-inputs`, `read-input-registers`, `read-holding-registers`.
+    - **function** (required, string, `read-coils`): Function to retrieve the Tag value. Can be one of `read-coils`, `read-input-registers`, `read-holding-registers`.
     - **address** (required, integer, `0`): Address of the tag.
     - **quantity** (required, integer, `1`): Tag length.
-    - **type** (required, string, `UINT16`): Tag data type. Can be one of `UINT16`, `UINT32`, `UINT64`, `INT16`, `INT32`, `INT64`, `FLOAT32`, `FLOAT64`, `STRING`.
-    - **byteOrder** (optional, string, `CDAB`): Switch input byte order. Can be one of `BA`, `CDAB`, `DCBA`.
-    - **slope** (optional, number, `3.14`): `V = input * S + O`.
-    - **offset** (optional, number, `-0.33`): `V = input * S + O`.
+    - **type** (required, string, `UINT16`): Tag data type.
+    - **byteOrder** (optional, string, `CDAB`): Switch input byte order. Can be any permutation of `AB`, `ABCD`, `ABCDEF`, `ABCDEFGH`.
     - **invalidValue** (optional, integer, `65535`): `if input == INVALID_VALUE, assume the value is not valid`.
     - **description** (required, string, `alarm input`): User edited description.
+    - **autoScalingMode** (required, string, `intercept`): Auto scaling mode: intercept or point
+    - **autoScaling**
+        - **slope** (required if autoScaling = intercept, number, `3.14`): `V = input * S + O`.
+        - **offset** (required if autoScaling = intercept, number, `-0.33`): `V = input * S + O`.
+        - **sourceMin** (required if autoScaling = point, number, `0`): `output = ((input-sourceMin) * (targetMax-targetMin) / (sourceMax-sourceMin)) + targetMin`.
+        - **sourceMax** (required if autoScaling = point, number, `1`): `output = ((input-sourceMin) * (targetMax-targetMin) / (sourceMax-sourceMin)) + targetMin`.
+        - **targetMin** (required if autoScaling = point, number, `0`): `output = ((input-sourceMin) * (targetMax-targetMin) / (sourceMax-sourceMin)) + targetMin`.
+        - **targetMax** (required if autoScaling = point, number, `100`): `output = ((input-sourceMin) * (targetMax-targetMin) / (sourceMax-sourceMin)) + targetMin`.
+
+### Get a equipment template by id [GET]
 
 + Response 200 (application/json)
 
@@ -2160,151 +2513,15 @@ Response attributes:
                     "quantity": 1,
                     "type": "UINT16",
                     "description": "alarm input"
-                },
-                {
-                    "name": "di1",
-                    "function": "read-coils",
-                    "address": 1,
-                    "quantity": 1,
-                    "type": "UINT16",
-                    "description": ""
-                },
-                {
-                    "name": "di2",
-                    "function": "read-coils",
-                    "address": 2,
-                    "quantity": 1,
-                    "type": "UINT16",
-                    "description": ""
-                },
-                {
-                    "name": "di3",
-                    "function": "read-coils",
-                    "address": 3,
-                    "quantity": 1,
-                    "type": "UINT16",
-                    "description": ""
-                },
-                {
-                    "name": "di4",
-                    "function": "read-coils",
-                    "address": 4,
-                    "quantity": 1,
-                    "type": "UINT16",
-                    "description": ""
-                },
-                {
-                    "name": "di5",
-                    "function": "read-coils",
-                    "address": 5,
-                    "quantity": 1,
-                    "type": "UINT16",
-                    "description": ""
-                },
-                {
-                    "name": "di6",
-                    "function": "read-coils",
-                    "address": 6,
-                    "quantity": 1,
-                    "type": "UINT16",
-                    "description": ""
-                },
-                {
-                    "name": "di7",
-                    "function": "read-coils",
-                    "address": 7,
-                    "quantity": 1,
-                    "type": "UINT16",
-                    "description": ""
-                },
-                {
-                    "name": "di8",
-                    "function": "read-coils",
-                    "address": 8,
-                    "quantity": 1,
-                    "type": "UINT16",
-                    "description": ""
-                },
-                {
-                    "name": "di9",
-                    "function": "read-coils",
-                    "address": 9,
-                    "quantity": 1,
-                    "type": "UINT16",
-                    "description": ""
-                },
-                {
-                    "name": "di10",
-                    "function": "read-coils",
-                    "address": 10,
-                    "quantity": 1,
-                    "type": "UINT16",
-                    "description": ""
-                },
-                {
-                    "name": "di11",
-                    "function": "read-coils",
-                    "address": 11,
-                    "quantity": 1,
-                    "type": "UINT16",
-                    "description": ""
-                },
-                {
-                    "name": "ai0",
-                    "function": "read-input-registers",
-                    "address": 304,
-                    "quantity": 2,
-                    "byteOrder": "CDAB",
-                    "type": "FLOAT32",
-                    "description": ""
-                },
-                {
-                    "name": "ai1",
-                    "function": "read-input-registers",
-                    "address": 306,
-                    "quantity": 2,
-                    "byteOrder": "CDAB",
-                    "type": "FLOAT32",
-                    "description": ""
-                },
-                {
-                    "name": "ai2",
-                    "function": "read-input-registers",
-                    "address": 308,
-                    "quantity": 2,
-                    "byteOrder": "CDAB",
-                    "type": "FLOAT32",
-                    "description": ""
-                },
-                {
-                    "name": "ai3",
-                    "function": "read-input-registers",
-                    "address": 310,
-                    "quantity": 2,
-                    "byteOrder": "CDAB",
-                    "type": "FLOAT32",
-                    "description": ""
                 }
             ]
         }
 
-### Put [PUT]
+### Update a equipment template [PUT]
 
-Request attributes:
-- **id** (optional, integer, `1`): Template ID. If given, it should match `{id}` in resource string.
-- **name** (required, string, `ioLogik-E2210`): Template name.
-- **tagList** (required, object array)
-    - **name** (required, string, `di0`): Tag name.
-    - **unit** (optional, string, `Volt`): Tag unit.
-    - **function** (required, string, `read-coils`): Function to retrieve the Tag value. Can be one of `read-coils`, `read-input-registers`, `read-holding-registers`.
-    - **address** (required, integer, `0`): Address of the tag.
-    - **quantity** (required, integer, `1`): Tag length.
-    - **type** (required, string, `UINT16`): Tag data type.
-    - **byteOrder** (optional, string, `CDAB`): Switch input byte order. Can be any permutation of `AB`, `ABCD`, `ABCDEF`, `ABCDEFGH`.
-    - **slope** (optional, number, `3.14`): `V = input * S + O`.
-    - **offset** (optional, number, `-0.33`): `V = input * S + O`.
-    - **invalidValue** (optional, integer, `65535`): `if input == INVALID_VALUE, assume the value is not valid`.
-    - **description** (required, string, `alarm input`): User edited description.
++ Parameters
+    + id: 1 (required, number) - The id of equipment template to update
+    
 
 + Request (application/json)
 
@@ -2319,130 +2536,6 @@ Request attributes:
                     "quantity": 1,
                     "type": "UINT16",
                     "description": "alarm input"
-                },
-                {
-                    "name": "di1",
-                    "function": "read-coils",
-                    "address": 1,
-                    "quantity": 1,
-                    "type": "UINT16",
-                    "description": ""
-                },
-                {
-                    "name": "di2",
-                    "function": "read-coils",
-                    "address": 2,
-                    "quantity": 1,
-                    "type": "UINT16",
-                    "description": ""
-                },
-                {
-                    "name": "di3",
-                    "function": "read-coils",
-                    "address": 3,
-                    "quantity": 1,
-                    "type": "UINT16",
-                    "description": ""
-                },
-                {
-                    "name": "di4",
-                    "function": "read-coils",
-                    "address": 4,
-                    "quantity": 1,
-                    "type": "UINT16",
-                    "description": ""
-                },
-                {
-                    "name": "di5",
-                    "function": "read-coils",
-                    "address": 5,
-                    "quantity": 1,
-                    "type": "UINT16",
-                    "description": ""
-                },
-                {
-                    "name": "di6",
-                    "function": "read-coils",
-                    "address": 6,
-                    "quantity": 1,
-                    "type": "UINT16",
-                    "description": ""
-                },
-                {
-                    "name": "di7",
-                    "function": "read-coils",
-                    "address": 7,
-                    "quantity": 1,
-                    "type": "UINT16",
-                    "description": ""
-                },
-                {
-                    "name": "di8",
-                    "function": "read-coils",
-                    "address": 8,
-                    "quantity": 1,
-                    "type": "UINT16",
-                    "description": ""
-                },
-                {
-                    "name": "di9",
-                    "function": "read-coils",
-                    "address": 9,
-                    "quantity": 1,
-                    "type": "UINT16",
-                    "description": ""
-                },
-                {
-                    "name": "di10",
-                    "function": "read-coils",
-                    "address": 10,
-                    "quantity": 1,
-                    "type": "UINT16",
-                    "description": ""
-                },
-                {
-                    "name": "di11",
-                    "function": "read-coils",
-                    "address": 11,
-                    "quantity": 1,
-                    "type": "UINT16",
-                    "description": ""
-                },
-                {
-                    "name": "ai0",
-                    "function": "read-input-registers",
-                    "address": 304,
-                    "quantity": 2,
-                    "byteOrder": "CDAB",
-                    "type": "FLOAT32",
-                    "description": ""
-                },
-                {
-                    "name": "ai1",
-                    "function": "read-input-registers",
-                    "address": 306,
-                    "quantity": 2,
-                    "byteOrder": "CDAB",
-                    "type": "FLOAT32",
-                    "description": ""
-                },
-                {
-                    "name": "ai2",
-                    "function": "read-input-registers",
-                    "address": 308,
-                    "quantity": 2,
-                    "byteOrder": "CDAB",
-                    "type": "FLOAT32",
-                    "description": ""
-                },
-                {
-                    "name": "ai3",
-                    "function": "read-input-registers",
-                    "address": 310,
-                    "quantity": 2,
-                    "byteOrder": "CDAB",
-                    "type": "FLOAT32",
-                    "description": ""
                 }
             ]
         }
@@ -2453,11 +2546,24 @@ Request attributes:
             "message": "success"
         }
 
+### Delete a equipment template [DELETE]
+
++ Parameters
+    + id: 1 (required, number) - The id of equipment template to delete
+    
+
++ Response 200 (application/json)
+
+        {
+            "message": "success"
+        }
+
+
 # Group Modbus Device List
 
-## Manage Configuration [/mxc/modbus/interfaces]
+## Interface Collection [/mxc/modbus/interfaces]
 
-### Get [GET]
+### Get all interfaces [GET]
 
 + Response 200 (application/json)
 
@@ -2508,56 +2614,146 @@ Request attributes:
             ]
         }
 
-### Put [PUT]
+
+### Create a interface [POST]
 
 + Request (application/json)
 
         {
-            "interfaceList": [
+            "modbus-rtu":
+            {
+                "dev": "/dev/ttyS0",
+                "baudRate": 9600,
+                "parity": "even",
+                "stopBits": "one",
+                "intercharTimeoutMS": 300,
+                "responseTimeoutMS": 5000,
+                "interframeDelayMS": 300
+            },
+            "pollingPeriodSec": 15,
+            "deviceList": [
                 {
-                    "id": 1,
-                    "modbus-rtu":
-                    {
-                        "dev": "/dev/ttyS0",
-                        "baudRate": 9600,
-                        "parity": "even",
-                        "stopBits": "one",
-                        "intercharTimeoutMS": 300,
-                        "responseTimeoutMS": 5000,
-                        "interframeDelayMS": 300
-                    },
-                    "pollingPeriodSec": 15,
-                    "deviceList": [
-                        {
-                            "deviceId": 31,
-                            "equipmentTemplate": "ioLogik-E2210",
-                            "equipmentName": "My ioLogik-E2210"
-                        },
-                        {
-                            "deviceId": 32,
-                            "equipmentTemplate": "ioLogik-E2212",
-                            "equipmentName": "My ioLogik-E2212"
-                        }
-                    ]
+                    "deviceId": 31,
+                    "equipmentTemplate": "ioLogik-E2210",
+                    "equipmentName": "My ioLogik-E2210"
                 },
                 {
-                    "id": 2,
-                    "name": "Modbus Gateway E2520",
-                    "modbus-tcp": {
-                        "host": "192.168.31.123",
-                        "service": 502
-                    },
-                    "pollingPeriodSec": 30,
-                    "deviceList": [
-                        {
-                            "deviceId": 0,
-                            "equipmentTemplate": "ioLogik-E2520",
-                            "equipmentName": "My ioLogik-E2520"
-                        }
-                    ]
+                    "deviceId": 32,
+                    "equipmentTemplate": "ioLogik-E2212",
+                    "equipmentName": "My ioLogik-E2212"
                 }
             ]
         }
+
++ Response 200 (application/json)
+
+        {
+            "id": 1,
+            "modbus-rtu":
+            {
+                "dev": "/dev/ttyS0",
+                "baudRate": 9600,
+                "parity": "even",
+                "stopBits": "one",
+                "intercharTimeoutMS": 300,
+                "responseTimeoutMS": 5000,
+                "interframeDelayMS": 300
+            },
+            "pollingPeriodSec": 15,
+            "deviceList": [
+                {
+                    "deviceId": 31,
+                    "equipmentTemplate": "ioLogik-E2210",
+                    "equipmentName": "My ioLogik-E2210"
+                },
+                {
+                    "deviceId": 32,
+                    "equipmentTemplate": "ioLogik-E2212",
+                    "equipmentName": "My ioLogik-E2212"
+                }
+            ]
+        }
+
+## Interface [/mxc/modbus/interfaces/{id}]
+
+### Get a interface by id [GET]
+
++ Parameters
+    + id: 1 (required, number) - The id of interface to return
+
++ Response 200 (application/json)
+
+        {
+            "id": 1,
+            "modbus-rtu":
+            {
+                "dev": "/dev/ttyS0",
+                "baudRate": 9600,
+                "parity": "even",
+                "stopBits": "one",
+                "intercharTimeoutMS": 300,
+                "responseTimeoutMS": 5000,
+                "interframeDelayMS": 300
+            },
+            "pollingPeriodSec": 15,
+            "deviceList": [
+                {
+                    "deviceId": 31,
+                    "equipmentTemplate": "ioLogik-E2210",
+                    "equipmentName": "My ioLogik-E2210"
+                },
+                {
+                    "deviceId": 32,
+                    "equipmentTemplate": "ioLogik-E2212",
+                    "equipmentName": "My ioLogik-E2212"
+                }
+            ]
+        }
+
+### Update a interface [PUT]
+
++ Parameters
+    + id: 1 (required, number) - The id of interface to update
+
++ Request (application/json)
+
+        {
+            "id": 1,
+            "modbus-rtu":
+            {
+                "dev": "/dev/ttyS0",
+                "baudRate": 9600,
+                "parity": "even",
+                "stopBits": "one",
+                "intercharTimeoutMS": 300,
+                "responseTimeoutMS": 5000,
+                "interframeDelayMS": 300
+            },
+            "pollingPeriodSec": 15,
+            "deviceList": [
+                {
+                    "deviceId": 31,
+                    "equipmentTemplate": "ioLogik-E2210",
+                    "equipmentName": "My ioLogik-E2210"
+                },
+                {
+                    "deviceId": 32,
+                    "equipmentTemplate": "ioLogik-E2212",
+                    "equipmentName": "My ioLogik-E2212"
+                }
+            ]
+        }
+
++ Response 200 (application/json)
+
+        {
+            "message": "success"
+        }
+
+### Delete a interface [DELETE]
+
++ Parameters
+    + id: 1 (required, number) - The id of interface to delete
 
 + Response 200 (application/json)
 
