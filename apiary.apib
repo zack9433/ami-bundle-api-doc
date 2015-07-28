@@ -2110,7 +2110,7 @@ Response Attributes:
 Response attributes:
 
 - **templateList** (required, object array)
-    - **id** (optional, integer, `1`): Template ID. If given, it will be ignored.
+    - **id** (required, integer, `1`): Template ID.
     - **name** (required, string, `ioLogik-E2210`): Template name.
     - **tagList** (required, object array)
         - **name** (required, string, `di0`): Tag name.
@@ -2417,7 +2417,6 @@ Response attributes:
 ### Create a new equipment template [POST]
 
 Request attributes:
-- **id** (optional, integer, `1`): Template ID. If given, it will be ignored.
 - **name** (required, string, `ioLogik-E2210`): Template name.
 - **tagList** (required, object array)
     - **name** (required, string, `di0`): Tag name.
@@ -2478,7 +2477,7 @@ Request attributes:
 
 A equipment template object has the following attributes:
 
-- **id** (optional, integer, `1`): Template ID.
+- **id** (required, integer, `1`): Template ID.
 - **name** (required, string, `ioLogik-E2210`): Template name.
 - **tagList** (required, object array)
     - **name** (required, string, `di0`): Tag name.
