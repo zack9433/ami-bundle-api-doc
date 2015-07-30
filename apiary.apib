@@ -2109,28 +2109,27 @@ Response Attributes:
 
 Response attributes:
 
-- **templateList** (required, object array)
-    - **id** (required, integer, `1`): Template ID.
-    - **name** (required, string, `ioLogik-E2210`): Template name.
-    - **tagList** (required, object array)
-        - **name** (required, string, `di0`): Tag name.
-        - **unit** (optional, string, `Volt`): Tag unit.
-        - **function** (required, string, `read-coils`): Function to retrieve the Tag value. Can be one of `read-coils`, `read-input-registers`, `read-holding-registers`.
-        - **address** (required, integer, `0`): Address of the tag.
-        - **quantity** (required, integer, `1`): Tag length.
-        - **type** (required, string, `UINT16`): Tag data type.
-        - **byteOrder** (optional, string, `CDAB`): Switch input byte order. Can be any permutation of `AB`, `ABCD`, `ABCDEF`, `ABCDEFGH`.
-        - **invalidValue** (optional, integer array): Array size is equals to quantity. `if input == INVALID_VALUE, assume the value is not valid`.
-        - **description** (required, string, `alarm input`): User edited description.
-        - **enableAutoScaling** (optional, integer, `0`): Enable auto scaling or not.
-        - **autoScalingMode** (optional, string, `intercept`): Auto scaling mode: intercept or point
-        - **autoScaling** (required if enableAutoScaling = 1, object)
-            - **slope** (required if autoScaling = intercept, number, `3.14`): `V = input * S + O`.
-            - **offset** (required if autoScaling = intercept, number, `-0.33`): `V = input * S + O`.
-            - **sourceMin** (required if autoScaling = point, number, `0`): `output = ((input-sourceMin) * (targetMax-targetMin) / (sourceMax-sourceMin)) + targetMin`.
-            - **sourceMax** (required if autoScaling = point, number, `1`): `output = ((input-sourceMin) * (targetMax-targetMin) / (sourceMax-sourceMin)) + targetMin`.
-            - **targetMin** (required if autoScaling = point, number, `0`): `output = ((input-sourceMin) * (targetMax-targetMin) / (sourceMax-sourceMin)) + targetMin`.
-            - **targetMax** (required if autoScaling = point, number, `100`): `output = ((input-sourceMin) * (targetMax-targetMin) / (sourceMax-sourceMin)) + targetMin`.
+- **id** (required, integer, `1`): Template ID.
+- **name** (required, string, `ioLogik-E2210`): Template name.
+- **tagList** (required, object array)
+    - **name** (required, string, `di0`): Tag name.
+    - **unit** (optional, string, `Volt`): Tag unit.
+    - **function** (required, string, `read-coils`): Function to retrieve the Tag value. Can be one of `read-coils`, `read-input-registers`, `read-holding-registers`.
+    - **address** (required, integer, `0`): Address of the tag.
+    - **quantity** (required, integer, `1`): Tag length.
+    - **type** (required, string, `UINT16`): Tag data type.
+    - **byteOrder** (optional, string, `CDAB`): Switch input byte order. Can be any permutation of `AB`, `ABCD`, `ABCDEF`, `ABCDEFGH`.
+    - **invalidValue** (optional, integer array): Array size is equals to quantity. `if input == INVALID_VALUE, assume the value is not valid`.
+    - **description** (required, string, `alarm input`): User edited description.
+    - **enableAutoScaling** (optional, integer, `0`): Enable auto scaling or not.
+    - **autoScalingMode** (optional, string, `intercept`): Auto scaling mode: intercept or point
+    - **autoScaling** (required if enableAutoScaling = 1, object)
+        - **slope** (required if autoScaling = intercept, number, `3.14`): `V = input * S + O`.
+        - **offset** (required if autoScaling = intercept, number, `-0.33`): `V = input * S + O`.
+        - **sourceMin** (required if autoScaling = point, number, `0`): `output = ((input-sourceMin) * (targetMax-targetMin) / (sourceMax-sourceMin)) + targetMin`.
+        - **sourceMax** (required if autoScaling = point, number, `1`): `output = ((input-sourceMin) * (targetMax-targetMin) / (sourceMax-sourceMin)) + targetMin`.
+        - **targetMin** (required if autoScaling = point, number, `0`): `output = ((input-sourceMin) * (targetMax-targetMin) / (sourceMax-sourceMin)) + targetMin`.
+        - **targetMax** (required if autoScaling = point, number, `100`): `output = ((input-sourceMin) * (targetMax-targetMin) / (sourceMax-sourceMin)) + targetMin`.
 
 + Response 200 (application/json)
 
