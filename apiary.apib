@@ -2114,7 +2114,7 @@ Response attributes:
 - **tagList** (required, object array)
     - **name** (required, string, `di0`): Tag name.
     - **unit** (optional, string, `Volt`): Tag unit.
-    - **function** (required, string, `read-coils`): Function to retrieve the Tag value. Can be one of `read-coils`, `read-input-registers`, `read-holding-registers`.
+    - **function** (required, string, `read-coils`): Function to retrieve the Tag value. Can be one of `read-coils`, `read-input-registers`, `read-discrete-inputs`, `read-holding-registers`.
     - **address** (required, integer, `0`): Address of the tag.
     - **quantity** (required, integer, `1`): Tag length.
     - **type** (required, string, `UINT16`): Tag data type.
@@ -2419,7 +2419,7 @@ Request attributes:
 - **tagList** (required, object array)
     - **name** (required, string, `di0`): Tag name.
     - **unit** (optional, string, `Volt`): Tag unit.
-    - **function** (required, string, `read-coils`): Function to retrieve the Tag value. Can be one of `read-coils`, `read-input-registers`, `read-holding-registers`.
+    - **function** (required, string, `read-coils`): Function to retrieve the Tag value. Can be one of `read-coils`, `read-input-registers`, `read-discrete-inputs`, `read-holding-registers`.
     - **address** (required, integer, `0`): Address of the tag.
     - **quantity** (required, integer, `1`): Tag length.
     - **type** (required, string, `UINT16`): Tag data type.
@@ -2469,6 +2469,21 @@ Request attributes:
             ]
         }
 
+### Delete multiple equipment templates [DELETE]
+
+Request array attributes:
+- **id** (required, integer, `1`): Template ID.
+
++ Request (application/json)
+
+        [1, 2]
+
++ Response 200 (application/json)
+
+        {
+            "message": "success"
+        }
+
 ## Equipment Template [/mxc/modbus/equipment-templates/{id}]
 
 + Parameters
@@ -2481,7 +2496,7 @@ A equipment template object has the following attributes:
 - **tagList** (required, object array)
     - **name** (required, string, `di0`): Tag name.
     - **unit** (optional, string, `Volt`): Tag unit.
-    - **function** (required, string, `read-coils`): Function to retrieve the Tag value. Can be one of `read-coils`, `read-input-registers`, `read-holding-registers`.
+    - **function** (required, string, `read-coils`): Function to retrieve the Tag value. Can be one of `read-coils`, `read-input-registers`, `read-discrete-inputs`, `read-holding-registers`.
     - **address** (required, integer, `0`): Address of the tag.
     - **quantity** (required, integer, `1`): Tag length.
     - **type** (required, string, `UINT16`): Tag data type.
