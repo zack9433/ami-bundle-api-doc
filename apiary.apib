@@ -2580,20 +2580,34 @@ A equipment template object has the following attributes:
 
 ### Get all interfaces [GET]
 
+A interface object has the following attributes:
+
+- **id** (required, integer, `1`): Interface ID.
+- **name** (required, string, `ioLogik-E2210`): Interface name.
+- **type** (required, string, `modbus-tcp`): Type of interface. Could be one of `modbus-rtu`, `modbus-tcp`
+- **pollingPeriodSec** (required, integer, `60`):
+- **deviceList** (required, object array):
+    - **deviceId** (required, integer):
+    - **equipmentTemplate** (required, string):
+    - **equipmentName** (required, string):
+- **config** (required, object):
+    - **dev** (required if `type == modbus-rtu`, string):
+    - **baudRate** (required if `type == modbus-rtu`, integer):
+    - **parity** (required if `type == modbus-rtu`, string):
+    - **stopBits** (required if `type == modbus-rtu`, string):
+    - **intercharTimeoutMS** (required if `type == modbus-rtu`, integer):
+    - **responseTimeoutMS** (required if `type == modbus-rtu`, integer):
+    - **interframeDelayMS** (required if `type == modbus-rtu`, integer):
+    - **host** (required if `type == modbus-tcp`, string):
+    - **service** (required if `type == modbus-tcp`, integer):
+
 + Response 200 (application/json)
 
         [
           {
             "id": 1,
-            "modbus-rtu": {
-              "dev": "/dev/ttyS0",
-              "baudRate": 9600,
-              "parity": "even",
-              "stopBits": "one",
-              "intercharTimeoutMS": 300,
-              "responseTimeoutMS": 5000,
-              "interframeDelayMS": 300
-            },
+            "name": "Modbus RTU E2210",
+            "type": "modbus-rtu",
             "pollingPeriodSec": 15,
             "deviceList": [
               {
@@ -2606,12 +2620,22 @@ A equipment template object has the following attributes:
                 "equipmentTemplate": "ioLogik-E2212",
                 "equipmentName": "My ioLogik-E2212"
               }
-            ]
+            ],
+            "config": {
+              "dev": "/dev/ttyS0",
+              "baudRate": 9600,
+              "parity": "even",
+              "stopBits": "one",
+              "intercharTimeoutMS": 300,
+              "responseTimeoutMS": 5000,
+              "interframeDelayMS": 300
+            }
           },
           {
             "id": 2,
             "name": "Modbus Gateway E2520",
-            "modbus-tcp": {
+            "type": "modbus-tcp",
+            "config": {
               "host": "192.168.31.123",
               "service": 502
             },
@@ -2632,58 +2656,40 @@ A equipment template object has the following attributes:
 + Request (application/json)
 
         {
-            "modbus-rtu":
+          "name": "Modbus Gateway E2520",
+          "type": "modbus-tcp",
+          "config": {
+            "host": "192.168.31.123",
+            "service": 502
+          },
+          "pollingPeriodSec": 30,
+          "deviceList": [
             {
-                "dev": "/dev/ttyS0",
-                "baudRate": 9600,
-                "parity": "even",
-                "stopBits": "one",
-                "intercharTimeoutMS": 300,
-                "responseTimeoutMS": 5000,
-                "interframeDelayMS": 300
-            },
-            "pollingPeriodSec": 15,
-            "deviceList": [
-                {
-                    "deviceId": 31,
-                    "equipmentTemplate": "ioLogik-E2210",
-                    "equipmentName": "My ioLogik-E2210"
-                },
-                {
-                    "deviceId": 32,
-                    "equipmentTemplate": "ioLogik-E2212",
-                    "equipmentName": "My ioLogik-E2212"
-                }
-            ]
+              "deviceId": 0,
+              "equipmentTemplate": "ioLogik-E2520",
+              "equipmentName": "My ioLogik-E2520"
+            }
+          ]
         }
 
 + Response 200 (application/json)
 
         {
-            "id": 1,
-            "modbus-rtu":
+          "id": 1,
+          "name": "Modbus Gateway E2520",
+          "type": "modbus-tcp",
+          "config": {
+            "host": "192.168.31.123",
+            "service": 502
+          },
+          "pollingPeriodSec": 30,
+          "deviceList": [
             {
-                "dev": "/dev/ttyS0",
-                "baudRate": 9600,
-                "parity": "even",
-                "stopBits": "one",
-                "intercharTimeoutMS": 300,
-                "responseTimeoutMS": 5000,
-                "interframeDelayMS": 300
-            },
-            "pollingPeriodSec": 15,
-            "deviceList": [
-                {
-                    "deviceId": 31,
-                    "equipmentTemplate": "ioLogik-E2210",
-                    "equipmentName": "My ioLogik-E2210"
-                },
-                {
-                    "deviceId": 32,
-                    "equipmentTemplate": "ioLogik-E2212",
-                    "equipmentName": "My ioLogik-E2212"
-                }
-            ]
+              "deviceId": 0,
+              "equipmentTemplate": "ioLogik-E2520",
+              "equipmentName": "My ioLogik-E2520"
+            }
+          ]
         }
 
 ## Interface [/mxc/modbus/interfaces/{id}]
@@ -2696,30 +2702,21 @@ A equipment template object has the following attributes:
 + Response 200 (application/json)
 
         {
-            "id": 1,
-            "modbus-rtu":
+          "id": 1,
+          "name": "Modbus Gateway E2520",
+          "type": "modbus-tcp",
+          "config": {
+            "host": "192.168.31.123",
+            "service": 502
+          },
+          "pollingPeriodSec": 30,
+          "deviceList": [
             {
-                "dev": "/dev/ttyS0",
-                "baudRate": 9600,
-                "parity": "even",
-                "stopBits": "one",
-                "intercharTimeoutMS": 300,
-                "responseTimeoutMS": 5000,
-                "interframeDelayMS": 300
-            },
-            "pollingPeriodSec": 15,
-            "deviceList": [
-                {
-                    "deviceId": 31,
-                    "equipmentTemplate": "ioLogik-E2210",
-                    "equipmentName": "My ioLogik-E2210"
-                },
-                {
-                    "deviceId": 32,
-                    "equipmentTemplate": "ioLogik-E2212",
-                    "equipmentName": "My ioLogik-E2212"
-                }
-            ]
+              "deviceId": 0,
+              "equipmentTemplate": "ioLogik-E2520",
+              "equipmentName": "My ioLogik-E2520"
+            }
+          ]
         }
 
 ### Update a interface [PUT]
@@ -2730,30 +2727,21 @@ A equipment template object has the following attributes:
 + Request (application/json)
 
         {
-            "id": 1,
-            "modbus-rtu":
+          "id": 1,
+          "name": "Modbus Gateway E2520",
+          "type": "modbus-tcp",
+          "config": {
+            "host": "192.168.31.123",
+            "service": 502
+          },
+          "pollingPeriodSec": 30,
+          "deviceList": [
             {
-                "dev": "/dev/ttyS0",
-                "baudRate": 9600,
-                "parity": "even",
-                "stopBits": "one",
-                "intercharTimeoutMS": 300,
-                "responseTimeoutMS": 5000,
-                "interframeDelayMS": 300
-            },
-            "pollingPeriodSec": 15,
-            "deviceList": [
-                {
-                    "deviceId": 31,
-                    "equipmentTemplate": "ioLogik-E2210",
-                    "equipmentName": "My ioLogik-E2210"
-                },
-                {
-                    "deviceId": 32,
-                    "equipmentTemplate": "ioLogik-E2212",
-                    "equipmentName": "My ioLogik-E2212"
-                }
-            ]
+              "deviceId": 0,
+              "equipmentTemplate": "ioLogik-E2520",
+              "equipmentName": "My ioLogik-E2520"
+            }
+          ]
         }
 
 + Response 200 (application/json)
