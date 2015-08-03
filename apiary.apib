@@ -2119,7 +2119,7 @@ Response attributes:
     - **quantity** (required, integer, `1`): Tag length.
     - **type** (required, string, `UINT16`): Tag data type.
     - **enableByteOrder** (optional, integer, `0`): Enable byte order or not.
-    - **byteOrder** (optional, string, `CDAB`): Switch input byte order. Can be any permutation of `AB`, `ABCD`, `ABCDEF`, `ABCDEFGH`.
+    - **byteOrder** (optional, string, `CDAB`): Switch input byte order. Can be any permutation of `BA`, `CDAB`, `DCBA`.
     - **invalidValue** (optional, integer array): Array size is equals to quantity. `if input == INVALID_VALUE, assume the value is not valid`.
     - **description** (required, string, `alarm input`): User edited description.
     - **enableAutoScaling** (optional, integer, `0`): Enable auto scaling or not.
@@ -2428,7 +2428,7 @@ Request attributes:
     - **quantity** (required, integer, `1`): Tag length.
     - **type** (required, string, `UINT16`): Tag data type.
     - **enableByteOrder** (optional, integer, `0`): Enable byte order or not.
-    - **byteOrder** (optional, string, `CDAB`): Switch input byte order. Can be any permutation of `AB`, `ABCD`, `ABCDEF`, `ABCDEFGH`.
+    - **byteOrder** (optional, string, `CDAB`): Switch input byte order. Can be any permutation of `BA`, `CDAB`, `DCBA`.
     - **invalidValue** (optional, integer array): Array size is equals to quantity. `if input == INVALID_VALUE, assume the value is not valid`.
     - **description** (required, string, `alarm input`): User edited description.
     - **enableAutoScaling** (optional, integer, `0`): Enable auto scaling or not.
@@ -2506,7 +2506,7 @@ A equipment template object has the following attributes:
     - **quantity** (required, integer, `1`): Tag length.
     - **type** (required, string, `UINT16`): Tag data type.
     - **enableByteOrder** (optional, integer, `0`): Enable byte order or not.
-    - **byteOrder** (optional, string, `CDAB`): Switch input byte order. Can be any permutation of `AB`, `ABCD`, `ABCDEF`, `ABCDEFGH`.
+    - **byteOrder** (optional, string, `CDAB`): Switch input byte order. Can be any permutation of `BA`, `CDAB`, `DCBA`.
     - **invalidValue** (optional, integer array): Array size is equals to quantity. `if input == INVALID_VALUE, assume the value is not valid`.
     - **description** (required, string, `alarm input`): User edited description.
     - **enableAutoScaling** (optional, integer, `0`): Enable auto scaling or not.
