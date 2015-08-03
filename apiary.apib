@@ -2118,6 +2118,7 @@ Response attributes:
     - **address** (required, integer, `0`): Address of the tag.
     - **quantity** (required, integer, `1`): Tag length.
     - **type** (required, string, `UINT16`): Tag data type.
+    - **enableByteOrder** (optional, integer, `0`): Enable byte order or not.
     - **byteOrder** (optional, string, `CDAB`): Switch input byte order. Can be any permutation of `AB`, `ABCD`, `ABCDEF`, `ABCDEFGH`.
     - **invalidValue** (optional, integer array): Array size is equals to quantity. `if input == INVALID_VALUE, assume the value is not valid`.
     - **description** (required, string, `alarm input`): User edited description.
@@ -2248,6 +2249,7 @@ Response attributes:
                         "function": "read-input-registers",
                         "address": 306,
                         "quantity": 2,
+                        "enableByteOrder": 1,
                         "byteOrder": "CDAB",
                         "type": "FLOAT32",
                         "description": ""
@@ -2257,6 +2259,7 @@ Response attributes:
                         "function": "read-input-registers",
                         "address": 308,
                         "quantity": 2,
+                        "enableByteOrder": 1,
                         "byteOrder": "CDAB",
                         "type": "FLOAT32",
                         "description": ""
@@ -2266,6 +2269,7 @@ Response attributes:
                         "function": "read-input-registers",
                         "address": 310,
                         "quantity": 2,
+                        "enableByteOrder": 1,
                         "byteOrder": "CDAB",
                         "type": "FLOAT32",
                         "description": ""
@@ -2423,6 +2427,7 @@ Request attributes:
     - **address** (required, integer, `0`): Address of the tag.
     - **quantity** (required, integer, `1`): Tag length.
     - **type** (required, string, `UINT16`): Tag data type.
+    - **enableByteOrder** (optional, integer, `0`): Enable byte order or not.
     - **byteOrder** (optional, string, `CDAB`): Switch input byte order. Can be any permutation of `AB`, `ABCD`, `ABCDEF`, `ABCDEFGH`.
     - **invalidValue** (optional, integer array): Array size is equals to quantity. `if input == INVALID_VALUE, assume the value is not valid`.
     - **description** (required, string, `alarm input`): User edited description.
@@ -2500,6 +2505,7 @@ A equipment template object has the following attributes:
     - **address** (required, integer, `0`): Address of the tag.
     - **quantity** (required, integer, `1`): Tag length.
     - **type** (required, string, `UINT16`): Tag data type.
+    - **enableByteOrder** (optional, integer, `0`): Enable byte order or not.
     - **byteOrder** (optional, string, `CDAB`): Switch input byte order. Can be any permutation of `AB`, `ABCD`, `ABCDEF`, `ABCDEFGH`.
     - **invalidValue** (optional, integer array): Array size is equals to quantity. `if input == INVALID_VALUE, assume the value is not valid`.
     - **description** (required, string, `alarm input`): User edited description.
