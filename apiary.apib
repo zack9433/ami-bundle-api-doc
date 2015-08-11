@@ -2608,7 +2608,7 @@ A interface object has the following attributes:
     - **responseTimeoutMS** (required if `type == modbus-rtu`, integer):
     - **interframeDelayMS** (required if `type == modbus-rtu`, integer):
     - **host** (required if `type == modbus-tcp`, string):
-    - **service** (required if `type == modbus-tcp`, integer):
+    - **port** (required if `type == modbus-tcp`, integer):
 
 + Response 200 (application/json)
 
@@ -2646,7 +2646,7 @@ A interface object has the following attributes:
             "type": "modbus-tcp",
             "config": {
               "host": "192.168.31.123",
-              "service": 502
+              "port": 502
             },
             "pollingPeriodSec": 30,
             "deviceList": [
@@ -2669,7 +2669,7 @@ A interface object has the following attributes:
           "type": "modbus-tcp",
           "config": {
             "host": "192.168.31.123",
-            "service": 502
+            "port": 502
           },
           "pollingPeriodSec": 30,
           "deviceList": [
@@ -2689,7 +2689,7 @@ A interface object has the following attributes:
           "type": "modbus-tcp",
           "config": {
             "host": "192.168.31.123",
-            "service": 502
+            "port": 502
           },
           "pollingPeriodSec": 30,
           "deviceList": [
@@ -2716,7 +2716,7 @@ A interface object has the following attributes:
           "type": "modbus-tcp",
           "config": {
             "host": "192.168.31.123",
-            "service": 502
+            "port": 502
           },
           "pollingPeriodSec": 30,
           "deviceList": [
@@ -2741,7 +2741,7 @@ A interface object has the following attributes:
           "type": "modbus-tcp",
           "config": {
             "host": "192.168.31.123",
-            "service": 502
+            "port": 502
           },
           "pollingPeriodSec": 30,
           "deviceList": [
