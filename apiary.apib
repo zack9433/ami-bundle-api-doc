@@ -2594,11 +2594,11 @@ A interface object has the following attributes:
 - **id** (required, integer, `1`): Interface ID.
 - **name** (required, string, `ioLogik-E2210`): Interface name.
 - **type** (required, string, `modbus-tcp`): Type of interface. Could be one of `modbus-rtu`, `modbus-tcp`
-- **pollingPeriodMS** (required, integer, `6000`):
+- **pollingPeriodMS** (required, integer, `6000`): must greater than 1000.
 - **deviceList** (required, object array):
-    - **deviceId** (required, integer):
-    - **equipmentTemplate** (required, string):
-    - **equipmentName** (required, string):
+    - **deviceId** (required, integer): `0 <= value <= 255`
+    - **equipmentTemplate** (required, string): allowed chars `[A-Za-z0-9_-]`, length: 3-255
+    - **equipmentName** (required, string): allowed chars `[A-Za-z0-9_-]`, length: 3-255
 - **config** (required, object):
     - **dev** (required if `type == modbus-rtu`, string):
     - **baudRate** (required if `type == modbus-rtu`, integer):
