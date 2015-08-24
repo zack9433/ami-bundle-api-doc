@@ -2110,14 +2110,14 @@ Response Attributes:
 Response attributes:
 
 - **id** (required, integer, `1`): Template ID.
-- **name** (required, string, `ioLogik-E2210`): Template name.
+- **name** (required, string, `ioLogik-E2210`): Template name. Allowed chars `[A-Za-z0-9_-]`, 3 <= length <= 255
 - **tagList** (required, object array)
-    - **name** (required, string, `di0`): Tag name.
+    - **name** (required, string, `di0`): Tag name. Allowed chars `[A-Za-z0-9_-]`, 2 <= length <= 255.
     - **unit** (optional, string, `Volt`): Tag unit.
     - **function** (required, string, `read-coils`): Function to retrieve the Tag value. Can be one of `read-coils`, `read-input-registers`, `read-discrete-inputs`, `read-holding-registers`.
-    - **address** (required, integer, `0`): Address of the tag.
-    - **quantity** (required, integer, `1`): Tag length.
-    - **type** (required, string, `UINT16`): Tag data type.
+    - **address** (required, integer, `0`): Address of the tag. `0x0000(0) <= value <= 0xFFFF(65535)`
+    - **quantity** (required, integer, `1`): Tag length. Must greater than 0.
+    - **type** (required, string, `UINT16`): Tag data type. Must be one of `uint16`, `uint32`, `uint64`, `int16`, `int32`, `int64`, `float32`, `float64`, `string`
     - **enableByteOrder** (optional, integer, `0`): Enable byte order or not.
     - **byteOrder** (optional, string, `CDAB`): Switch input byte order. Can be any permutation of `BA`, `CDAB`, `DCBA`.
     - **enableInvalidValue** (optional, integer, `0`): Enable invalidValue or not.
@@ -2420,14 +2420,14 @@ Response attributes:
 ### Create a new equipment template [POST]
 
 Request attributes:
-- **name** (required, string, `ioLogik-E2210`): Template name.
+- **name** (required, string, `ioLogik-E2210`): Template name. Allowed chars `[A-Za-z0-9_-]`, 3 <= length <= 255
 - **tagList** (required, object array)
-    - **name** (required, string, `di0`): Tag name.
+    - **name** (required, string, `di0`): Tag name. Allowed chars `[A-Za-z0-9_-]`, 2 <= length <= 255.
     - **unit** (optional, string, `Volt`): Tag unit.
     - **function** (required, string, `read-coils`): Function to retrieve the Tag value. Can be one of `read-coils`, `read-input-registers`, `read-discrete-inputs`, `read-holding-registers`.
-    - **address** (required, integer, `0`): Address of the tag.
-    - **quantity** (required, integer, `1`): Tag length.
-    - **type** (required, string, `UINT16`): Tag data type.
+    - **address** (required, integer, `0`): Address of the tag. `0x0000(0) <= value <= 0xFFFF(65535)`
+    - **quantity** (required, integer, `1`): Tag length. Must greater than 0.
+    - **type** (required, string, `UINT16`): Tag data type. Must be one of `uint16`, `uint32`, `uint64`, `int16`, `int32`, `int64`, `float32`, `float64`, `string`
     - **enableByteOrder** (optional, integer, `0`): Enable byte order or not.
     - **byteOrder** (optional, string, `CDAB`): Switch input byte order. Can be any permutation of `BA`, `CDAB`, `DCBA`.
     - **enableInvalidValue** (optional, integer, `0`): Enable invalidValue or not.
@@ -2499,14 +2499,14 @@ Request array attributes:
 A equipment template object has the following attributes:
 
 - **id** (required, integer, `1`): Template ID.
-- **name** (required, string, `ioLogik-E2210`): Template name.
+- **name** (required, string, `ioLogik-E2210`): Template name. Allowed chars `[A-Za-z0-9_-]`, 3 <= length <= 255
 - **tagList** (required, object array)
-    - **name** (required, string, `di0`): Tag name.
+    - **name** (required, string, `di0`): Tag name. Allowed chars `[A-Za-z0-9_-]`, 2 <= length <= 255.
     - **unit** (optional, string, `Volt`): Tag unit.
     - **function** (required, string, `read-coils`): Function to retrieve the Tag value. Can be one of `read-coils`, `read-input-registers`, `read-discrete-inputs`, `read-holding-registers`.
-    - **address** (required, integer, `0`): Address of the tag.
-    - **quantity** (required, integer, `1`): Tag length.
-    - **type** (required, string, `UINT16`): Tag data type.
+    - **address** (required, integer, `0`): Address of the tag. `0x0000(0) <= value <= 0xFFFF(65535)`
+    - **quantity** (required, integer, `1`): Tag length. Must greater than 0.
+    - **type** (required, string, `UINT16`): Tag data type. Must be one of `uint16`, `uint32`, `uint64`, `int16`, `int32`, `int64`, `float32`, `float64`, `string`
     - **enableByteOrder** (optional, integer, `0`): Enable byte order or not.
     - **byteOrder** (optional, string, `CDAB`): Switch input byte order. Can be any permutation of `BA`, `CDAB`, `DCBA`.
     - **enableInvalidValue** (optional, integer, `0`): Enable invalidValue or not.
