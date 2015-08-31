@@ -2122,7 +2122,7 @@ Response attributes:
     - **byteOrder** (optional, string, `CDAB`): Switch input byte order. Can be any permutation of `BA`, `CDAB`, `DCBA`.
     - **enableInvalidValue** (optional, integer, `0`): Enable invalidValue or not.
     - **invalidValue** (optional, integer array): Array size is equals to quantity. `if input == INVALID_VALUE, assume the value is not valid`.
-    - **description** (required, string, `alarm input`): User edited description.
+    - **description** (optional, string, `alarm input`): User edited description.
     - **enableAutoScaling** (optional, integer, `0`): Enable auto scaling or not.
     - **autoScalingMode** (optional, string, `intercept`): Auto scaling mode: intercept or point
     - **autoScaling** (required if enableAutoScaling = 1, object)
@@ -2432,7 +2432,7 @@ Request attributes:
     - **byteOrder** (optional, string, `CDAB`): Switch input byte order. Can be any permutation of `BA`, `CDAB`, `DCBA`.
     - **enableInvalidValue** (optional, integer, `0`): Enable invalidValue or not.
     - **invalidValue** (optional, integer array): Array size is equals to quantity. `if input == INVALID_VALUE, assume the value is not valid`.
-    - **description** (required, string, `alarm input`): User edited description.
+    - **description** (optional, string, `alarm input`): User edited description.
     - **enableAutoScaling** (optional, integer, `0`): Enable auto scaling or not.
     - **autoScalingMode** (optional, string, `intercept`): Auto scaling mode: intercept or point
     - **autoScaling** (required if enableAutoScaling = 1, object)
@@ -2511,7 +2511,7 @@ A equipment template object has the following attributes:
     - **byteOrder** (optional, string, `CDAB`): Switch input byte order. Can be any permutation of `BA`, `CDAB`, `DCBA`.
     - **enableInvalidValue** (optional, integer, `0`): Enable invalidValue or not.
     - **invalidValue** (optional, integer array): Array size is equals to quantity. `if input == INVALID_VALUE, assume the value is not valid`.
-    - **description** (required, string, `alarm input`): User edited description.
+    - **description** (optional, string, `alarm input`): User edited description.
     - **enableAutoScaling** (optional, integer, `0`): Enable auto scaling or not.
     - **autoScalingMode** (optional, string, `intercept`): Auto scaling mode: intercept or point
     - **autoScaling** (required if enableAutoScaling = 1, object)
