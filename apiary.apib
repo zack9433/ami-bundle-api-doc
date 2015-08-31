@@ -2769,3 +2769,279 @@ A interface object has the following attributes:
         {
             "message": "success"
         }
+
+# Group Log Profile
+
+## Log Profile Collection [/mxc/logprofile]
+
+### Get all log profiles [GET]
+
++ Response 200 (application/json)
+
+        [
+          {
+            "id": 1,
+            "name": "log profile 1",
+            "archiver": {
+              "directory": "/var/mxc/upload",
+              "thresholdBytePerFile": 5242800,
+              "archiveToKeep": 24
+            },
+            "uploader": {
+              "httpPost": {
+                "url": "http://host/post",
+                "enableAuth": 0,
+                "authentication": {
+                  "username": "uploader",
+                  "password": "password"
+                },
+                "bypassSSL": 1,
+                "cronExpr": "*/5 * * * *"
+              }
+            },
+            "deviceList": [
+              {
+                "equipmentName": "My ioLogik-E2242",
+                "equipmentTags": ["di0", "di1", "ai0"]
+              },
+              {
+                "equipmentName": "My other ioLogik-E2242",
+                "equipmentTags": ["di0", "di1", "ai0"]
+              }
+            ]
+          },
+          {
+            "id": 2,
+            "name": "log profile 2",
+            "archiver": {
+              "directory": "/var/mxc/upload",
+              "thresholdBytePerFile": 5242800,
+              "archiveToKeep": 24
+            },
+            "uploader": {
+              "httpPost": {
+                "url": "http://host/post",
+                "enableAuth": 1,
+                "authentication": {
+                  "username": "uploader",
+                  "password": "password"
+                },
+                "bypassSSL": 0,
+                "cronExpr": "*/5 * * * *"
+              }
+            },
+            "deviceList": [
+              {
+                "equipmentName": "My ioLogik-E2242",
+                "equipmentTags": ["di0"]
+              },
+              {
+                "equipmentName": "My other ioLogik-E2242",
+                "equipmentTags": ["di0"]
+              }
+            ]
+          }
+        ]
+        
+
+### Create a log profile [POST]
+
++ Request (application/json)
+
+        {
+          "name": "log profile 1",
+          "archiver": {
+            "directory": "/var/mxc/upload",
+            "thresholdBytePerFile": 5242800,
+            "archiveToKeep": 24
+          },
+          "uploader": {
+            "httpPost": {
+              "url": "http://host/post",
+              "enableAuth": 0,
+              "authentication": {
+                "username": "uploader",
+                "password": "password"
+              },
+              "bypassSSL": 1,
+              "cronExpr": "*/5 * * * *"
+            }
+          },
+          "deviceList": [
+            {
+              "equipmentName": "My ioLogik-E2242",
+              "equipmentTags": ["di0", "di1", "ai0"]
+            },
+            {
+              "equipmentName": "My other ioLogik-E2242",
+              "equipmentTags": ["di0", "di1", "ai0"]
+            }
+          ]
+        }
+
++ Response 200 (application/json)
+
+        {
+          "id": 3,
+          "name": "log profile 1",
+          "archiver": {
+            "directory": "/var/mxc/upload",
+            "thresholdBytePerFile": 5242800,
+            "archiveToKeep": 24
+          },
+          "uploader": {
+            "httpPost": {
+              "url": "http://host/post",
+              "enableAuth": 0,
+              "authentication": {
+                "username": "uploader",
+                "password": "password"
+              },
+              "bypassSSL": 1,
+              "cronExpr": "*/5 * * * *"
+            }
+          },
+          "deviceList": [
+            {
+              "equipmentName": "My ioLogik-E2242",
+              "equipmentTags": ["di0", "di1", "ai0"]
+            },
+            {
+              "equipmentName": "My other ioLogik-E2242",
+              "equipmentTags": ["di0", "di1", "ai0"]
+            }
+          ]
+        }
+        
+### Delete log profiles [DELETE]
+
++ Request (application/json)
+
+        [1, 2, 3]
+
++ Response 200 (application/json)
+
+        {
+          "message": "success"
+        }
+
+
+## Log Profile [/mxc/logprofile/{id}]
+
++ Parameter
+    + id: 1 (required, number) - ID of the Log Profile in form of an integer
+
+### Get a log profile [GET]
+
++ Response 200 (application/json)
+
+        {
+          "id": 1,
+          "name": "log profile 1",
+          "archiver": {
+            "directory": "/var/mxc/upload",
+            "thresholdBytePerFile": 5242800,
+            "archiveToKeep": 24
+          },
+          "uploader": {
+            "httpPost": {
+              "url": "http://host/post",
+              "enableAuth": 0,
+              "authentication": {
+                "username": "uploader",
+                "password": "password"
+              },
+              "bypassSSL": 1,
+              "cronExpr": "*/5 * * * *"
+            }
+          },
+          "deviceList": [
+            {
+              "equipmentName": "My ioLogik-E2242",
+              "equipmentTags": ["di0", "di1", "ai0"]
+            },
+            {
+              "equipmentName": "My other ioLogik-E2242",
+              "equipmentTags": ["di0", "di1", "ai0"]
+            }
+          ]
+        }
+
+
+### Update a log profile [PUT]
+
++ Request (application/json)
+
+        {
+          "name": "log profile 1",
+          "archiver": {
+            "directory": "/var/mxc/upload",
+            "thresholdBytePerFile": 5242800,
+            "archiveToKeep": 24
+          },
+          "uploader": {
+            "httpPost": {
+              "url": "http://host/post",
+              "enableAuth": 0,
+              "authentication": {
+                "username": "uploader",
+                "password": "password"
+              },
+              "bypassSSL": 1,
+              "cronExpr": "*/5 * * * *"
+            }
+          },
+          "deviceList": [
+            {
+              "equipmentName": "My ioLogik-E2242",
+              "equipmentTags": ["di0", "di1", "ai0"]
+            },
+            {
+              "equipmentName": "My other ioLogik-E2242",
+              "equipmentTags": ["di0", "di1", "ai0"]
+            }
+          ]
+        }
+
++ Response 200 (application/json)
+
+        {
+          "id": 1,
+          "name": "log profile 1",
+          "archiver": {
+            "directory": "/var/mxc/upload",
+            "thresholdBytePerFile": 5242800,
+            "archiveToKeep": 24
+          },
+          "uploader": {
+            "httpPost": {
+              "url": "http://host/post",
+              "enableAuth": 0,
+              "authentication": {
+                "username": "uploader",
+                "password": "password"
+              },
+              "bypassSSL": 1,
+              "cronExpr": "*/5 * * * *"
+            }
+          },
+          "deviceList": [
+            {
+              "equipmentName": "My ioLogik-E2242",
+              "equipmentTags": ["di0", "di1", "ai0"]
+            },
+            {
+              "equipmentName": "My other ioLogik-E2242",
+              "equipmentTags": ["di0", "di1", "ai0"]
+            }
+          ]
+        }
+        
+### Delete a log profile [DELETE]
+
++ Response 200 (application/json)
+
+        {
+          "message": "success"
+        }
+        
