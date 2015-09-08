@@ -2601,6 +2601,7 @@ A interface object has the following attributes:
     - **equipmentName** (required, string): allowed chars `[A-Za-z0-9_-]`, length: 3-255
 - **config** (required, object):
     - **dev** (required if `type == modbus-rtu`, string):
+    - **devDisplayName** (required if `type == modbus-rtu`, string):
     - **baudRate** (required if `type == modbus-rtu`, integer):
     - **parity** (required if `type == modbus-rtu`, string):
     - **stopBits** (required if `type == modbus-rtu`, int): `0`, `1`, `2`
@@ -2632,6 +2633,7 @@ A interface object has the following attributes:
             ],
             "config": {
               "dev": "/dev/ttyS0",
+              "devDisplayName": "PORT 1",
               "baudRate": 9600,
               "parity": "even",
               "stopBits": 1,
