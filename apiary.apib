@@ -2506,7 +2506,7 @@ A equipment template object has the following attributes:
     - **function** (required, string, `read-coils`): Function to retrieve the Tag value. Can be one of `read-coils`, `read-input-registers`, `read-discrete-inputs`, `read-holding-registers`.
     - **address** (required, integer, `0`): Address of the tag. `0x0000(0) <= value <= 0xFFFF(65535)`
     - **quantity** (required, integer, `1`): Tag length. Must greater than 0.
-    - **type** (required, string, `UINT16`): Tag data type. Must be one of `uint16`, `uint32`, `uint64`, `int16`, `int32`, `int64`, `float32`, `float64`, `string`
+    - **type** (required, string, `UINT16`): Tag data type. Must be one of `uint16`, `uint32`, `uint64`, `int16`, `int32`, `int64`, `float32`, `float64`, `string`, `boolean`
     - **enableByteOrder** (optional, integer, `0`): Enable byte order or not.
     - **byteOrder** (optional, string, `CDAB`): Switch input byte order. Can be any permutation of `BA`, `CDAB`, `DCBA`.
     - **enableInvalidValue** (optional, integer, `0`): Enable invalidValue or not.
