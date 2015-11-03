@@ -2594,7 +2594,8 @@ A interface object has the following attributes:
 - **id** (required, integer, `1`): Interface ID.
 - **name** (required, string, `ioLogik-E2210`): Interface name.
 - **type** (required, string, `modbus-tcp`): Type of interface. Could be one of `modbus-rtu`, `modbus-tcp`
-- **pollingPeriodMS** (required, integer, `6000`): must greater than 1000.
+- **pollingPeriodMS** (required, integer, `6000`): 1000 <= value < 86400000.
+- **requestTimeoutMS** (required, integer): 100 <= value <= 60000.
 - **deviceList** (required, object array):
     - **deviceId** (required, integer): `0 <= value <= 255`
     - **equipmentTemplate** (required, string): allowed chars `[A-Za-z0-9_-]`, length: 3-255
@@ -2606,8 +2607,6 @@ A interface object has the following attributes:
     - **parity** (required if `type == modbus-rtu`, string):
     - **stopBits** (required if `type == modbus-rtu`, int): `0`, `1`, `2`
     - **intercharTimeoutMS** (required if `type == modbus-rtu`, integer):
-    - **responseTimeoutMS** (required if `type == modbus-rtu`, integer):
-    - **interframeDelayMS** (required if `type == modbus-rtu`, integer):
     - **host** (required if `type == modbus-tcp`, string):
     - **port** (required if `type == modbus-tcp`, integer):
 
@@ -2619,6 +2618,7 @@ A interface object has the following attributes:
             "name": "Modbus RTU E2210",
             "type": "modbus-rtu",
             "pollingPeriodMS": 1500,
+            "requestTimeoutMS": 1000,
             "deviceList": [
               {
                 "deviceId": 31,
@@ -2637,9 +2637,7 @@ A interface object has the following attributes:
               "baudRate": 9600,
               "parity": "even",
               "stopBits": 1,
-              "intercharTimeoutMS": 300,
-              "responseTimeoutMS": 5000,
-              "interframeDelayMS": 300
+              "intercharTimeoutMS": 300
             }
           },
           {
@@ -2651,6 +2649,7 @@ A interface object has the following attributes:
               "port": 502
             },
             "pollingPeriodMS": 3000,
+            "requestTimeoutMS": 1000,
             "deviceList": [
               {
                 "deviceId": 0,
@@ -2674,6 +2673,7 @@ A interface object has the following attributes:
             "port": 502
           },
           "pollingPeriodMS": 3000,
+          "requestTimeoutMS": 1000,
           "deviceList": [
             {
               "deviceId": 0,
@@ -2694,6 +2694,7 @@ A interface object has the following attributes:
             "port": 502
           },
           "pollingPeriodMS": 3000,
+          "requestTimeoutMS": 1000,
           "deviceList": [
             {
               "deviceId": 0,
@@ -2721,6 +2722,7 @@ A interface object has the following attributes:
             "port": 502
           },
           "pollingPeriodMS": 3000,
+          "requestTimeoutMS": 1000,
           "deviceList": [
             {
               "deviceId": 0,
@@ -2746,6 +2748,7 @@ A interface object has the following attributes:
             "port": 502
           },
           "pollingPeriodMS": 3000,
+          "requestTimeoutMS": 1000,
           "deviceList": [
             {
               "deviceId": 0,
