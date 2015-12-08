@@ -2583,6 +2583,75 @@ A equipment template object has the following attributes:
         }
 
 
+
+## Import Equipment Template [/mxc/modbus/import-equipment-templates]
+import/export Equipment Template configuration files to/from the system.
+
+### Import [PUT]
+The request for PUT has following attributes:
+
+- **file.url** (required, string, `3`): File http url.
+- **file.headers** (optional, object): Headers for fetch the file if necessary.
+- **override** (required, boolean): If one of templates is exist, it will override or not.
+
++ Request  (application/json)
+
+        {
+          "id": 3,
+          "resource": "/mxc/modbus/import-equipment-templates",
+          "method": "put",
+          "data": {
+            "override": false,
+            "file": {
+              "url": "http://192.168.31.81:5000/api/v1/download/1234",
+              "headers": {
+                "accessToken": "MOXAMOXA-TEST-SYSTEM"
+              }
+            }
+          }
+        }
+
++ Response 200 (application/json)
+
+        {}
+
+
+## Export Equipment Template [/mxc/modbus/export-equipment-templates{?ids}]
+
++ Parameters
+    + ids (optional, number) - Id of templates. If not given this parameters, it will exports all templates.
+
+### Export From web to backend [GET]
+
+The response for GET would be a file.
+
++ Request  (application/json)
+
+
++ Response 200 (application/octet-stream)
+
+        ```binary data goes here```
+
+### Export From backend to bundle [POST]
+
+The response for GET has following attributes:
+
++ Request  (application/json)
+
+        {
+          "url": "https://server/upload",
+          "headers": {
+            "accessToken": "MOXAMOXA-TEST-SYSTEM"
+          }
+        }
+
++ Response 200 (application/json)
+
+        {
+          "url": "https://server/upload/xxxxxxx"
+        }
+
+
 # Group Modbus Device List
 
 ## Interface Collection [/mxc/modbus/interfaces]
