@@ -3345,14 +3345,13 @@ A interface object has the following attributes:
 + Response 200 (application/json)
 
         
-## Test Logprofile [/mxc/test-logprofile]
+## Test Logprofile Connection [/mxc/test-logprofile-connection]
 
-### Test a logprofile upload function [POST]
+### Test a log profile upload connection [POST]
 
 + Request (application/json)
 
         {
-          "uploader": {
             "httpPost": {
               "url": "http://host/post",
               "enableAuth": 0,
@@ -3368,7 +3367,17 @@ A interface object has the following attributes:
               "retryCount": 3,
               "retryPeriodSec": 3
             }
-          }
+        }
+
++ Response 200 (application/json)
+
+## Test Logprofile Upload [/mxc/test-logprofile-upload]
+
+### Test a log profile by upload [POST]
+
++ Request (application/json)
+        {
+            "id": 1
         }
 
 + Response 200 (application/json)
