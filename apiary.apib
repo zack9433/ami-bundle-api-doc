@@ -3345,3 +3345,30 @@ A interface object has the following attributes:
 + Response 200 (application/json)
 
         
+## Test Logprofile [/mxc/test-logprofile]
+
+### Test a logprofile upload function [POST]
+
++ Request (application/json)
+
+        {
+          "uploader": {
+            "httpPost": {
+              "url": "http://host/post",
+              "enableAuth": 0,
+              "authentication": {
+                "username": "uploader",
+                "password": "password"
+              },
+              "bypassSSL": 1,
+              "cronExpr": "* */1 * * *",
+              "format": "json",
+              "compress": "gzip",
+              "enableCompress": 1,
+              "retryCount": 3,
+              "retryPeriodSec": 3
+            }
+          }
+        }
+
++ Response 200 (application/json)
